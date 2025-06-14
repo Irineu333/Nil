@@ -19,12 +19,21 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.ui)
             implementation(compose.foundation)
+
+            // ktor
+            implementation(libs.ktor.client.core)
         }
 
         getByName("desktopMain").dependencies {
 
             // compose
             implementation(compose.desktop.currentOs)
+
+            // ktor
+            implementation(libs.ktor.client.okhttp)
+
+            // slf4j
+            implementation("org.slf4j:slf4j-nop:2.0.9")
         }
     }
 }

@@ -1,8 +1,11 @@
 [versions]
 cmp = "1.8.1"
 kotlin = "2.1.21"
+ktor = "3.2.0"
 
 [libraries]
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 
 [plugins]
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "cmp" }
