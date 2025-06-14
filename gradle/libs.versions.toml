@@ -2,10 +2,14 @@
 cmp = "1.8.1"
 kotlin = "2.1.21"
 ktor = "3.2.0"
+kotlinx-coroutines = "1.10.2"
 
 [libraries]
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+
+kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 
 [plugins]
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "cmp" }

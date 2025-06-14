@@ -22,6 +22,9 @@ kotlin {
 
             // ktor
             implementation(libs.ktor.client.core)
+
+            // coroutines
+            implementation(libs.kotlinx.coroutines)
         }
 
         getByName("desktopMain").dependencies {
@@ -34,6 +37,9 @@ kotlin {
 
             // slf4j
             implementation("org.slf4j:slf4j-nop:2.0.9")
+
+            // coroutines
+            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }
