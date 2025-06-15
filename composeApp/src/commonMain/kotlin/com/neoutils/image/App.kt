@@ -20,8 +20,9 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import org.jetbrains.skia.Bitmap
 import org.jetbrains.skia.Codec
@@ -93,7 +94,7 @@ sealed interface Image {
     ) : Image
 }
 
-fun Image.Animated.animate() = flow {
+fun Image.Animated.animate() = callbackFlow {
 
     val bitmap = Bitmap().apply {
         allocPixels(codec.imageInfo)
@@ -104,12 +105,14 @@ fun Image.Animated.animate() = flow {
 
             codec.readPixels(bitmap, index)
 
-            emit(bitmap.asComposeImageBitmap())
+            withContext(Dispatchers.Main) {
+                send(bitmap.asComposeImageBitmap())
+            }
 
             delay(codec.framesInfo[index].duration.milliseconds)
         }
     }
-}
+}.flowOn(Dispatchers.Default)
 
 class ImageLoader(
     private val client: HttpClient = HttpClient()
@@ -117,7 +120,12 @@ class ImageLoader(
     suspend fun get(url: String): Resource.Result<Image> {
         return try {
             val response = client.get(url)
-            Resource.Result.Success(response.toImage())
+
+            val image = withContext(Dispatchers.Default) {
+                response.toImage()
+            }
+
+            Resource.Result.Success(image)
         } catch (e: Throwable) {
             Resource.Result.Failure(e)
         }
@@ -133,9 +141,17 @@ class ImageLoader(
                 }
             }
 
-            send(Resource.Result.Success(response.toImage()))
+            val image = withContext(Dispatchers.Default) {
+                response.toImage()
+            }
+
+            withContext(Dispatchers.Main) {
+                send(Resource.Result.Success(image))
+            }
         } catch (e: Throwable) {
-            send(Resource.Result.Failure(e))
+            withContext(Dispatchers.Main) {
+                send(Resource.Result.Failure(e))
+            }
         }
     }
 
