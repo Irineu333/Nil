@@ -5,15 +5,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asComposeImageBitmap
 import androidx.compose.ui.graphics.decodeToImageBitmap
+import com.neoutils.image.resources.Res
+import com.neoutils.image.resources.crazy_cat
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
@@ -24,6 +23,10 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.ResourceEnvironment
+import org.jetbrains.compose.resources.getDrawableResourceBytes
+import org.jetbrains.compose.resources.rememberResourceEnvironment
 import org.jetbrains.skia.Bitmap
 import org.jetbrains.skia.Codec
 import org.jetbrains.skia.Data
@@ -35,7 +38,7 @@ fun App() = Box(
     contentAlignment = Alignment.Center,
     modifier = Modifier.fillMaxSize()
 ) {
-    val resource = asyncImageBitmapResource(url = "https://cataas.com/cat/gif")
+    val resource = asyncImageBitmapResource(res = Res.drawable.crazy_cat)
 
     when (resource) {
         is Resource.Loading -> {
@@ -123,7 +126,7 @@ private fun Duration.takeOrElse(block: () -> Duration): Duration {
     return if (absoluteValue == Duration.ZERO) block() else this
 }
 
-class ImageLoader(
+class ImageFromUrl(
     private val client: HttpClient = HttpClient()
 ) {
     suspend fun get(url: String): Resource.Result<Image> {
@@ -131,7 +134,7 @@ class ImageLoader(
             val response = client.get(url)
 
             val image = withContext(Dispatchers.Default) {
-                response.toImage()
+                response.bodyAsBytes().toImage()
             }
 
             Resource.Result.Success(image)
@@ -151,7 +154,7 @@ class ImageLoader(
             }
 
             val image = withContext(Dispatchers.Default) {
-                response.toImage()
+                response.bodyAsBytes().toImage()
             }
 
             withContext(Dispatchers.Main) {
@@ -176,36 +179,80 @@ class ImageLoader(
             }
         )
     }
+}
 
-    private suspend fun HttpResponse.toImage(): Image {
+class ImageFromResources(
+    val environment: ResourceEnvironment
+) {
+    suspend fun get(res: DrawableResource): Resource.Result<Image> {
+        return try {
+            val bytes = withContext(Dispatchers.IO) {
+                getDrawableResourceBytes(environment, res)
+            }
 
-        val bytes = bodyAsBytes()
+            val image = withContext(Dispatchers.Default) {
+                bytes.toImage()
+            }
 
-        val data = Data.makeFromBytes(bytes)
-        val codec = Codec.makeFromData(data)
+            Resource.Result.Success(image)
+        } catch (e: Exception) {
+            Resource.Result.Failure(e)
+        }
+    }
+}
 
-        return if (codec.frameCount == 1) {
-            Image.Static(
-                bitmap = bytes.decodeToImageBitmap()
-            )
-        } else {
-            Image.Animated(
-                codec = codec,
-            )
+fun ByteArray.toImage(): Image {
+
+    val data = Data.makeFromBytes(this)
+    val codec = Codec.makeFromData(data)
+
+    return if (codec.frameCount == 1) {
+        Image.Static(
+            bitmap = decodeToImageBitmap()
+        )
+    } else {
+        Image.Animated(
+            codec = codec,
+        )
+    }
+}
+
+@Composable
+fun asyncImageBitmapResource(
+    url: String,
+    imageFromUrl: ImageFromUrl = remember { ImageFromUrl() }
+): Resource<ImageBitmap> {
+
+    val imageFlow = remember(imageFromUrl, url) { imageFromUrl.fetch(url) }
+
+    val resource by imageFlow.collectAsState(initial = Resource.Loading())
+
+    return resource.mapSuccess {
+        when (it) {
+            is Image.Animated -> it.animatedImageBitmap()
+            is Image.Static -> it.bitmap
         }
     }
 }
 
 @Composable
-fun asyncImageBitmapResource(url: String): Resource<ImageBitmap> {
+fun rememberImageFromResources(
+    environment: ResourceEnvironment = rememberResourceEnvironment()
+) = remember(environment) { ImageFromResources(environment) }
 
-    val imageLoader = remember { ImageLoader() }
+@Composable
+fun asyncImageBitmapResource(
+    res: DrawableResource,
+    imageFromResources: ImageFromResources = rememberImageFromResources()
+): Resource<ImageBitmap> {
 
-    val imageFlow = remember(url) { imageLoader.fetch(url) }
+    var imageResource by remember { mutableStateOf<Resource<Image>>(Resource.Loading()) }
 
-    val resource by imageFlow.collectAsState(initial = Resource.Loading())
+    LaunchedEffect(imageFromResources, res) {
+        imageResource = imageFromResources.get(res)
+    }
 
-    return resource.mapSuccess {
+    return imageResource.mapSuccess {
         when (it) {
             is Image.Animated -> it.animatedImageBitmap()
             is Image.Static -> it.bitmap

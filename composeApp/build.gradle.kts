@@ -14,11 +14,12 @@ kotlin {
     sourceSets {
 
         commonMain.dependencies {
-            
+
             // compose
             implementation(compose.runtime)
             implementation(compose.ui)
             implementation(compose.foundation)
+            implementation(compose.components.resources)
 
             // ktor
             implementation(libs.ktor.client.core)
@@ -44,9 +45,14 @@ kotlin {
     }
 }
 
-
 compose.desktop {
     application {
         mainClass = "com.neoutils.image.MainKt"
     }
+}
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "com.neoutils.image.resources"
+    generateResClass = always
 }
