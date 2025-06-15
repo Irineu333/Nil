@@ -8,8 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
-import com.neoutils.image.resources.Res
-import com.neoutils.image.resources.crazy_cat
 import core.compose.asyncPainterResource
 import core.util.Resource
 
@@ -19,9 +17,16 @@ fun App() = Box(
     modifier = Modifier.fillMaxSize()
 ) {
 
-    val resource = asyncPainterResource(res = Res.drawable.crazy_cat)
+    val resource = asyncPainterResource(url = "https://cataas.com/cat")
 
     when (resource) {
+        is Resource.Result.Success<Painter> -> {
+            Image(
+                painter = resource.data,
+                contentDescription = null
+            )
+        }
+
         is Resource.Loading -> {
             when (val progress = resource.progress) {
                 is Float -> {
@@ -36,13 +41,6 @@ fun App() = Box(
 
         is Resource.Result.Failure -> {
             throw resource.throwable
-        }
-
-        is Resource.Result.Success<Painter> -> {
-            Image(
-                painter = resource.data,
-                contentDescription = null
-            )
         }
     }
 }
