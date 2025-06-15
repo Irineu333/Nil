@@ -4,17 +4,25 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.runtime.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asComposeImageBitmap
 import androidx.compose.ui.graphics.decodeToImageBitmap
 import io.ktor.client.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import org.jetbrains.skia.Bitmap
 import org.jetbrains.skia.Codec
 import org.jetbrains.skia.Data
@@ -28,8 +36,12 @@ fun App() = Box(
     val resource = asyncImageBitmapResource(url = "https://cataas.com/cat/gif")
 
     when (resource) {
-        Resource.Loading -> {
-            BasicText(text = "loading...")
+        is Resource.Loading -> {
+            if (resource.progress != null) {
+                CircularProgressIndicator(progress = resource.progress)
+            } else {
+                CircularProgressIndicator()
+            }
         }
 
         is Resource.Result.Failure -> {
@@ -46,7 +58,9 @@ fun App() = Box(
 }
 
 sealed interface Resource<out T> {
-    data object Loading : Resource<Nothing>
+    data class Loading(
+        val progress: Float? = null
+    ) : Resource<Nothing>
 
     sealed interface Result<out T> : Resource<T> {
 
@@ -98,28 +112,61 @@ fun Image.Animated.animate() = flow {
 }
 
 class ImageLoader(
-    private val httpClient: HttpClient = HttpClient()
+    private val client: HttpClient = HttpClient()
 ) {
     suspend fun get(url: String): Resource.Result<Image> {
+        return try {
+            val response = client.get(url)
+            Resource.Result.Success(response.toImage())
+        } catch (e: Throwable) {
+            Resource.Result.Failure(e)
+        }
+    }
+
+    fun fetch(url: String) = channelFlow {
         try {
-            val bytes = httpClient.get(url).bodyAsBytes()
-
-            val data = Data.makeFromBytes(bytes)
-            val codec = Codec.makeFromData(data)
-
-            val image = if (codec.frameCount == 1) {
-                Image.Static(
-                    bitmap = bytes.decodeToImageBitmap()
-                )
-            } else {
-                Image.Animated(
-                    codec = codec,
-                )
+            val response = client.get(url) {
+                onProgress { progress ->
+                    withContext(Dispatchers.Main) {
+                        send(Resource.Loading(progress))
+                    }
+                }
             }
 
-            return Resource.Result.Success(data = image)
+            send(Resource.Result.Success(response.toImage()))
         } catch (e: Throwable) {
-            return Resource.Result.Failure(e)
+            send(Resource.Result.Failure(e))
+        }
+    }
+
+    private fun HttpRequestBuilder.onProgress(
+        update: suspend (progress: Float?) -> Unit
+    ) = onDownload { bytesSentTotal, contentLength ->
+        update(
+            contentLength?.let {
+                bytesSentTotal.toFloat()
+                    .div(contentLength.toFloat())
+                    .coerceIn(minimumValue = 0f, maximumValue = 1f)
+                    .takeUnless { it.isNaN() }
+            }
+        )
+    }
+
+    private suspend fun HttpResponse.toImage(): Image {
+
+        val bytes = bodyAsBytes()
+
+        val data = Data.makeFromBytes(bytes)
+        val codec = Codec.makeFromData(data)
+
+        return if (codec.frameCount == 1) {
+            Image.Static(
+                bitmap = bytes.decodeToImageBitmap()
+            )
+        } else {
+            Image.Animated(
+                codec = codec,
+            )
         }
     }
 }
@@ -127,15 +174,13 @@ class ImageLoader(
 @Composable
 fun asyncImageBitmapResource(url: String): Resource<ImageBitmap> {
 
-    val image = remember { mutableStateOf<Resource<Image>>(Resource.Loading) }
-
     val imageLoader = remember { ImageLoader() }
 
-    LaunchedEffect(url) {
-        image.value = imageLoader.get(url)
-    }
+    val imageFlow = remember(url) { imageLoader.fetch(url) }
 
-    return image.value.mapSuccess {
+    val resource by imageFlow.collectAsState(initial = Resource.Loading())
+
+    return resource.mapSuccess {
         when (it) {
             is Image.Animated -> it.animatedImageBitmap()
             is Image.Static -> it.bitmap
@@ -146,9 +191,9 @@ fun asyncImageBitmapResource(url: String): Resource<ImageBitmap> {
 @Composable
 fun Image.Animated.animatedImageBitmap(): ImageBitmap {
 
-    val animation = remember { animate() }
+    val animationFlow = remember { animate() }
 
-    return animation.collectAsState(
+    return animationFlow.collectAsState(
         initial = ImageBitmap(1, 1)
     ).value
 }
