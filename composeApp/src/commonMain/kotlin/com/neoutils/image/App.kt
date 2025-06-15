@@ -27,6 +27,7 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.skia.Bitmap
 import org.jetbrains.skia.Codec
 import org.jetbrains.skia.Data
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
@@ -94,6 +95,8 @@ sealed interface Image {
     ) : Image
 }
 
+private val DefaultAnimationDuration = 100.milliseconds
+
 fun Image.Animated.animate() = callbackFlow {
 
     val bitmap = Bitmap().apply {
@@ -109,10 +112,16 @@ fun Image.Animated.animate() = callbackFlow {
                 send(bitmap.asComposeImageBitmap())
             }
 
-            delay(codec.framesInfo[index].duration.milliseconds)
+            val frameDuration = codec.framesInfo[index].duration.milliseconds
+
+            delay(frameDuration.takeOrElse { DefaultAnimationDuration })
         }
     }
 }.flowOn(Dispatchers.Default)
+
+private fun Duration.takeOrElse(block: () -> Duration): Duration {
+    return if (absoluteValue == Duration.ZERO) block() else this
+}
 
 class ImageLoader(
     private val client: HttpClient = HttpClient()
@@ -204,12 +213,14 @@ fun asyncImageBitmapResource(url: String): Resource<ImageBitmap> {
     }
 }
 
+private val ImageBlank = ImageBitmap(1, 1)
+
 @Composable
 fun Image.Animated.animatedImageBitmap(): ImageBitmap {
 
     val animationFlow = remember { animate() }
 
     return animationFlow.collectAsState(
-        initial = ImageBitmap(1, 1)
+        initial = ImageBlank
     ).value
 }
