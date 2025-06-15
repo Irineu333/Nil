@@ -15,6 +15,9 @@ kotlin {
 
         commonMain.dependencies {
 
+            // modules
+            implementation(project(":core"))
+
             // compose
             implementation(compose.runtime)
             implementation(compose.ui)
