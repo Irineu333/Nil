@@ -7,20 +7,14 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.geometry.isSpecified
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asComposeImageBitmap
-import androidx.compose.ui.graphics.decodeToImageBitmap
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Density
 import com.neoutils.image.resources.Res
-import com.neoutils.image.resources.atom
+import com.neoutils.image.resources.atom_vector
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
@@ -31,15 +25,11 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.ResourceEnvironment
-import org.jetbrains.compose.resources.getDrawableResourceBytes
-import org.jetbrains.compose.resources.rememberResourceEnvironment
+import org.jetbrains.compose.resources.*
 import org.jetbrains.skia.Bitmap
 import org.jetbrains.skia.Codec
 import org.jetbrains.skia.Data
-import org.jetbrains.skia.Rect
-import org.jetbrains.skia.svg.*
+import org.jetbrains.skia.EncodedImageFormat
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -48,7 +38,7 @@ fun App() = Box(
     contentAlignment = Alignment.Center,
     modifier = Modifier.fillMaxSize()
 ) {
-    val resource = asyncPainterResource(res = Res.drawable.atom)
+    val resource = asyncPainterResource(res = Res.drawable.atom_vector)
 
     when (resource) {
         is Resource.Loading -> {
@@ -100,15 +90,19 @@ inline fun <T, R> Resource<T>.mapSuccess(transform: (T) -> R): Resource<R> {
 sealed interface Image {
 
     class Static(
-        val bitmap: ImageBitmap
+        val data: ByteArray
     ) : Image
 
     class Animated(
         val codec: Codec,
     ) : Image
 
+    class Svg(
+        val data: ByteArray
+    ) : Image
+
     class Vector(
-        val svgDom: SVGDOM
+        val data: ByteArray
     ) : Image
 }
 
@@ -215,27 +209,48 @@ class ImageFromResource(
     }
 }
 
+val SVG_REGEX = Regex(pattern = "<svg[\\s\\S]+/>")
+val VECTOR_REGEX = Regex(pattern = "<vector[\\s\\S]+>[\\s\\S]+</vector>")
+
 fun ByteArray.toImage(): Image {
 
     val data = Data.makeFromBytes(this)
 
     runCatching {
-        Image.Vector(SVGDOM(data))
-    }.onSuccess {
-        return it
+        val codec = Codec.makeFromData(data)
+
+        return when (codec.encodedImageFormat) {
+            EncodedImageFormat.GIF -> {
+                Image.Animated(codec = codec)
+            }
+
+            EncodedImageFormat.BMP,
+            EncodedImageFormat.ICO,
+            EncodedImageFormat.JPEG,
+            EncodedImageFormat.PNG,
+            EncodedImageFormat.WEBP -> {
+                Image.Static(data = this)
+            }
+
+            EncodedImageFormat.WBMP -> null
+            EncodedImageFormat.PKM -> null
+            EncodedImageFormat.KTX -> null
+            EncodedImageFormat.ASTC -> null
+            EncodedImageFormat.DNG -> null
+            EncodedImageFormat.HEIF -> null
+        } ?: return@runCatching
     }
 
-    val codec = Codec.makeFromData(data)
+    val content = decodeToString()
 
-    return if (codec.frameCount == 1) {
-        Image.Static(
-            bitmap = decodeToImageBitmap()
-        )
-    } else {
-        Image.Animated(
-            codec = codec,
-        )
+    if (content.contains(SVG_REGEX)) {
+        return Image.Svg(data = this)
     }
+    if (content.contains(VECTOR_REGEX)) {
+        return Image.Vector(data = this)
+    }
+
+    error("Unsupported format")
 }
 
 @Composable
@@ -274,10 +289,13 @@ fun asyncPainterResource(
 @Composable
 fun Image.resolveAsPainter(): Painter {
 
+    val density = LocalDensity.current
+
     return when (this) {
         is Image.Animated -> BitmapPainter(animatedImageBitmap())
-        is Image.Static -> BitmapPainter(bitmap)
-        is Image.Vector -> SvgPainter(svgDom, LocalDensity.current)
+        is Image.Static -> BitmapPainter(data.decodeToImageBitmap())
+        is Image.Svg -> data.decodeToSvgPainter(density)
+        is Image.Vector -> rememberVectorPainter(data.decodeToImageVector(density))
     }
 }
 
@@ -291,48 +309,4 @@ fun Image.Animated.animatedImageBitmap(): ImageBitmap {
     return animationFlow.collectAsState(
         initial = ImageBlank
     ).value
-}
-
-/**
- * Copied from Compose Resources
- */
-class SvgPainter(
-    private val dom: SVGDOM,
-    private val density: Density
-) : Painter() {
-    private val svg = dom.root
-
-    private val defaultSizePx: Size = run {
-        val width = svg?.width?.withUnit(SVGLengthUnit.PX)?.value ?: 0f
-        val height = svg?.height?.withUnit(SVGLengthUnit.PX)?.value ?: 0f
-        if (width == 0f && height == 0f) {
-            Size.Unspecified
-        } else {
-            Size(width, height)
-        }
-    }
-
-    init {
-        if (svg?.viewBox == null && defaultSizePx.isSpecified) {
-            svg?.viewBox = Rect.makeXYWH(0f, 0f, defaultSizePx.width, defaultSizePx.height)
-        }
-    }
-
-    override val intrinsicSize: Size
-        get() {
-            return if (defaultSizePx.isSpecified) {
-                defaultSizePx * density.density
-            } else {
-                Size.Unspecified
-            }
-        }
-
-    override fun DrawScope.onDraw() {
-        drawIntoCanvas { canvas ->
-            svg?.width = SVGLength(size.width, SVGLengthUnit.PX)
-            svg?.height = SVGLength(size.height, SVGLengthUnit.PX)
-            svg?.preserveAspectRatio = SVGPreserveAspectRatio(SVGPreserveAspectRatioAlign.NONE)
-            dom.render(canvas.nativeCanvas)
-        }
-    }
 }
