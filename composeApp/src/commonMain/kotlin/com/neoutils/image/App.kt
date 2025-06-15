@@ -195,7 +195,7 @@ class ImageFromUrl(
     }
 }
 
-class ImageFromResources(
+class ImageFromResource(
     val environment: ResourceEnvironment
 ) {
     suspend fun get(res: DrawableResource): Resource.Result<Image> {
@@ -244,42 +244,40 @@ fun asyncPainterResource(
     imageFromUrl: ImageFromUrl = remember { ImageFromUrl() }
 ): Resource<Painter> {
 
-    val imageFlow = remember(imageFromUrl, url) { imageFromUrl.fetch(url) }
+    val imageResourceFlow = remember(imageFromUrl, url) { imageFromUrl.fetch(url) }
 
-    val resource by imageFlow.collectAsState(initial = Resource.Loading())
+    val imageResource by imageResourceFlow.collectAsState(initial = Resource.Loading())
 
-    return resource.mapSuccess {
-        when (it) {
-            is Image.Animated -> BitmapPainter(it.animatedImageBitmap())
-            is Image.Static -> BitmapPainter(it.bitmap)
-            is Image.Vector -> SvgPainter(it.svgDom, LocalDensity.current)
-        }
-    }
+    return imageResource.mapSuccess { it.resolveAsPainter() }
 }
 
 @Composable
-fun rememberImageFromResources(
+fun rememberImageFromResource(
     environment: ResourceEnvironment = rememberResourceEnvironment()
-) = remember(environment) { ImageFromResources(environment) }
+) = remember(environment) { ImageFromResource(environment) }
 
 @Composable
 fun asyncPainterResource(
     res: DrawableResource,
-    imageFromResources: ImageFromResources = rememberImageFromResources()
+    imageFromResource: ImageFromResource = rememberImageFromResource()
 ): Resource<Painter> {
 
     var imageResource by remember { mutableStateOf<Resource<Image>>(Resource.Loading()) }
 
-    LaunchedEffect(imageFromResources, res) {
-        imageResource = imageFromResources.get(res)
+    LaunchedEffect(imageFromResource, res) {
+        imageResource = imageFromResource.get(res)
     }
 
-    return imageResource.mapSuccess {
-        when (it) {
-            is Image.Animated -> BitmapPainter(it.animatedImageBitmap())
-            is Image.Static -> BitmapPainter(it.bitmap)
-            is Image.Vector -> SvgPainter(it.svgDom, LocalDensity.current)
-        }
+    return imageResource.mapSuccess { it.resolveAsPainter() }
+}
+
+@Composable
+fun Image.resolveAsPainter(): Painter {
+
+    return when (this) {
+        is Image.Animated -> BitmapPainter(animatedImageBitmap())
+        is Image.Static -> BitmapPainter(bitmap)
+        is Image.Vector -> SvgPainter(svgDom, LocalDensity.current)
     }
 }
 
@@ -288,7 +286,7 @@ private val ImageBlank = ImageBitmap(1, 1)
 @Composable
 fun Image.Animated.animatedImageBitmap(): ImageBitmap {
 
-    val animationFlow = remember { animateImageBitmap() }
+    val animationFlow = remember(codec) { animateImageBitmap() }
 
     return animationFlow.collectAsState(
         initial = ImageBlank
