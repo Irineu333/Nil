@@ -11,10 +11,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalDensity
 import com.neoutils.image.resources.Res
 import com.neoutils.image.resources.atom
-import image.fetcher.resources.compose.asyncPainterResource
 import image.core.util.Resource
 import image.decoder.bitmap.impl.BitmapDecoder
 import image.decoder.svg.impl.SvgDecoder
+import image.fetcher.resources.compose.asyncPainterResource
 
 @Composable
 fun App() = Box(
@@ -23,7 +23,10 @@ fun App() = Box(
 ) {
     val resource = asyncPainterResource(
         res = Res.drawable.atom,
-        decoders = listOf(BitmapDecoder(), SvgDecoder(LocalDensity.current))
+        decoders = listOf(
+            BitmapDecoder(),
+            SvgDecoder(LocalDensity.current),
+        )
     )
 
     when (resource) {
