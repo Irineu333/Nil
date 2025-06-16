@@ -1,6 +1,7 @@
 package core.fetcher
 
 import core.extension.toRawImage
+import core.model.Request
 import core.util.RawImage
 import core.util.Resource
 import io.ktor.client.*
@@ -12,12 +13,19 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.withContext
 
+
 class NetworkFetcher(
     private val client: HttpClient = HttpClient()
-) : Fetcher<String> {
-    override suspend fun get(input: String): Resource.Result<RawImage> {
+) : Fetcher<Request> {
+    override suspend fun get(input: Request): Resource.Result<RawImage> {
         return runCatching {
-            client.get(input)
+            client.request(input.url) {
+                method = input.method
+
+                input.headers.forEach {
+                    headers[it.first] = it.second
+                }
+            }
         }.map {
             withContext(Dispatchers.Default) {
                 it.bodyAsBytes().toRawImage()
@@ -29,9 +37,15 @@ class NetworkFetcher(
         }
     }
 
-    override fun fetch(input: String) = channelFlow {
+    override fun fetch(input: Request) = channelFlow {
         runCatching {
-            client.get(input) {
+            client.request(input.url) {
+                method = input.method
+
+                input.headers.forEach {
+                    headers[it.first] = it.second
+                }
+
                 onProgress { progress ->
                     withContext(Dispatchers.Main) {
                         send(Resource.Loading(progress))

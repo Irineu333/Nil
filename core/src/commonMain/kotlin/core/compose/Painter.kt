@@ -10,6 +10,7 @@ import core.extension.mapSuccess
 import core.extension.onSuccess
 import core.fetcher.NetworkFetcher
 import core.fetcher.ResourceFetcher
+import core.model.Request
 import core.util.Resource
 import org.jetbrains.compose.resources.DrawableResource
 
@@ -30,7 +31,8 @@ fun asyncPainterResource(
 fun asyncPainterResource(
     url: String,
     memoryCache: MemoryCache = remember(url) { MemoryCache(url) },
-    networkFetcher: NetworkFetcher = remember { NetworkFetcher() }
+    networkFetcher: NetworkFetcher = remember { NetworkFetcher() },
+    config: Request.Builder.() -> Unit = {}
 ): Resource<Painter> {
 
     val cached = remember(memoryCache) { memoryCache.get() }
@@ -39,7 +41,9 @@ fun asyncPainterResource(
         return Resource.Result.Success(cached.resolveAsPainter())
     }
 
-    val rawImageFlow = remember(networkFetcher, url) { networkFetcher.fetch(url) }
+    val request = remember(url, config) { Request.Builder().apply(config).build(url) }
+
+    val rawImageFlow = remember(networkFetcher, request) { networkFetcher.fetch(request) }
 
     val rawImage by rawImageFlow.collectAsState(initial = Resource.Loading())
 
