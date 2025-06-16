@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import core.cache.MemoryCache
 import core.compose.asyncPainterResource
 import core.util.Resource
 
@@ -17,7 +18,10 @@ fun App() = Box(
     modifier = Modifier.fillMaxSize()
 ) {
 
-    val resource = asyncPainterResource(url = "https://cataas.com/cat")
+    val resource = asyncPainterResource(
+        url = "https://cataas.com/cat",
+        memoryCache = MemoryCache.Disabled
+    )
 
     when (resource) {
         is Resource.Result.Success<Painter> -> {

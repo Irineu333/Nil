@@ -30,12 +30,12 @@ fun asyncPainterResource(
 @Composable
 fun asyncPainterResource(
     url: String,
-    memoryCache: MemoryCache = remember(url) { MemoryCache(url) },
+    memoryCache: MemoryCache? = remember(url) { MemoryCache(url) },
     networkFetcher: NetworkFetcher = remember { NetworkFetcher() },
     config: Request.Builder.() -> Unit = {}
 ): Resource<Painter> {
 
-    val cached = remember(memoryCache) { memoryCache.get() }
+    val cached = remember(memoryCache) { memoryCache?.get() }
 
     if (cached != null) {
         return Resource.Result.Success(cached.resolveAsPainter())
@@ -48,7 +48,7 @@ fun asyncPainterResource(
     val rawImage by rawImageFlow.collectAsState(initial = Resource.Loading())
 
     return rawImage
-        .onSuccess { memoryCache.set(it) }
+        .onSuccess { memoryCache?.set(it) }
         .mapSuccess { it.resolveAsPainter() }
 }
 

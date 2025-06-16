@@ -4,15 +4,16 @@ import core.util.RawImage
 
 private val cache = mutableMapOf<String, RawImage>()
 
-class MemoryCache(
-    val key: String = "",
-    val enabled: Boolean = true
+data class MemoryCache(
+    val key: String,
 ) {
-    fun get() = cache[key].takeIf { enabled }
+    fun get() = cache[key]
 
     fun set(image: RawImage) {
-        if (enabled) {
-            cache[key] = image
-        }
+        cache[key] = image
+    }
+
+    companion object {
+        val Disabled: MemoryCache? = null
     }
 }
