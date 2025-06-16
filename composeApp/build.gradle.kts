@@ -16,7 +16,11 @@ kotlin {
         commonMain.dependencies {
 
             // modules
-            implementation(project(":core"))
+            implementation(project(":image:core"))
+            implementation(project(":image:fetcher:network"))
+            implementation(project(":image:decoder:bitmap"))
+            implementation(project(":image:decoder:svg"))
+            implementation(project(":image:decoder:gif"))
 
             // compose
             implementation(compose.runtime)
