@@ -1,8 +1,8 @@
-package image.fetcher
+package image.fetcher.network.impl
 
 import image.core.fetcher.Fetcher
 import image.core.util.Resource
-import image.model.Request
+import image.fetcher.network.model.Request
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*

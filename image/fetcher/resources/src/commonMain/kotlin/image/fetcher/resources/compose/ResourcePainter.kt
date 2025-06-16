@@ -1,4 +1,4 @@
-package image.compose
+package image.fetcher.resources.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -10,7 +10,7 @@ import image.core.decoder.Decoder
 import image.core.decoder.LocalDecoders
 import image.core.extension.mapSuccess
 import image.core.util.Resource
-import image.fetcher.ResourcesFetcher
+import image.fetcher.resources.impl.ResourcesFetcher
 import org.jetbrains.compose.resources.DrawableResource
 
 @Composable

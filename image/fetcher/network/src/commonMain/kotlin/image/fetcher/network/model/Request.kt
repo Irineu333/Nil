@@ -1,4 +1,4 @@
-package image.model
+package image.fetcher.network.model
 
 import io.ktor.http.HttpMethod
 

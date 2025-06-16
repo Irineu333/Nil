@@ -1,8 +1,8 @@
-package image.compose
+package image.fetcher.resources.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import image.fetcher.ResourcesFetcher
+import image.fetcher.resources.impl.ResourcesFetcher
 import org.jetbrains.compose.resources.ResourceEnvironment
 import org.jetbrains.compose.resources.rememberResourceEnvironment
 

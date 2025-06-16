@@ -9,11 +9,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalDensity
-import image.compose.asyncPainterResource
+import com.neoutils.image.resources.Res
+import com.neoutils.image.resources.atom
+import image.fetcher.resources.compose.asyncPainterResource
 import image.core.util.Resource
-import image.decoder.BitmapDecoder
-import image.decoder.SvgDecoder
-import image.model.MemoryCache
+import image.decoder.bitmap.impl.BitmapDecoder
+import image.decoder.svg.impl.SvgDecoder
 
 @Composable
 fun App() = Box(
@@ -21,8 +22,7 @@ fun App() = Box(
     modifier = Modifier.fillMaxSize()
 ) {
     val resource = asyncPainterResource(
-        url = "https://cataas.com/cat",
-        memoryCache = MemoryCache.Disabled,
+        res = Res.drawable.atom,
         decoders = listOf(BitmapDecoder(), SvgDecoder(LocalDensity.current))
     )
 

@@ -1,4 +1,4 @@
-package image.compose
+package image.fetcher.network.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -11,9 +11,9 @@ import image.core.decoder.LocalDecoders
 import image.core.extension.mapSuccess
 import image.core.extension.onSuccess
 import image.core.util.Resource
-import image.fetcher.NetworkFetcher
-import image.model.MemoryCache
-import image.model.Request
+import image.fetcher.network.impl.NetworkFetcher
+import image.fetcher.network.model.MemoryCache
+import image.fetcher.network.model.Request
 
 @Composable
 fun asyncPainterResource(

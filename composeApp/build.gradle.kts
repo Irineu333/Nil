@@ -18,6 +18,7 @@ kotlin {
             // modules
             implementation(project(":image:core"))
             implementation(project(":image:fetcher:network"))
+            implementation(project(":image:fetcher:resources"))
             implementation(project(":image:decoder:bitmap"))
             implementation(project(":image:decoder:svg"))
             implementation(project(":image:decoder:gif"))

@@ -1,10 +1,10 @@
-package image.decoder
+package image.decoder.bitmap.impl
 
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import image.core.decoder.Decoder
 import image.core.decoder.Support
-import image.format.ImageFormat
+import image.decoder.bitmap.format.ImageFormat
 import org.jetbrains.compose.resources.decodeToImageBitmap
 
 class BitmapDecoder : Decoder {

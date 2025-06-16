@@ -1,4 +1,4 @@
-package image.fetcher
+package image.fetcher.resources.impl
 
 import image.core.fetcher.Fetcher
 import image.core.util.Resource

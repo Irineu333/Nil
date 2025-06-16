@@ -1,18 +1,19 @@
-package image.decoder
+package image.decoder.svg.impl
 
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Density
 import image.core.decoder.Decoder
 import image.core.decoder.Support
+import org.jetbrains.compose.resources.decodeToSvgPainter
 
-class XmlVectorDecoder(
+class SvgDecoder(
     private val density: Density
 ) : Decoder {
     override fun decode(input: ByteArray): Painter {
-        TODO("Implement")
+        return input.decodeToSvgPainter(density)
     }
 
     override fun support(input: ByteArray): Support {
-        return Support.NONE
+        return Support.TOTAL
     }
 }
