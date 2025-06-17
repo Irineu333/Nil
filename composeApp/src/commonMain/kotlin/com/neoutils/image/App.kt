@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalDensity
 import com.neoutils.image.resources.Res
-import com.neoutils.image.resources.crazy_cat
+import com.neoutils.image.resources.cute_cat
 import image.core.util.Resource
 import image.decoder.bitmap.impl.BitmapDecoder
 import image.decoder.gif.impl.GifDecoder
@@ -26,7 +26,7 @@ fun App() = Box(
     val density = LocalDensity.current
 
     val resource = asyncPainterResource(
-        res = Res.drawable.crazy_cat,
+        res = Res.drawable.cute_cat,
         decoders = listOf(
             BitmapDecoder(),
             GifDecoder(),

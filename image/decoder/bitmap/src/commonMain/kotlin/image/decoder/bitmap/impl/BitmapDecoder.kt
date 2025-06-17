@@ -22,6 +22,7 @@ class BitmapDecoder : Decoder {
         return when (detectFormat(input)) {
             ImageFormat.PNG -> Support.TOTAL
             ImageFormat.JPEG -> Support.TOTAL
+            ImageFormat.WEBP -> Support.TOTAL
             ImageFormat.GIF -> Support.PARTIAL
             null -> Support.NONE
         }

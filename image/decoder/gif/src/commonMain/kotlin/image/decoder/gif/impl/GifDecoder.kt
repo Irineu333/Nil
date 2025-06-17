@@ -9,6 +9,7 @@ import image.decoder.gif.util.signature
 import org.jetbrains.skia.Codec
 import org.jetbrains.skia.Data
 
+// https://en.wikipedia.org/wiki/List_of_file_signatures
 private val GIF87A_SPEC = signature(0x47, 0x49, 0x46, 0x38, 0x37, 0x61)
 private val GIF89A_SPEC = signature(0x47, 0x49, 0x46, 0x38, 0x39, 0x61)
 
