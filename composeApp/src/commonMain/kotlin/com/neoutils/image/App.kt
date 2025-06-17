@@ -3,14 +3,14 @@ package com.neoutils.image
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalDensity
 import com.neoutils.image.resources.Res
-import com.neoutils.image.resources.cute_cat
+import com.neoutils.image.resources.crazy_cat
 import image.core.util.Resource
 import image.decoder.bitmap.impl.BitmapDecoder
 import image.decoder.gif.impl.GifDecoder
@@ -23,15 +23,13 @@ fun App() = Box(
     contentAlignment = Alignment.Center,
     modifier = Modifier.fillMaxSize()
 ) {
-    val density = LocalDensity.current
-
     val resource = asyncPainterResource(
-        res = Res.drawable.cute_cat,
+        res = Res.drawable.crazy_cat,
         decoders = listOf(
             BitmapDecoder(),
-            GifDecoder(),
-            XmlDecoder(density),
-            SvgDecoder(density)
+            GifDecoder(), // Don't support Android
+            SvgDecoder(LocalDensity.current), // Don't support Android
+            XmlDecoder(LocalDensity.current)
         )
     )
 
@@ -46,7 +44,7 @@ fun App() = Box(
         is Resource.Loading -> {
             when (val progress = resource.progress) {
                 is Float -> {
-                    CircularProgressIndicator(progress = progress)
+                    CircularProgressIndicator(progress = { progress })
                 }
 
                 null -> {
