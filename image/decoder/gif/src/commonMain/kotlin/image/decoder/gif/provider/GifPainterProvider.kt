@@ -30,7 +30,6 @@ internal class GifPainterProvider(
 
         LaunchedEffect(Unit) {
 
-
             while (isActive) {
                 repeat(times = codec.frameCount - 1) { index ->
 

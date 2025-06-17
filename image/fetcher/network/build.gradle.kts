@@ -20,8 +20,7 @@ kotlin {
 
             // compose
             implementation(compose.runtime)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
+            implementation(libs.compose.ui.graphics)
 
             // ktor
             implementation(libs.ktor.client.core)

@@ -1,5 +1,6 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
+import org.jetbrains.compose.ComposeBuildConfig
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
@@ -17,7 +18,7 @@ kotlin {
 
             // compose
             implementation(compose.runtime)
-            implementation(compose.ui)
+            implementation(libs.compose.ui.graphics)
             implementation(compose.components.resources)
 
             // ktor
