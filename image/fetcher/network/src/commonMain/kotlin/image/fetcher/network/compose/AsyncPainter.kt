@@ -5,9 +5,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.painter.Painter
+import image.core.compose.LocalDecoders
 import image.core.compose.resolveAsPainter
 import image.core.decoder.Decoder
-import image.core.decoder.LocalDecoders
 import image.core.extension.mapSuccess
 import image.core.extension.onSuccess
 import image.core.util.Resource

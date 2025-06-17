@@ -1,14 +1,10 @@
 package image.decoder.bitmap.impl
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.graphics.painter.Painter
 import image.core.decoder.Decoder
-import image.core.decoder.PainterProvider
-import image.core.decoder.Support
+import image.core.provider.PainterProvider
+import image.core.util.Support
 import image.decoder.bitmap.format.ImageFormat
+import image.decoder.bitmap.provider.BitmapPainterProvider
 import org.jetbrains.compose.resources.decodeToImageBitmap
 
 class BitmapDecoder : Decoder {
@@ -26,21 +22,12 @@ class BitmapDecoder : Decoder {
         return when (detectFormat(input)) {
             ImageFormat.PNG -> Support.TOTAL
             ImageFormat.JPEG -> Support.TOTAL
-            ImageFormat.GIF87A, ImageFormat.GIF89A -> Support.PARTIAL
+            ImageFormat.GIF -> Support.PARTIAL
             null -> Support.NONE
         }
     }
 
     private fun detectFormat(bytes: ByteArray): ImageFormat? {
         return ImageFormat.entries.find { it.matches(bytes) }
-    }
-}
-
-class BitmapPainterProvider(
-    private val imageBitmap: ImageBitmap
-): PainterProvider {
-    @Composable
-    override fun provide(): Painter {
-        return remember(imageBitmap) { BitmapPainter(imageBitmap)}
     }
 }

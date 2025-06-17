@@ -1,11 +1,10 @@
 package image.decoder.svg.impl
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Density
 import image.core.decoder.Decoder
-import image.core.decoder.PainterProvider
-import image.core.decoder.Support
+import image.core.provider.PainterProvider
+import image.core.util.Support
 import org.jetbrains.compose.resources.decodeToSvgPainter
 
 private val SVG_REGEX = Regex(pattern = "<svg[\\s\\S]+/>[\\s\\S]+</svg>")
@@ -17,7 +16,12 @@ class SvgDecoder(
 
         check(support(input) != Support.NONE) { "Doesn't support" }
 
-        return SvgPainterProvider(input.decodeToSvgPainter(density))
+        val imageVector = input.decodeToSvgPainter(density)
+
+        return object : PainterProvider {
+            @Composable
+            override fun provide() = imageVector
+        }
     }
 
     override fun support(input: ByteArray): Support {
@@ -30,11 +34,4 @@ class SvgDecoder(
 
         return Support.NONE
     }
-}
-
-class SvgPainterProvider(
-    private val painter: Painter
-) : PainterProvider {
-    @Composable
-    override fun provide() = painter
 }

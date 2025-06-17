@@ -1,13 +1,10 @@
 package image.decoder.xml.impl
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.Density
 import image.core.decoder.Decoder
-import image.core.decoder.PainterProvider
-import image.core.decoder.Support
+import image.core.provider.PainterProvider
+import image.core.util.Support
+import image.decoder.xml.provider.XmlPainterProvider
 import org.jetbrains.compose.resources.decodeToImageVector
 
 private val VECTOR_REGEX = Regex(pattern = "<vector[\\s\\S]+>[\\s\\S]+</vector>")
@@ -31,14 +28,5 @@ class XmlDecoder(
         }
 
         return Support.NONE
-    }
-}
-
-class XmlPainterProvider(
-    private val imageVector: ImageVector
-) : PainterProvider {
-    @Composable
-    override fun provide(): Painter {
-        return rememberVectorPainter(imageVector)
     }
 }

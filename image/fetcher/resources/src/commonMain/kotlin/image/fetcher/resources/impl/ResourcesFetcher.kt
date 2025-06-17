@@ -11,7 +11,7 @@ import org.jetbrains.compose.resources.ResourceEnvironment
 import org.jetbrains.compose.resources.getDrawableResourceBytes
 
 class ResourcesFetcher(
-    val environment: ResourceEnvironment
+    private val environment: ResourceEnvironment
 ) : Fetcher<DrawableResource> {
 
     override suspend fun get(

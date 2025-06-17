@@ -10,8 +10,7 @@ enum class ImageFormat(
 ) {
     PNG(listOf(PNG_RFC_2083)),
     JPEG(listOf(JPEG_ITU_T81)),
-    GIF87A(listOf(GIF87A_SPEC)),
-    GIF89A(listOf(GIF89A_SPEC));
+    GIF(listOf(GIF87A_SPEC, GIF89A_SPEC));
 
     fun matches(bytes: ByteArray) = signatures.any { bytes.startsWith(it) }
 }
@@ -21,6 +20,4 @@ private fun ByteArray.startsWith(bytes: ByteArray): Boolean {
     return bytes.indices.all { i -> this[i] == bytes[i] }
 }
 
-private fun signature(vararg bytes: Int): ByteArray {
-    return bytes.map { it.toByte() }.toByteArray()
-}
+private fun signature(vararg bytes: Int) = bytes.map { it.toByte() }.toByteArray()

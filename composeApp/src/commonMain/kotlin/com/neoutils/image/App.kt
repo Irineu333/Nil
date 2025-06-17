@@ -12,9 +12,11 @@ import androidx.compose.ui.platform.LocalDensity
 import com.neoutils.image.resources.Res
 import com.neoutils.image.resources.atom
 import com.neoutils.image.resources.atom_vector
+import com.neoutils.image.resources.crazy_cat
 import image.fetcher.resources.compose.asyncPainterResource
 import image.core.util.Resource
 import image.decoder.bitmap.impl.BitmapDecoder
+import image.decoder.gif.impl.GifDecoder
 import image.decoder.svg.impl.SvgDecoder
 import image.decoder.xml.impl.XmlDecoder
 
@@ -24,8 +26,8 @@ fun App() = Box(
     modifier = Modifier.fillMaxSize()
 ) {
     val resource = asyncPainterResource(
-        res = Res.drawable.atom_vector,
-        decoders = listOf(BitmapDecoder(), XmlDecoder(LocalDensity.current))
+        res = Res.drawable.crazy_cat,
+        decoders = listOf(BitmapDecoder(), GifDecoder())
     )
 
     when (resource) {
