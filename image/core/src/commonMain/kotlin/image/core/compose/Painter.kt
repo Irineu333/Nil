@@ -4,7 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.painter.Painter
 import image.core.decoder.Decoder
-import image.core.util.Support
+import image.core.decoder.LocalDecoders
+import image.core.decoder.rememberTargetDecoder
 
 @Composable
 fun resolveAsPainter(
@@ -12,13 +13,7 @@ fun resolveAsPainter(
     decoders: List<Decoder> = LocalDecoders.current
 ): Painter {
 
-    val decoders = remember(decoders, input) { decoders.filter { it.support(input)  != Support.NONE } }
-
-    val decoder = remember(input, decoders) { decoders.maxByOrNull { it.support(input) } }
-
-    checkNotNull(decoder) { "No supported decoders found" }
-
-    decoder.Prepare()
+    val decoder = rememberTargetDecoder(input, decoders).apply { Prepare() }
 
     return remember(decoder) { decoder.decode(input) }.provide()
 }

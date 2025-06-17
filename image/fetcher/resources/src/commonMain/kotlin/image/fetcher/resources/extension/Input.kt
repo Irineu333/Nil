@@ -1,7 +1,14 @@
 package image.fetcher.resources.extension
 
+import androidx.compose.runtime.Composable
 import image.core.util.Input
 import image.fetcher.resources.model.InputResource
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.ResourceEnvironment
+import org.jetbrains.compose.resources.rememberResourceEnvironment
 
-fun Input.Companion.resource(res: DrawableResource) = InputResource(res)
+@Composable
+fun Input.Companion.resource(
+    res: DrawableResource,
+    environment: ResourceEnvironment = rememberResourceEnvironment()
+) = InputResource(res, environment)

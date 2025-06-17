@@ -8,16 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import com.neoutils.image.resources.Res
+import com.neoutils.image.resources.crazy_cat
 import image.core.compose.asyncPainterResource
 import image.core.util.Input
 import image.core.util.Resource
-import image.decoder.bitmap.extension.bitmap
 import image.decoder.gif.extension.gif
-import image.decoder.svg.extension.svg
-import image.decoder.xml.extension.xml
-import image.fetcher.network.extension.network
-import image.fetcher.network.extension.request
-import image.fetcher.resources.extension.resources
+import image.fetcher.resources.extension.resource
 
 @Composable
 fun App() = Box(
@@ -25,16 +22,9 @@ fun App() = Box(
     modifier = Modifier.fillMaxSize()
 ) {
     val resource = asyncPainterResource(
-        input = Input.request("https://cataas.com/cat"),
-        fetchers = {
-            resources()
-            network()
-        },
-        decoders = {
-            bitmap()
-            gif()
-            xml()
-            svg()
+        input = Input.resource(Res.drawable.crazy_cat),
+        settings = {
+            decoders { gif() }
         }
     )
 

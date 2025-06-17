@@ -6,32 +6,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.painter.Painter
 import image.core.extension.mapSuccess
-import image.core.fetcher.FetchersScope
+import image.core.fetcher.rememberTargetFetcher
+import image.core.scope.SettingsScope
+import image.core.scope.rememberSettings
 import image.core.util.Input
 import image.core.util.Resource
 
 @Composable
 fun asyncPainterResource(
     input: Input,
-    decoders: DecodersScope.() -> Unit = {},
-    fetchers: FetchersScope.() -> Unit = {}
+    settings: SettingsScope.() -> Unit = {}
 ): Resource<Painter> {
 
-    val decodersScope = DecodersScope.fromLocal()
-    val fetchersScope = FetchersScope.fromLocal()
+    val settings = rememberSettings(settings)
 
-    val decoders = remember(decoders, decodersScope) { decodersScope.apply(decoders).build() }
-    val fetchers = remember(fetchers, fetchersScope) { fetchersScope.apply(fetchers).build() }
-
-    val fetcher = remember(fetchers, input) { fetchers.find { it.type == input::class } }
-
-    checkNotNull(fetcher) { "No supported fetcher found" }
-
-    fetcher.Prepare()
+    val fetcher = rememberTargetFetcher(input::class, settings.fetchers)
 
     val flow = remember(fetcher, input) { fetcher.fetch(input) }
 
     val resource by flow.collectAsState(initial = Resource.Loading())
 
-    return resource.mapSuccess { bytes -> resolveAsPainter(bytes, decoders) }
+    return resource.mapSuccess { bytes -> resolveAsPainter(bytes, settings.decoders) }
 }

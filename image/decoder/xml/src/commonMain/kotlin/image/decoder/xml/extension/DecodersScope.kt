@@ -1,6 +1,6 @@
 package image.decoder.xml.extension
 
-import image.core.compose.DecodersScope
+import image.core.scope.DecodersScope
 import image.decoder.xml.impl.XmlDecoder
 
 fun DecodersScope.xml() {
