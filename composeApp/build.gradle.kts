@@ -22,6 +22,7 @@ kotlin {
             implementation(project(":image:decoder:bitmap"))
             implementation(project(":image:decoder:svg"))
             implementation(project(":image:decoder:gif"))
+            implementation(project(":image:decoder:xml"))
 
             // compose
             implementation(compose.runtime)

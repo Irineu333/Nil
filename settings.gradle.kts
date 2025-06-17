@@ -25,6 +25,7 @@ include(":composeApp")
 
 include(":image:core")
 include(":image:decoder:svg")
+include(":image:decoder:xml")
 include(":image:decoder:gif")
 include(":image:decoder:bitmap")
 include(":image:fetcher:network")
