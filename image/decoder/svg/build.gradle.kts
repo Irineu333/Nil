@@ -28,7 +28,7 @@ kotlin {
 
             // compose
             implementation(compose.runtime)
-            implementation(libs.compose.ui.graphics)
+            implementation(compose.ui)
             implementation(compose.components.resources)
         }
     }

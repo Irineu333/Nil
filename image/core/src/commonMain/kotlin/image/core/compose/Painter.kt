@@ -12,13 +12,13 @@ fun resolveAsPainter(
     decoders: List<Decoder> = LocalDecoders.current
 ): Painter {
 
-    val decoder = remember(input, decoders) {
-        decoders
-            .filter { it.support(input)  != Support.NONE }
-            .maxByOrNull { it.support(input) }
-    }
+    val decoders = remember(decoders, input) { decoders.filter { it.support(input)  != Support.NONE } }
+
+    val decoder = remember(input, decoders) { decoders.maxByOrNull { it.support(input) } }
 
     checkNotNull(decoder) { "No supported decoders found" }
+
+    decoder.Prepare()
 
     return remember(decoder) { decoder.decode(input) }.provide()
 }

@@ -8,15 +8,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalDensity
-import com.neoutils.image.resources.Res
-import com.neoutils.image.resources.crazy_cat
+import image.core.compose.asyncPainterResource
+import image.core.util.Input
 import image.core.util.Resource
-import image.decoder.bitmap.impl.BitmapDecoder
-import image.decoder.gif.impl.GifDecoder
-import image.decoder.svg.impl.SvgDecoder
-import image.decoder.xml.impl.XmlDecoder
-import image.fetcher.resources.compose.asyncPainterResource
+import image.decoder.bitmap.extension.bitmap
+import image.decoder.gif.extension.gif
+import image.decoder.svg.extension.svg
+import image.decoder.xml.extension.xml
+import image.fetcher.network.extension.network
+import image.fetcher.network.extension.request
+import image.fetcher.resources.extension.resources
 
 @Composable
 fun App() = Box(
@@ -24,13 +25,17 @@ fun App() = Box(
     modifier = Modifier.fillMaxSize()
 ) {
     val resource = asyncPainterResource(
-        res = Res.drawable.crazy_cat,
-        decoders = listOf(
-            BitmapDecoder(),
-            GifDecoder(), // Don't support Android
-            SvgDecoder(LocalDensity.current), // Don't support Android
-            XmlDecoder(LocalDensity.current)
-        )
+        input = Input.request("https://cataas.com/cat"),
+        fetchers = {
+            resources()
+            network()
+        },
+        decoders = {
+            bitmap()
+            gif()
+            xml()
+            svg()
+        }
     )
 
     when (resource) {

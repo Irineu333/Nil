@@ -1,9 +1,17 @@
 package image.core.fetcher
 
+import androidx.compose.runtime.Composable
+import image.core.util.Input
 import image.core.util.Resource
 import kotlinx.coroutines.flow.Flow
+import kotlin.reflect.KClass
 
-interface Fetcher<T> {
-    suspend fun get(input: T): Resource.Result<ByteArray>
-    fun fetch(input: T): Flow<Resource<ByteArray>>
+abstract class Fetcher<out T : Input>(val type: KClass<@UnsafeVariance T>) {
+
+    @Composable
+    open fun Prepare() = Unit
+
+    abstract suspend fun get(input: @UnsafeVariance T): Resource.Result<ByteArray>
+
+    abstract fun fetch(input: @UnsafeVariance T): Flow<Resource<ByteArray>>
 }

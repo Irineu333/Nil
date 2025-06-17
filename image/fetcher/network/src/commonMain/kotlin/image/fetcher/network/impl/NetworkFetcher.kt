@@ -2,7 +2,7 @@ package image.fetcher.network.impl
 
 import image.core.fetcher.Fetcher
 import image.core.util.Resource
-import image.fetcher.network.model.Request
+import image.fetcher.network.model.InputRequest
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
@@ -14,14 +14,15 @@ import kotlinx.coroutines.withContext
 
 class NetworkFetcher(
     private val client: HttpClient = HttpClient()
-) : Fetcher<Request> {
-    override suspend fun get(input: Request): Resource.Result<ByteArray> {
+) : Fetcher<InputRequest>(InputRequest::class) {
+
+    override suspend fun get(input: InputRequest): Resource.Result<ByteArray> {
         return runCatching {
             client.request(input.url) {
                 method = input.method
 
                 input.headers.forEach {
-                    headers[it.first] = it.second
+                    headers[it.key] = it.value
                 }
             }
         }.map { response ->
@@ -35,13 +36,13 @@ class NetworkFetcher(
         }
     }
 
-    override fun fetch(input: Request) = channelFlow {
+    override fun fetch(input: InputRequest) = channelFlow {
         runCatching {
             client.request(input.url) {
                 method = input.method
 
                 input.headers.forEach {
-                    headers[it.first] = it.second
+                    headers[it.key] = it.value
                 }
 
                 onProgress { progress ->

@@ -1,24 +1,31 @@
 package image.fetcher.resources.impl
 
+import androidx.compose.runtime.Composable
 import image.core.fetcher.Fetcher
 import image.core.util.Resource
+import image.fetcher.resources.model.InputResource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.withContext
-import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ResourceEnvironment
 import org.jetbrains.compose.resources.getDrawableResourceBytes
+import org.jetbrains.compose.resources.rememberResourceEnvironment
 
-class ResourcesFetcher(
-    private val environment: ResourceEnvironment
-) : Fetcher<DrawableResource> {
+class ResourcesFetcher() : Fetcher<InputResource>(InputResource::class) {
+
+    private lateinit var environment: ResourceEnvironment
+
+    @Composable
+    override fun Prepare() {
+        environment = rememberResourceEnvironment()
+    }
 
     override suspend fun get(
-        input: DrawableResource
+        input: InputResource
     ) = runCatching {
         withContext(Dispatchers.IO) {
-            getDrawableResourceBytes(environment, input)
+            getDrawableResourceBytes(environment, input.res)
         }
     }.map { bytes ->
         Resource.Result.Success(bytes)
@@ -26,10 +33,10 @@ class ResourcesFetcher(
         Resource.Result.Failure(it)
     }
 
-    override fun fetch(input: DrawableResource) = callbackFlow {
+    override fun fetch(input: InputResource) = callbackFlow {
         runCatching {
             withContext(Dispatchers.IO) {
-                getDrawableResourceBytes(environment, input)
+                getDrawableResourceBytes(environment, input.res)
             }
         }.onSuccess { bytes ->
             withContext(Dispatchers.Main) {
