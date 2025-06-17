@@ -23,10 +23,10 @@ plugins {
 
 include(":composeApp")
 
-include(":image:core")
-include(":image:decoder:svg")
-include(":image:decoder:xml")
-include(":image:decoder:gif")
-include(":image:decoder:bitmap")
-include(":image:fetcher:network")
-include(":image:fetcher:resources")
+include(":nil-core")
+include(":nil-decoder:svg")
+include(":nil-decoder:xml")
+include(":nil-decoder:gif")
+include(":nil-decoder:bitmap")
+include(":nil-fetcher:network")
+include(":nil-fetcher:resources")

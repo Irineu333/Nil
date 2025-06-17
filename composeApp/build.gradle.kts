@@ -25,13 +25,13 @@ kotlin {
         commonMain.dependencies {
 
             // modules
-            implementation(project(":image:core"))
-            implementation(project(":image:fetcher:resources"))
-            implementation(project(":image:fetcher:network"))
-            implementation(project(":image:decoder:bitmap"))
-            implementation(project(":image:decoder:gif"))
-            implementation(project(":image:decoder:svg"))
-            implementation(project(":image:decoder:xml"))
+            implementation(project(":nil-core"))
+            implementation(project(":nil-fetcher:resources"))
+            implementation(project(":nil-fetcher:network"))
+            implementation(project(":nil-decoder:bitmap"))
+            implementation(project(":nil-decoder:gif"))
+            implementation(project(":nil-decoder:svg"))
+            implementation(project(":nil-decoder:xml"))
 
             // compose
             implementation(compose.runtime)
@@ -72,16 +72,16 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "com.neoutils.image.MainKt"
+        mainClass = "com.neoutils.nil.example.MainKt"
     }
 }
 
 android {
-    namespace = "com.neoutils.image"
+    namespace = "com.neoutils.nil.example"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.neoutils.image"
+        applicationId = "com.neoutils.nil.example"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -108,6 +108,6 @@ android {
 
 compose.resources {
     publicResClass = true
-    packageOfResClass = "com.neoutils.image.resources"
+    packageOfResClass = "com.neoutils.nil.example.resources"
     generateResClass = always
 }
