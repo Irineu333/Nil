@@ -17,8 +17,13 @@ fun ProvideDecoders(
 )
 
 interface Decoder {
-    fun decode(input: ByteArray): Painter
+    fun decode(input: ByteArray): PainterProvider
     fun support(input: ByteArray): Support
+}
+
+interface PainterProvider {
+    @Composable
+    fun provide(): Painter
 }
 
 enum class Support {

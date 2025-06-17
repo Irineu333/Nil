@@ -21,5 +21,5 @@ fun resolveAsPainter(
 
     checkNotNull(decoder) { "No supported decoders found" }
 
-    return remember(decoder) { decoder.decode(input) }
+    return remember(decoder) { decoder.decode(input) }.provide()
 }
