@@ -11,29 +11,37 @@ import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.util.Input
 
 class SettingsScope internal constructor(
-    var decoders: MutableList<Decoder>,
-    var fetchers: MutableList<Fetcher<Input>>
+    var decoders: List<Decoder>,
+    var fetchers: List<Fetcher<Input>>
 ) {
     fun decoders(vararg decoders: Decoder) {
-        this.decoders.addAll(decoders.toList())
+        this.decoders += decoders
     }
 
     fun fetchers(vararg fetchers: Fetcher<Input>) {
-        this.fetchers.addAll(fetchers.toList())
+        this.fetchers += fetchers
     }
 
-    fun decoders(block: DecodersScope.() -> Unit) {
-        DecodersScope(decoders).apply(block)
+    fun decoders(block: SettingScope<Decoder>.() -> Unit) {
+        decoders += SettingScope(decoders).apply(block).values
     }
 
-    fun fetchers(block: FetchersScope.() -> Unit) {
-        FetchersScope(fetchers).apply(block)
+    fun fetchers(block: SettingScope<Fetcher<Input>>.() -> Unit) {
+        fetchers += SettingScope(fetchers).apply(block).values
     }
 
     internal fun build() = Settings(
         decoders = decoders.toList(),
         fetchers = fetchers.toList()
     )
+}
+
+class SettingScope<T>(
+    internal var values: List<T>
+) {
+    fun add(value: T) {
+        values += value
+    }
 }
 
 @Composable

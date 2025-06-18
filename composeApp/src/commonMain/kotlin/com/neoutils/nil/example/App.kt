@@ -12,44 +12,45 @@ import com.neoutils.nil.core.compose.asyncPainterResource
 import com.neoutils.nil.core.util.Input
 import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.decoder.gif.extension.gif
-import com.neoutils.nil.example.resources.Res
-import com.neoutils.nil.example.resources.crazy_cat
-import com.neoutils.nil.fetcher.resources.extension.resource
+import com.neoutils.nil.fetcher.network.extension.request
 
 @Composable
-fun App() = Box(
-    contentAlignment = Alignment.Center,
-    modifier = Modifier.fillMaxSize()
-) {
-    val resource = asyncPainterResource(
-        input = Input.resource(Res.drawable.crazy_cat),
-        settings = {
-            decoders { gif() }
-        }
-    )
+fun App() = AppTheme {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        val resource = asyncPainterResource(
+            input = Input.request("https://cataas.com/cat/gif"),
+            settings = {
+                decoders { gif() }
+            }
+        )
 
-    when (resource) {
-        is Resource.Result.Success<Painter> -> {
-            Image(
-                painter = resource.data,
-                contentDescription = null
-            )
-        }
+        when (resource) {
+            is Resource.Result.Success<Painter> -> {
+                Image(
+                    painter = resource.data,
+                    contentDescription = null
+                )
+            }
 
-        is Resource.Loading -> {
-            when (val progress = resource.progress) {
-                is Float -> {
-                    CircularProgressIndicator(progress = { progress })
-                }
+            is Resource.Loading -> {
+                when (val progress = resource.progress) {
+                    is Float -> {
+                        CircularProgressIndicator(progress = { progress })
+                    }
 
-                null -> {
-                    CircularProgressIndicator()
+                    null -> {
+                        CircularProgressIndicator()
+                    }
                 }
             }
-        }
 
-        is Resource.Result.Failure -> {
-            throw resource.throwable
+            is Resource.Result.Failure -> {
+                throw resource.throwable
+            }
         }
     }
+
 }
