@@ -16,6 +16,12 @@ enum class ImageFormat(
     WEBP(listOf(WEBP_RIFF));
 
     fun matches(bytes: ByteArray) = signatures.any { bytes.startsWith(it) }
+
+    companion object {
+        fun detect(bytes: ByteArray): ImageFormat? {
+            return ImageFormat.entries.find { it.matches(bytes) }
+        }
+    }
 }
 
 private fun ByteArray.startsWith(bytes: ByteArray): Boolean {

@@ -33,6 +33,12 @@ kotlin {
             // coroutines
             implementation(libs.kotlinx.coroutines)
         }
+
+        androidMain.dependencies {
+
+            // androidx
+            implementation(libs.androidx.core)
+        }
     }
 
     compilerOptions {

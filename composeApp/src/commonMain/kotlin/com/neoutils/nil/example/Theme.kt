@@ -11,9 +11,6 @@ import com.neoutils.nil.fetcher.resources.impl.ResourcesFetcher
 fun AppTheme(content: @Composable () -> Unit) {
     ProvideSettings(
         settings = rememberSettings {
-            decoders = listOf(
-                BitmapDecoder()
-            )
 
             fetchers = listOf(
                 NetworkFetcher(),

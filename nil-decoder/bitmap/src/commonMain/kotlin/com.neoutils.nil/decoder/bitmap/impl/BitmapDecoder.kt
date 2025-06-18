@@ -19,16 +19,12 @@ class BitmapDecoder : Decoder {
     override fun support(input: ByteArray): Support {
         if (input.isEmpty()) return Support.NONE
 
-        return when (detectFormat(input)) {
+        return when (ImageFormat.detect(input)) {
             ImageFormat.PNG -> Support.TOTAL
             ImageFormat.JPEG -> Support.TOTAL
             ImageFormat.WEBP -> Support.TOTAL
             ImageFormat.GIF -> Support.PARTIAL
             null -> Support.NONE
         }
-    }
-
-    private fun detectFormat(bytes: ByteArray): ImageFormat? {
-        return ImageFormat.entries.find { it.matches(bytes) }
     }
 }
