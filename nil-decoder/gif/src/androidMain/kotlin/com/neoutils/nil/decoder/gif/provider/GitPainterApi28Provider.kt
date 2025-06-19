@@ -31,10 +31,16 @@ internal class GitPainterApi28Provider(
 
         var painter by remember { mutableStateOf(PainterBlank) }
 
-        LaunchedEffect(Unit) {
+        DisposableEffect(Unit) {
 
             drawable.start()
 
+            onDispose {
+                drawable.stop()
+            }
+        }
+
+        LaunchedEffect(Unit) {
             while (drawable.isRunning) {
                 painter = BitmapPainter(drawable.toBitmap().asImageBitmap())
                 delay(DefaultAnimationDuration)

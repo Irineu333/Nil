@@ -27,11 +27,7 @@ internal class GifPainterLegacyProvider(
         movie = Movie.decodeStream(bytes.inputStream())
     )
 
-    private val bitmap = createBitmap(
-        movie.width(),
-        movie.height(),
-        Bitmap.Config.ARGB_8888
-    )
+    private val frameCache = mutableMapOf<Int, ImageBitmap>()
 
     @Composable
     override fun provide(): Painter {
@@ -48,11 +44,20 @@ internal class GifPainterLegacyProvider(
 
                 for (time in times) {
 
-                    movie.setTime(time)
+                    val bitmap = frameCache.getOrPut(time) {
 
-                    movie.draw(Canvas(bitmap), 0f, 0f)
+                        movie.setTime(time)
 
-                    painter = BitmapPainter(bitmap.asImageBitmap())
+                        createBitmap(
+                            movie.width(),
+                            movie.height(),
+                            Bitmap.Config.ARGB_8888
+                        ).also {
+                            movie.draw(Canvas(it), 0f, 0f)
+                        }.asImageBitmap()
+                    }
+
+                    painter = BitmapPainter(bitmap)
 
                     delay(DefaultAnimationDuration)
                 }

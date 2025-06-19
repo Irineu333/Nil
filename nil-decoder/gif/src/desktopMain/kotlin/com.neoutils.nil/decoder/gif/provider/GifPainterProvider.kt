@@ -5,8 +5,8 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asComposeImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
-import com.neoutils.nil.core.provider.PainterProvider
 import com.neoutils.nil.core.extension.takeOrElse
+import com.neoutils.nil.core.provider.PainterProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import org.jetbrains.skia.Bitmap
@@ -21,7 +21,7 @@ internal class GifPainterProvider(
     private val codec: Codec,
 ) : PainterProvider {
 
-    private val bitmap = Bitmap().apply { allocPixels(codec.imageInfo) }
+    private val frameCache = mutableMapOf<Int, ImageBitmap>()
 
     @Composable
     override fun provide(): Painter {
@@ -33,9 +33,15 @@ internal class GifPainterProvider(
             while (isActive) {
                 repeat(times = codec.frameCount - 1) { index ->
 
-                    codec.readPixels(bitmap, index)
+                    val bitmap = frameCache.getOrPut(index) {
+                        Bitmap().apply {
+                            allocPixels(codec.imageInfo)
+                        }.also {
+                            codec.readPixels(it, index)
+                        }.asComposeImageBitmap()
+                    }
 
-                    painter = BitmapPainter(bitmap.asComposeImageBitmap())
+                    painter = BitmapPainter(bitmap)
 
                     val frameDuration = codec.framesInfo[index].duration.milliseconds
 
