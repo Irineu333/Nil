@@ -26,5 +26,5 @@ fun asyncPainterResource(
 
     val resource by flow.collectAsState(initial = Resource.Loading())
 
-    return resource.mapSuccess { bytes -> resolveAsPainter(bytes, settings.decoders) }
+    return resource.mapSuccess { bytes -> decode(bytes, settings.decoders) }
 }

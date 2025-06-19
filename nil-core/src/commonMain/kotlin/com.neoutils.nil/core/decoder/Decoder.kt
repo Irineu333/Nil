@@ -11,9 +11,6 @@ val LocalDecoders = compositionLocalOf<List<Decoder>> { listOf() }
 interface Decoder {
     fun decode(input: ByteArray): PainterProvider
     fun support(input: ByteArray): Support
-
-    @Composable
-    fun Prepare() = Unit
 }
 
 @Composable

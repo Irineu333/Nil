@@ -8,12 +8,12 @@ import com.neoutils.nil.core.decoder.LocalDecoders
 import com.neoutils.nil.core.decoder.rememberTargetDecoder
 
 @Composable
-fun resolveAsPainter(
+fun decode(
     input: ByteArray,
     decoders: List<Decoder> = LocalDecoders.current
 ): Painter {
 
-    val decoder = rememberTargetDecoder(input, decoders).apply { Prepare() }
+    val decoder = rememberTargetDecoder(input, decoders)
 
     return remember(decoder) { decoder.decode(input) }.provide()
 }

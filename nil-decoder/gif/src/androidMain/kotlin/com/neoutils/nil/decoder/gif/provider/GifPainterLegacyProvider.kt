@@ -54,7 +54,7 @@ internal class GifPainterLegacyProvider(
 
                     painter = BitmapPainter(bitmap.asImageBitmap())
 
-                    delay(DefaultAnimationDuration.toLong(DurationUnit.MILLISECONDS))
+                    delay(DefaultAnimationDuration)
                 }
             }
         }
