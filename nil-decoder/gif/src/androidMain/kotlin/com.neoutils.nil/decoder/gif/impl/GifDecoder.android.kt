@@ -13,6 +13,8 @@ import com.neoutils.nil.decoder.gif.provider.GitPainterApi28Provider
 actual class GifDecoder : Decoder {
     actual override fun decode(input: ByteArray): PainterProvider {
 
+        check(support(input) != Support.NONE) { "Doesn't support" }
+
         return when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.P -> {
                 GitPainterApi28Provider(input)
