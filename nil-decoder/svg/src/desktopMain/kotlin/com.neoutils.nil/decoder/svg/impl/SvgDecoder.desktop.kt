@@ -1,34 +1,18 @@
 package com.neoutils.nil.decoder.svg.impl
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Density
 import com.neoutils.nil.core.decoder.Decoder
 import com.neoutils.nil.core.provider.PainterProvider
 import com.neoutils.nil.core.util.Support
-import org.jetbrains.compose.resources.decodeToSvgPainter
-
-private val SVG_REGEX = Regex(pattern = "<svg[\\s\\S]+/>[\\s\\S]+</svg>")
+import com.neoutils.nil.decoder.svg.format.SVG_REGEX
+import com.neoutils.nil.decoder.svg.provider.SvgPainterProvider
 
 actual class SvgDecoder : Decoder {
-
-    private lateinit var density: Density
-
-    @Composable
-    override fun Prepare() {
-        density = LocalDensity.current
-    }
 
     actual override fun decode(input: ByteArray): PainterProvider {
 
         check(support(input) != Support.NONE) { "Doesn't support" }
 
-        val painter = input.decodeToSvgPainter(density)
-
-        return object : PainterProvider {
-            @Composable
-            override fun provide() = painter
-        }
+        return SvgPainterProvider(input)
     }
 
     actual override fun support(input: ByteArray): Support {

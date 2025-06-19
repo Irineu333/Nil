@@ -4,14 +4,11 @@ import com.neoutils.nil.core.decoder.Decoder
 import com.neoutils.nil.core.provider.PainterProvider
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.gif.extension.startsWith
+import com.neoutils.nil.decoder.gif.format.GIF87A_SPEC
+import com.neoutils.nil.decoder.gif.format.GIF89A_SPEC
 import com.neoutils.nil.decoder.gif.provider.GifPainterProvider
-import com.neoutils.nil.decoder.gif.util.signature
 import org.jetbrains.skia.Codec
 import org.jetbrains.skia.Data
-
-// https://en.wikipedia.org/wiki/List_of_file_signatures
-private val GIF87A_SPEC = signature(0x47, 0x49, 0x46, 0x38, 0x37, 0x61)
-private val GIF89A_SPEC = signature(0x47, 0x49, 0x46, 0x38, 0x39, 0x61)
 
 actual class GifDecoder : Decoder {
     actual override fun decode(input: ByteArray): PainterProvider {

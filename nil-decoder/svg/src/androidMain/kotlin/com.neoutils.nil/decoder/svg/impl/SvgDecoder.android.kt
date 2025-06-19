@@ -8,9 +8,8 @@ import com.caverock.androidsvg.SVG
 import com.neoutils.nil.core.decoder.Decoder
 import com.neoutils.nil.core.provider.PainterProvider
 import com.neoutils.nil.core.util.Support
+import com.neoutils.nil.decoder.svg.format.SVG_REGEX
 import com.neoutils.nil.decoder.svg.painter.SVGPainter
-
-private val SVG_REGEX = Regex(pattern = "<svg[\\s\\S]+/>[\\s\\S]+</svg>")
 
 actual class SvgDecoder : Decoder {
 

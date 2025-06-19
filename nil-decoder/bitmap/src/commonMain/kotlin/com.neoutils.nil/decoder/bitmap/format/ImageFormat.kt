@@ -7,7 +7,7 @@ private val GIF87A_SPEC = signature(0x47, 0x49, 0x46, 0x38, 0x37, 0x61)
 private val GIF89A_SPEC = signature(0x47, 0x49, 0x46, 0x38, 0x39, 0x61)
 private val WEBP_RIFF = signature(0x52, 0x49, 0x46, 0x46)
 
-enum class ImageFormat(
+internal enum class ImageFormat(
     private val signatures: List<ByteArray>
 ) {
     PNG(listOf(PNG_RFC_2083)),

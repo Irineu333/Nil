@@ -38,6 +38,9 @@ kotlin {
 
             // androidx
             implementation(libs.androidx.core)
+
+            // compose
+            implementation(compose.animation)
         }
     }
 

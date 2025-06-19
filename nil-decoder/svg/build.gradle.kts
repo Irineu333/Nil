@@ -22,7 +22,7 @@ kotlin {
     sourceSets {
 
         androidMain.dependencies {
-            implementation("com.caverock:androidsvg-aar:1.4")
+            implementation(libs.androidsvg)
         }
 
         commonMain.dependencies {
