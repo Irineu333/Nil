@@ -10,9 +10,11 @@ import kotlinx.coroutines.runBlocking
 @OptIn(InternalCompottieApi::class)
 class LottieDecoder : Decoder {
 
+    private val cache = mutableMapOf<ByteArray, Support>()
+
     override fun decode(input: ByteArray): PainterProvider {
 
-        val spec =  runBlocking {
+        val spec = runBlocking {
             when {
                 isDotLottie(input) -> LottieCompositionSpec.DotLottie(input)
                 isJsonLottie(input) -> LottieCompositionSpec.JsonString(input.decodeToString())
@@ -25,10 +27,12 @@ class LottieDecoder : Decoder {
 
     override fun support(input: ByteArray): Support {
         return runBlocking {
-            when {
-                isDotLottie(input) -> Support.TOTAL
-                isJsonLottie(input) -> Support.TOTAL
-                else -> Support.NONE
+            cache.getOrPut(input) {
+                when {
+                    isDotLottie(input) -> Support.TOTAL
+                    isJsonLottie(input) -> Support.TOTAL
+                    else -> Support.NONE
+                }
             }
         }
     }
