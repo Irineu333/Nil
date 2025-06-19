@@ -11,10 +11,9 @@ import androidx.compose.ui.graphics.painter.Painter
 import com.neoutils.nil.core.compose.asyncPainterResource
 import com.neoutils.nil.core.util.Input
 import com.neoutils.nil.core.util.Resource
-import com.neoutils.nil.decoder.gif.extension.gif
+import com.neoutils.nil.decoder.svg.extension.svg
 import com.neoutils.nil.example.resources.Res
-import com.neoutils.nil.example.resources.crazy_cat
-import com.neoutils.nil.fetcher.network.extension.request
+import com.neoutils.nil.example.resources.atom
 import com.neoutils.nil.fetcher.resources.extension.resource
 
 @Composable
@@ -24,9 +23,11 @@ fun App() = AppTheme {
         modifier = Modifier.fillMaxSize()
     ) {
         val resource = asyncPainterResource(
-            input = Input.resource(Res.drawable.crazy_cat),
+            input = Input.resource(Res.drawable.atom),
             settings = {
-                decoders { gif() }
+                decoders {
+                    svg()
+                }
             }
         )
 

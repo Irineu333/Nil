@@ -23,11 +23,11 @@ actual class SvgDecoder : Decoder {
 
         check(support(input) != Support.NONE) { "Doesn't support" }
 
-        val imageVector = input.decodeToSvgPainter(density)
+        val painter = input.decodeToSvgPainter(density)
 
         return object : PainterProvider {
             @Composable
-            override fun provide() = imageVector
+            override fun provide() = painter
         }
     }
 
