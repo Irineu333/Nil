@@ -4,12 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import com.neoutils.nil.core.provider.PainterProvider
+import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.core.util.Support
 
 val LocalDecoders = compositionLocalOf<List<Decoder>> { listOf() }
 
 interface Decoder {
-    fun decode(input: ByteArray): PainterProvider
+    suspend fun decode(input: ByteArray): Resource.Result<PainterProvider>
     fun support(input: ByteArray): Support
 }
 
@@ -19,9 +20,13 @@ fun rememberTargetDecoder(
     decoders: List<Decoder> = LocalDecoders.current
 ): Decoder {
 
-    val supportedDecoders = remember(decoders, input) { decoders.filter { it.support(input) != Support.NONE } }
+    val decodersSupport = remember(decoders, input) {
+        decoders.associateWith { it.support(input) }
+    }
 
-    val decoder = remember(input, supportedDecoders) { supportedDecoders.maxByOrNull { it.support(input) } }
+    val decoder = remember(input, decodersSupport) {
+        decodersSupport.maxByOrNull { it.value }?.key
+    }
 
     return checkNotNull(decoder) { "No supported decoder found" }
 }

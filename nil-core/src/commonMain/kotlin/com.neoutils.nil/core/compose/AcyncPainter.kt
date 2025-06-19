@@ -5,7 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.painter.Painter
-import com.neoutils.nil.core.extension.mapSuccess
+import com.neoutils.nil.core.extension.combine
 import com.neoutils.nil.core.fetcher.rememberTargetFetcher
 import com.neoutils.nil.core.scope.SettingsScope
 import com.neoutils.nil.core.scope.rememberSettings
@@ -26,5 +26,7 @@ fun asyncPainterResource(
 
     val resource by flow.collectAsState(initial = Resource.Loading())
 
-    return resource.mapSuccess { bytes -> decode(bytes, settings.decoders) }
+    return resource.combine {
+        bytes -> decode(bytes, settings.decoders)
+    }
 }

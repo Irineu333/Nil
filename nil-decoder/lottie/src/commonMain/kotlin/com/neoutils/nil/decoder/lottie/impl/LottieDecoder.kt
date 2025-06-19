@@ -1,7 +1,9 @@
 package com.neoutils.nil.decoder.lottie.impl
 
 import com.neoutils.nil.core.decoder.Decoder
+import com.neoutils.nil.core.exception.NotSupportException
 import com.neoutils.nil.core.provider.PainterProvider
+import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.lottie.provider.LottiePainterProvider
 import io.github.alexzhirkevich.compottie.*
@@ -12,17 +14,15 @@ class LottieDecoder : Decoder {
 
     private val cache = mutableMapOf<ByteArray, Support>()
 
-    override fun decode(input: ByteArray): PainterProvider {
+    override suspend fun decode(input: ByteArray): Resource.Result<PainterProvider> {
 
-        val spec = runBlocking {
-            when {
-                isDotLottie(input) -> LottieCompositionSpec.DotLottie(input)
-                isJsonLottie(input) -> LottieCompositionSpec.JsonString(input.decodeToString())
-                else -> error("Doesn't support")
-            }
+        val spec = when {
+            isDotLottie(input) -> LottieCompositionSpec.DotLottie(input)
+            isJsonLottie(input) -> LottieCompositionSpec.JsonString(input.decodeToString())
+            else -> return Resource.Result.Failure(NotSupportException())
         }
 
-        return LottiePainterProvider(spec)
+        return Resource.Result.Success(LottiePainterProvider(spec))
     }
 
     override fun support(input: ByteArray): Support {

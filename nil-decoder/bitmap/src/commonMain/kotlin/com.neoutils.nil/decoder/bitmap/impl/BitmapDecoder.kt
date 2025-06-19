@@ -1,7 +1,10 @@
 package com.neoutils.nil.decoder.bitmap.impl
 
 import com.neoutils.nil.core.decoder.Decoder
+import com.neoutils.nil.core.exception.NotSupportException
+import com.neoutils.nil.core.extension.toResource
 import com.neoutils.nil.core.provider.PainterProvider
+import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.bitmap.format.ImageFormat
 import com.neoutils.nil.decoder.bitmap.provider.BitmapPainterProvider
@@ -9,11 +12,15 @@ import org.jetbrains.compose.resources.decodeToImageBitmap
 
 class BitmapDecoder : Decoder {
 
-    override fun decode(input: ByteArray): PainterProvider {
+    override suspend fun decode(input: ByteArray): Resource.Result<PainterProvider> {
 
-        check(support(input) != Support.NONE) { "Doesn't support" }
+        if (support(input) == Support.NONE) {
+            return Resource.Result.Failure(NotSupportException())
+        }
 
-        return BitmapPainterProvider(input.decodeToImageBitmap())
+        return runCatching {
+            BitmapPainterProvider(input.decodeToImageBitmap())
+        }.toResource()
     }
 
     override fun support(input: ByteArray): Support {
