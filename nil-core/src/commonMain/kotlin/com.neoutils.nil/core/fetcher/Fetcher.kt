@@ -26,3 +26,5 @@ fun rememberTargetFetcher(
 
     return checkNotNull(fetcher) { "No supported fetcher found" }
 }
+
+class NoFetcherFound(message: String =  "No fetcher found") : Exception(message)
