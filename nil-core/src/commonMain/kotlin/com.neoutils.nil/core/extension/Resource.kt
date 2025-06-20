@@ -2,7 +2,7 @@ package com.neoutils.nil.core.extension
 
 import com.neoutils.nil.core.util.Resource
 
-inline fun <T, R> Resource<T>.mapSuccess(transform: (T) -> R): Resource<R> {
+inline fun <T, R> Resource<T>.map(transform: (T) -> R): Resource<R> {
     return when (this) {
         is Resource.Loading -> this
         is Resource.Result.Failure -> this

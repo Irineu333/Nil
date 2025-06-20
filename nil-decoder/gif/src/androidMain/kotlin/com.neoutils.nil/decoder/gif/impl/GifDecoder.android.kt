@@ -41,7 +41,7 @@ actual class GifDecoder : Decoder {
         }.toResource()
     }
 
-    actual override fun support(input: ByteArray): Support {
+    actual override suspend fun support(input: ByteArray): Support {
         if (input.isEmpty()) return Support.NONE
         return when {
             input.startsWith(GIF87A_SPEC) -> Support.TOTAL

@@ -23,7 +23,7 @@ actual class SvgDecoder : Decoder {
         }.toResource()
     }
 
-    actual override fun support(input: ByteArray): Support {
+    actual override suspend fun support(input: ByteArray): Support {
 
         val content = input.decodeToString()
 

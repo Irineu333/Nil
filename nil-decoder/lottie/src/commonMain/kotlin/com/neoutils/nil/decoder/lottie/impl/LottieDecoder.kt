@@ -7,7 +7,6 @@ import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.lottie.painter.NilLottiePainter
 import io.github.alexzhirkevich.compottie.*
-import kotlinx.coroutines.runBlocking
 
 @OptIn(InternalCompottieApi::class)
 class LottieDecoder : Decoder {

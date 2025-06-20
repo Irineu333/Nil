@@ -21,7 +21,7 @@ internal fun NilPainter.delegate(): NilPainter {
 }
 
 @Composable
-internal fun Resource<NilPainter>.delegate() = mapSuccess { it -> it.delegate() }
+internal fun Resource<NilPainter>.delegate() = map { it -> it.delegate() }
 
 @Composable
 fun NilPainter.animateAsPainter(): Painter {
@@ -38,7 +38,7 @@ fun NilPainter.animateAsPainter(): Painter {
 
 @Composable
 fun Resource<NilPainter>.animateAsPainter(): Resource<Painter> {
-    return mapSuccess { it ->
+    return map { it ->
         it.animateAsPainter()
     }
 }

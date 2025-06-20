@@ -1,6 +1,5 @@
 package com.neoutils.nil.core.fetcher
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import com.neoutils.nil.core.util.Input
 import com.neoutils.nil.core.util.Resource
@@ -15,16 +14,3 @@ abstract class Fetcher<out T : Input>(val type: KClass<@UnsafeVariance T>) {
 
     abstract fun fetch(input: @UnsafeVariance T): Flow<Resource<ByteArray>>
 }
-
-@Composable
-fun rememberTargetFetcher(
-    inputClass: KClass<out Input>,
-    fetchers: List<Fetcher<Input>> = LocalFetchers.current
-): Fetcher<Input> {
-
-    val fetcher = fetchers.find { it.type == inputClass }
-
-    return checkNotNull(fetcher) { "No supported fetcher found" }
-}
-
-class NoFetcherFound(message: String =  "No fetcher found") : Exception(message)

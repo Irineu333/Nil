@@ -12,7 +12,7 @@ import com.neoutils.nil.core.painter.NilPainter
 import com.neoutils.nil.core.scope.SettingsScope
 import com.neoutils.nil.core.scope.rememberSettings
 import com.neoutils.nil.core.util.Input
-import com.neoutils.nil.core.util.Nil
+import com.neoutils.nil.core.model.Nil
 import com.neoutils.nil.core.util.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 

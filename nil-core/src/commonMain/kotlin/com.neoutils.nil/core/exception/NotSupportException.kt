@@ -1,5 +1,9 @@
 package com.neoutils.nil.core.exception
 
+import com.neoutils.nil.core.strings.ErrorStrings
+
+private val error = ErrorStrings()
+
 class NotSupportException(
-    override val message: String = "Doesn't support"
-) : Exception()
+    message: String = error.notSupported
+) : Exception(message)
