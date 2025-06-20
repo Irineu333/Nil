@@ -25,14 +25,12 @@ class LottieDecoder : Decoder {
         return Resource.Result.Success(NilLottiePainter(spec))
     }
 
-    override fun support(input: ByteArray): Support {
-        return runBlocking {
-            cache.getOrPut(input) {
-                when {
-                    isDotLottie(input) -> Support.TOTAL
-                    isJsonLottie(input) -> Support.TOTAL
-                    else -> Support.NONE
-                }
+    override suspend fun support(input: ByteArray): Support {
+        return cache.getOrPut(input) {
+            when {
+                isDotLottie(input) -> Support.TOTAL
+                isJsonLottie(input) -> Support.TOTAL
+                else -> Support.NONE
             }
         }
     }

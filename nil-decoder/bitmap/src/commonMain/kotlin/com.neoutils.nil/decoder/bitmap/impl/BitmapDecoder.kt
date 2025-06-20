@@ -24,7 +24,7 @@ class BitmapDecoder : Decoder {
         }.toResource()
     }
 
-    override fun support(input: ByteArray): Support {
+    override suspend fun support(input: ByteArray): Support {
         if (input.isEmpty()) return Support.NONE
 
         return when (ImageFormat.detect(input)) {

@@ -7,5 +7,5 @@ import com.neoutils.nil.core.util.Support
 
 expect class GifDecoder() : Decoder {
     override suspend fun decode(input: ByteArray): Resource.Result<NilFlowAnimationPainter>
-    override fun support(input: ByteArray): Support
+    override suspend fun support(input: ByteArray): Support
 }

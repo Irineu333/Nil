@@ -18,7 +18,7 @@ class XmlDecoder() : Decoder {
         }
     }
 
-    override fun support(input: ByteArray): Support {
+    override suspend fun support(input: ByteArray): Support {
 
         val content = input.decodeToString()
 
