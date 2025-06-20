@@ -26,6 +26,7 @@ kotlin {
 
             // modules
             implementation(project(":nil-core"))
+            implementation(project(":nil-ui"))
             implementation(project(":nil-fetcher:resources"))
             implementation(project(":nil-fetcher:network"))
             implementation(project(":nil-decoder:bitmap"))
