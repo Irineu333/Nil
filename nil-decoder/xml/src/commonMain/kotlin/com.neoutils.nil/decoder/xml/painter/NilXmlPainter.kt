@@ -1,23 +1,26 @@
-package com.neoutils.nil.decoder.xml.provider
+package com.neoutils.nil.decoder.xml.painter
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalDensity
-import com.neoutils.nil.core.provider.PainterProvider
+import com.neoutils.nil.core.painter.NilComposeDelegatePainter
+import com.neoutils.nil.core.painter.NilPainter
+import com.neoutils.nil.core.painter.NilStaticPainter
 import org.jetbrains.compose.resources.decodeToImageVector
 
-internal class XmlPainterProvider(
+class NilXmlPainter(
     private val input: ByteArray
-) : PainterProvider {
+) : NilComposeDelegatePainter() {
     @Composable
-    override fun provide(): Painter {
+    override fun delegate(): NilPainter {
 
         val density = LocalDensity.current
 
         val imageVector = remember(input, density) { input.decodeToImageVector(density) }
 
-        return rememberVectorPainter(imageVector)
+        val painter = rememberVectorPainter(imageVector)
+
+        return remember(painter) { NilStaticPainter(painter) }
     }
 }

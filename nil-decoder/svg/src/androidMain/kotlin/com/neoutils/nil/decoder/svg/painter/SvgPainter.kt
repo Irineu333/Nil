@@ -10,7 +10,7 @@ import com.caverock.androidsvg.PreserveAspectRatio
 import com.caverock.androidsvg.SVG
 import kotlin.math.ceil
 
-internal class SVGPainter(
+internal class SvgPainter(
     private val dom: SVG,
     private val density: Density
 ) : Painter() {

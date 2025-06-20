@@ -5,7 +5,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.painter.Painter
+import com.neoutils.nil.core.painter.NilPainter
+import com.neoutils.nil.core.extension.animateAsPainter
 import com.neoutils.nil.core.extension.combine
+import com.neoutils.nil.core.extension.delegate
 import com.neoutils.nil.core.fetcher.rememberTargetFetcher
 import com.neoutils.nil.core.scope.SettingsScope
 import com.neoutils.nil.core.scope.rememberSettings
@@ -16,7 +19,7 @@ import com.neoutils.nil.core.util.Resource
 fun asyncPainterResource(
     input: Input,
     settings: SettingsScope.() -> Unit = {}
-): Resource<Painter> {
+): Resource<NilPainter> {
 
     val settings = rememberSettings(settings)
 
@@ -26,7 +29,18 @@ fun asyncPainterResource(
 
     val resource by flow.collectAsState(initial = Resource.Loading())
 
-    return resource.combine {
-        bytes -> decode(bytes, settings.decoders)
-    }
+    return resource.combine { bytes ->
+        decode(bytes, settings.decoders)
+    }.delegate()
+}
+
+@Composable
+fun asyncAnimatedPainterResource(
+    input: Input,
+    settings: SettingsScope.() -> Unit = {}
+): Resource<Painter> {
+    return asyncPainterResource(
+        input = input,
+        settings = settings
+    ).animateAsPainter()
 }
