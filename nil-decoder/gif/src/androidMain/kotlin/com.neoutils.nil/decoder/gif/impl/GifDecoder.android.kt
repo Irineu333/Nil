@@ -5,7 +5,7 @@ import android.graphics.drawable.AnimatedImageDrawable
 import android.os.Build
 import com.neoutils.nil.core.decoder.Decoder
 import com.neoutils.nil.core.exception.NotSupportException
-import com.neoutils.nil.core.extension.toPainter
+import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.gif.extension.startsWith
@@ -37,7 +37,7 @@ actual class GifDecoder : Decoder {
                     )
                 }
             }
-        }.toPainter()
+        }.toPainterResource()
     }
 
     actual override suspend fun support(input: ByteArray): Support {

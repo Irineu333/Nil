@@ -26,7 +26,6 @@ kotlin {
 
             // module
             implementation(project(":nil-core"))
-            api(project(":nil-animation"))
 
             // lottie
             implementation(libs.compottie)

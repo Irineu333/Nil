@@ -24,7 +24,6 @@ plugins {
 include(":composeApp")
 
 include(":nil-core")
-include(":nil-animation")
 include(":nil-decoder:svg")
 include(":nil-decoder:xml")
 include(":nil-decoder:gif")

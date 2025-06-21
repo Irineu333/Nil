@@ -2,7 +2,7 @@ package com.neoutils.nil.decoder.gif.impl
 
 import com.neoutils.nil.core.decoder.Decoder
 import com.neoutils.nil.core.exception.NotSupportException
-import com.neoutils.nil.core.extension.toPainter
+import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.gif.extension.startsWith
@@ -23,7 +23,7 @@ actual class GifDecoder : Decoder {
             val data = Data.makeFromBytes(input)
             val codec = Codec.makeFromData(data)
             GifPainterSkia(codec)
-        }.toPainter()
+        }.toPainterResource()
     }
 
     actual override suspend fun support(input: ByteArray): Support {

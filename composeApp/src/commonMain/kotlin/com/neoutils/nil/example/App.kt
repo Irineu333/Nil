@@ -7,7 +7,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.neoutils.nil.animation.compose.asyncAnimatedPainterResource
+import com.neoutils.nil.core.compose.asyncPainterResource
 import com.neoutils.nil.core.util.Input
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.decoder.gif.extension.gif
@@ -19,7 +19,7 @@ fun App() = AppTheme {
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        val resource = asyncAnimatedPainterResource(
+        val resource = asyncPainterResource(
             input = Input.request("https://cataas.com/cat/gif"),
             settings = {
                 decoders {

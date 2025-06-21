@@ -2,14 +2,12 @@
 
 package com.neoutils.nil.core.compose
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.painter.Painter
-import com.neoutils.nil.core.extension.copy
 import com.neoutils.nil.core.extension.delegate
+import com.neoutils.nil.core.extension.merge
 import com.neoutils.nil.core.model.Nil
+import com.neoutils.nil.core.painter.PainterAnimation
 import com.neoutils.nil.core.scope.SettingsScope
 import com.neoutils.nil.core.scope.rememberSettings
 import com.neoutils.nil.core.util.EmptyPainter
@@ -31,15 +29,34 @@ fun asyncPainterResource(
 
     val painter by flow.collectAsState(PainterResource.Loading())
 
-    return when (painter) {
-        is PainterResource.Result.Success -> painter.delegate()
+    return rememberPainterResource(
+        painter = painter,
+        placeholder = placeholder,
+        fallback = fallback
+    )
+}
 
-        is PainterResource.Loading -> {
-            painter.copy(painter = placeholder)
-        }
+@Composable
+fun rememberPainterResource(
+    painter: PainterResource,
+    placeholder: Painter = EmptyPainter,
+    fallback: Painter = EmptyPainter
+): PainterResource {
 
-        is PainterResource.Result.Failure -> {
-            painter.copy(painter = fallback)
+    val resolved = remember(painter, placeholder, fallback) {
+        painter.merge(
+            failure = fallback,
+            loading = placeholder
+        )
+    }.delegate()
+
+    LaunchedEffect(resolved) {
+        when (val painter = resolved.painter) {
+            is PainterAnimation -> {
+                painter.animate()
+            }
         }
     }
+
+    return resolved
 }
