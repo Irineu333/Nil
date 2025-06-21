@@ -2,26 +2,24 @@ package com.neoutils.nil.decoder.bitmap.impl
 
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import com.neoutils.nil.core.decoder.Decoder
-import com.neoutils.nil.core.painter.NilPainter
-import com.neoutils.nil.core.painter.NilStaticPainter
 import com.neoutils.nil.core.exception.NotSupportException
-import com.neoutils.nil.core.extension.toResource
-import com.neoutils.nil.core.util.Resource
+import com.neoutils.nil.core.extension.toPainter
+import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.bitmap.format.ImageFormat
 import org.jetbrains.compose.resources.decodeToImageBitmap
 
 class BitmapDecoder : Decoder {
 
-    override suspend fun decode(input: ByteArray): Resource.Result<NilPainter> {
+    override suspend fun decode(input: ByteArray): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
-            return Resource.Result.Failure(NotSupportException())
+            return PainterResource.Result.Failure(NotSupportException())
         }
 
         return runCatching {
-            NilStaticPainter(BitmapPainter(input.decodeToImageBitmap()))
-        }.toResource()
+            BitmapPainter(input.decodeToImageBitmap())
+        }.toPainter()
     }
 
     override suspend fun support(input: ByteArray): Support {

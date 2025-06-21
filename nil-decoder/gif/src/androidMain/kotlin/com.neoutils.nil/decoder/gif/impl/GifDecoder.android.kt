@@ -4,28 +4,27 @@ import android.graphics.Movie
 import android.graphics.drawable.AnimatedImageDrawable
 import android.os.Build
 import com.neoutils.nil.core.decoder.Decoder
-import com.neoutils.nil.core.painter.NilFlowAnimationPainter
 import com.neoutils.nil.core.exception.NotSupportException
-import com.neoutils.nil.core.extension.toResource
-import com.neoutils.nil.core.util.Resource
+import com.neoutils.nil.core.extension.toPainter
+import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.gif.extension.startsWith
 import com.neoutils.nil.decoder.gif.format.GIF87A_SPEC
 import com.neoutils.nil.decoder.gif.format.GIF89A_SPEC
-import com.neoutils.nil.decoder.gif.painter.NilGifPainterApi28
-import com.neoutils.nil.decoder.gif.painter.NilGifPainterLowerApi
+import com.neoutils.nil.decoder.gif.painter.GifPainterApi28
+import com.neoutils.nil.decoder.gif.painter.GifPainterLowerApi
 
 actual class GifDecoder : Decoder {
-    actual override suspend fun decode(input: ByteArray): Resource.Result<NilFlowAnimationPainter> {
+    actual override suspend fun decode(input: ByteArray): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
-            return Resource.Result.Failure(NotSupportException())
+            return PainterResource.Result.Failure(NotSupportException())
         }
 
         return runCatching {
             when {
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.P -> {
-                    NilGifPainterApi28(
+                    GifPainterApi28(
                         drawable = AnimatedImageDrawable.createFromStream(
                             input.inputStream(), null
                         ) as AnimatedImageDrawable
@@ -33,12 +32,12 @@ actual class GifDecoder : Decoder {
                 }
 
                 else -> @Suppress("DEPRECATION") {
-                    NilGifPainterLowerApi(
+                    GifPainterLowerApi(
                         movie = Movie.decodeStream(input.inputStream())
                     )
                 }
             }
-        }.toResource()
+        }.toPainter()
     }
 
     actual override suspend fun support(input: ByteArray): Support {

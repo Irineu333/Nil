@@ -2,25 +2,24 @@ package com.neoutils.nil.decoder.svg.impl
 
 import com.caverock.androidsvg.SVG
 import com.neoutils.nil.core.decoder.Decoder
-import com.neoutils.nil.core.painter.NilPainter
 import com.neoutils.nil.core.exception.NotSupportException
-import com.neoutils.nil.core.extension.toResource
-import com.neoutils.nil.core.util.Resource
+import com.neoutils.nil.core.extension.toPainter
+import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.svg.format.SVG_REGEX
-import com.neoutils.nil.decoder.svg.painter.NilSvgComposePainter
+import com.neoutils.nil.decoder.svg.painter.SvgDelegatePainter
 
 actual class SvgDecoder : Decoder {
 
-    actual override suspend fun decode(input: ByteArray): Resource.Result<NilPainter> {
+    actual override suspend fun decode(input: ByteArray): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
-            return Resource.Result.Failure(NotSupportException())
+            return PainterResource.Result.Failure(NotSupportException())
         }
 
         return runCatching {
-            NilSvgComposePainter(SVG.getFromInputStream(input.inputStream()))
-        }.toResource()
+            SvgDelegatePainter(SVG.getFromInputStream(input.inputStream()))
+        }.toPainter()
     }
 
     actual override suspend fun support(input: ByteArray): Support {

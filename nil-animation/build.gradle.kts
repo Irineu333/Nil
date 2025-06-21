@@ -11,6 +11,7 @@ plugins {
 }
 
 kotlin {
+
     jvm("desktop")
 
     androidTarget {
@@ -20,7 +21,6 @@ kotlin {
     }
 
     sourceSets {
-
         commonMain.dependencies {
 
             // module
@@ -28,14 +28,17 @@ kotlin {
 
             // compose
             implementation(compose.runtime)
-            implementation(compose.ui)
-            implementation(compose.foundation)
+            implementation(libs.compose.ui.graphics)
+            implementation(compose.components.resources)
+
+            // coroutines
+            implementation(libs.kotlinx.coroutines)
         }
     }
 }
 
 android {
-    namespace = "com.neoutils.nil.ui"
+    namespace = "com.neoutils.nil.animation"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {

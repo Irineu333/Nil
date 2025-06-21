@@ -7,10 +7,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
-import com.neoutils.nil.core.compose.asyncAnimatedPainterResource
+import com.neoutils.nil.animation.compose.asyncAnimatedPainterResource
 import com.neoutils.nil.core.util.Input
-import com.neoutils.nil.core.util.Resource
+import com.neoutils.nil.core.util.PainterResource
+import com.neoutils.nil.decoder.gif.extension.gif
 import com.neoutils.nil.fetcher.network.extension.request
 
 @Composable
@@ -20,30 +20,34 @@ fun App() = AppTheme {
         modifier = Modifier.fillMaxSize()
     ) {
         val resource = asyncAnimatedPainterResource(
-            input = Input.request("https://cataas.com/cat"),
+            input = Input.request("https://cataas.com/cat/gif"),
+            settings = {
+                decoders {
+                    gif()
+                }
+            }
         )
 
         when (resource) {
-            is Resource.Result.Success<Painter> -> {
+            is PainterResource.Result.Success -> {
                 Image(
-                    painter = resource.data,
+                    painter = resource,
+                    modifier = Modifier.fillMaxSize(),
                     contentDescription = null
                 )
             }
 
-            is Resource.Loading -> {
-                when (val progress = resource.progress) {
-                    is Float -> {
-                        CircularProgressIndicator(progress = { progress })
-                    }
-
-                    null -> {
-                        CircularProgressIndicator()
-                    }
+            is PainterResource.Loading -> {
+                if (resource.progress != null) {
+                    CircularProgressIndicator(
+                        progress = { resource.progress!! }
+                    )
+                } else {
+                    CircularProgressIndicator()
                 }
             }
 
-            is Resource.Result.Failure -> {
+            is PainterResource.Result.Failure -> {
                 throw resource.throwable
             }
         }

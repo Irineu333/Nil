@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.toSize
-import com.neoutils.nil.core.painter.NilFlowAnimationPainter
+import com.neoutils.nil.animation.painter.FlowAnimationPainter
 import com.neoutils.nil.core.extension.takeOrElse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
@@ -25,9 +25,9 @@ import kotlin.time.Duration.Companion.milliseconds
 
 private val DefaultAnimationDuration = 100.milliseconds
 
-class NilGifPainterSkia(
+class GifPainterSkia(
     private val codec: Codec
-) : NilFlowAnimationPainter() {
+) : FlowAnimationPainter() {
 
     private val static by lazy {
         BitmapPainter(
@@ -50,9 +50,7 @@ class NilGifPainterSkia(
             while (isActive) {
                 repeat(times = codec.frameCount - 1) { index ->
 
-                    val bitmap = frameCache.getOrPut(index) {
-                        codec.createBitmap(index)
-                    }
+                    val bitmap = frameCache.getOrPut(index) { codec.createBitmap(index) }
 
                     send(BitmapPainter(bitmap))
 
@@ -67,7 +65,7 @@ class NilGifPainterSkia(
     override fun DrawScope.onDraw() {
         static.run {
             draw(
-                size = this@onDraw.size,
+                size = size,
                 alpha = alpha,
                 colorFilter = colorFilter
             )

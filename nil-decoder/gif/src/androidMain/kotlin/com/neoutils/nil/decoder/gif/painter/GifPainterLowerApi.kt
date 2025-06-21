@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.toSize
-import com.neoutils.nil.core.painter.NilFlowAnimationPainter
+import com.neoutils.nil.animation.painter.FlowAnimationPainter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
@@ -28,7 +28,7 @@ import kotlin.time.DurationUnit
 private val DefaultAnimationDuration = 60.milliseconds
 
 @Suppress("DEPRECATION")
-class NilGifPainterLowerApi(
+class GifPainterLowerApi(
     private val movie: Movie,
     private val static: Painter = BitmapPainter(
         createBitmap(
@@ -39,7 +39,7 @@ class NilGifPainterLowerApi(
             movie.draw(Canvas(it), 0f, 0f)
         }.asImageBitmap()
     )
-) : NilFlowAnimationPainter() {
+) : FlowAnimationPainter() {
 
     override val intrinsicSize: Size = IntSize(
         width = movie.width(),
@@ -87,7 +87,7 @@ class NilGifPainterLowerApi(
     override fun DrawScope.onDraw() {
         static.run {
             draw(
-                size = this@onDraw.size,
+                size = size,
                 alpha = alpha,
                 colorFilter = colorFilter
             )

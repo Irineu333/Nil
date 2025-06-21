@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.toSize
 import androidx.core.graphics.drawable.toBitmap
-import com.neoutils.nil.core.painter.NilFlowAnimationPainter
+import com.neoutils.nil.animation.painter.FlowAnimationPainter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -23,9 +23,9 @@ import kotlin.time.Duration.Companion.milliseconds
 private val DefaultAnimationDuration = 10.milliseconds
 
 @RequiresApi(Build.VERSION_CODES.P)
-class NilGifPainterApi28(
+class GifPainterApi28(
     private val drawable: AnimatedImageDrawable,
-) : NilFlowAnimationPainter() {
+) : FlowAnimationPainter() {
 
     override val intrinsicSize: Size = IntSize(
         width = drawable.intrinsicWidth,
@@ -65,7 +65,7 @@ class NilGifPainterApi28(
     override fun DrawScope.onDraw() {
         static.run {
             draw(
-                size = this@onDraw.size,
+                size = size,
                 alpha = alpha,
                 colorFilter = colorFilter
             )

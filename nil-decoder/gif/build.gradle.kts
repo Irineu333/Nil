@@ -25,6 +25,7 @@ kotlin {
 
             // module
             implementation(project(":nil-core"))
+            api(project(":nil-animation"))
 
             // compose
             implementation(compose.runtime)
