@@ -41,6 +41,9 @@ kotlin {
 
             // json
             implementation(libs.kotlinx.serialization.json)
+
+            // file
+            implementation(libs.okio)
         }
 
         androidMain.dependencies {
