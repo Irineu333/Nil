@@ -2,15 +2,14 @@
 
 package com.neoutils.nil.core.model
 
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.painter.Painter
-import com.neoutils.nil.core.decoder.Decoder
+import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.extension.decoderFor
 import com.neoutils.nil.core.extension.fetcherFor
-import com.neoutils.nil.core.fetcher.Fetcher
+import com.neoutils.nil.core.extension.paramsFor
+import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.util.Input
 import com.neoutils.nil.core.util.PainterResource
+import com.neoutils.nil.core.util.Params
 import com.neoutils.nil.core.util.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -44,11 +43,18 @@ class Nil(
                         PainterResource.Result.Failure(decoder.throwable)
                     }
 
-                    is Resource.Result.Success<Decoder> -> {
-                        decoder.data.decode(output.data)
+                    is Resource.Result.Success<Decoder<Params>> -> {
+
+                        val decoder = decoder.data
+
+                        decoder.decode(
+                            input = output.data,
+                            params = settings.params.paramsFor(decoder),
+                        )
                     }
                 }
             }
         }
     }
 }
+

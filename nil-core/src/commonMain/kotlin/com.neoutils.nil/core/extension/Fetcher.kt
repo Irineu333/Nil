@@ -1,7 +1,7 @@
 package com.neoutils.nil.core.extension
 
 import com.neoutils.nil.core.exception.NoFetcherFound
-import com.neoutils.nil.core.fetcher.Fetcher
+import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.strings.FetcherErrorStrings
 import com.neoutils.nil.core.util.Input
 import com.neoutils.nil.core.util.Resource

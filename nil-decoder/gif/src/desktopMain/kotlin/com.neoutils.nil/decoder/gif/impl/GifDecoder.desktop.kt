@@ -1,9 +1,10 @@
 package com.neoutils.nil.decoder.gif.impl
 
-import com.neoutils.nil.core.decoder.Decoder
+import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.exception.NotSupportException
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.util.PainterResource
+import com.neoutils.nil.core.util.Params
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.gif.extension.startsWith
 import com.neoutils.nil.decoder.gif.format.GIF87A_SPEC
@@ -12,8 +13,12 @@ import com.neoutils.nil.decoder.gif.painter.GifPainterSkia
 import org.jetbrains.skia.Codec
 import org.jetbrains.skia.Data
 
-actual class GifDecoder : Decoder {
-    actual override suspend fun decode(input: ByteArray): PainterResource.Result {
+actual class GifDecoder : Decoder<Params>(Params::class) {
+
+    actual override suspend fun decode(
+        input: ByteArray,
+        params: Params?
+    ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
             return PainterResource.Result.Failure(NotSupportException())
@@ -27,6 +32,7 @@ actual class GifDecoder : Decoder {
     }
 
     actual override suspend fun support(input: ByteArray): Support {
+
         if (input.isEmpty()) return Support.NONE
 
         return when {

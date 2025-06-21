@@ -1,35 +1,49 @@
 package com.neoutils.nil.decoder.lottie.impl
 
-import com.neoutils.nil.core.decoder.Decoder
 import com.neoutils.nil.core.exception.NotSupportException
+import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
+import com.neoutils.nil.decoder.lottie.model.LottieParams
 import com.neoutils.nil.decoder.lottie.painter.LottieComposePainter
-import io.github.alexzhirkevich.compottie.*
+import io.github.alexzhirkevich.compottie.DotLottie
+import io.github.alexzhirkevich.compottie.InternalCompottieApi
+import io.github.alexzhirkevich.compottie.LottieAnimationFormat
+import io.github.alexzhirkevich.compottie.LottieCompositionSpec
+import io.github.alexzhirkevich.compottie.decodeToLottieComposition
 import okio.Buffer
 import okio.ByteString
 import okio.ByteString.Companion.decodeHex
 
-private val ZIP = "504B0304".decodeHex()
+private val ZIP_SIGN = "504B0304".decodeHex()
 
 @OptIn(InternalCompottieApi::class)
-class LottieDecoder : Decoder {
+class LottieDecoder : Decoder<LottieParams>(LottieParams::class) {
 
     private val cache = mutableMapOf<ByteArray, Support>()
 
-    override suspend fun decode(input: ByteArray): PainterResource.Result {
+    override suspend fun decode(
+        input: ByteArray,
+        params: LottieParams?
+    ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
             return PainterResource.Result.Failure(NotSupportException())
         }
 
         val spec = when {
-            isDotLottie(input) -> LottieCompositionSpec.DotLottie(input)
-            isJsonLottie(input) -> LottieCompositionSpec.JsonString(input.decodeToString())
+            isDotLottie(input) -> LottieCompositionSpec.Companion.DotLottie(input)
+            isJsonLottie(input) -> LottieCompositionSpec.Companion.JsonString(input.decodeToString())
             else -> return PainterResource.Result.Failure(NotSupportException())
         }
 
-        return PainterResource.Result.Success(LottieComposePainter(spec))
+        return PainterResource.Result.Success(
+            LottieComposePainter(
+                spec = spec,
+                iterations = params?.iterations,
+                speed = params?.speed
+            )
+        )
     }
 
     override suspend fun support(input: ByteArray): Support {
@@ -44,7 +58,7 @@ class LottieDecoder : Decoder {
 
     private suspend fun isDotLottie(bytes: ByteArray): Boolean {
 
-        if (!bytes.isType(ZIP)) return false
+        if (!bytes.matches(ZIP_SIGN)) return false
 
         try {
             bytes.decodeToLottieComposition(LottieAnimationFormat.DotLottie)
@@ -67,7 +81,7 @@ class LottieDecoder : Decoder {
     }
 }
 
-private fun ByteArray.isType(
+private fun ByteArray.matches(
     signature: ByteString
 ) = Buffer().use {
     it.write(this)

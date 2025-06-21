@@ -3,7 +3,6 @@ package com.neoutils.nil.decoder.gif.painter
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.DefaultAlpha
 import androidx.compose.ui.graphics.ImageBitmap
@@ -30,11 +29,10 @@ class GifPainterSkia(
 
     private var imageBitmap by mutableStateOf(codec.createBitmap(index = 0))
 
-    override val intrinsicSize: Size
-        get() = IntSize(
-            width = codec.width,
-            height = codec.height
-        ).toSize()
+    override val intrinsicSize = IntSize(
+        width = codec.width,
+        height = codec.height
+    ).toSize()
 
     private var alpha: Float = DefaultAlpha
     private var colorFilter: ColorFilter? = null

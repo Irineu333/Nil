@@ -7,7 +7,6 @@ import android.graphics.Movie
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.DefaultAlpha
 import androidx.compose.ui.graphics.ImageBitmap
@@ -31,7 +30,7 @@ class GifPainterLowerApi(
     private val movie: Movie,
 ) : Painter(), PainterAnimation {
 
-    override val intrinsicSize: Size = IntSize(
+    override val intrinsicSize = IntSize(
         width = movie.width(),
         height = movie.height()
     ).toSize()

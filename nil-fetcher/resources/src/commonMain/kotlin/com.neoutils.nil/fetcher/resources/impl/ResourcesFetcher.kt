@@ -1,6 +1,6 @@
 package com.neoutils.nil.fetcher.resources.impl
 
-import com.neoutils.nil.core.fetcher.Fetcher
+import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.fetcher.resources.model.InputResource
 import kotlinx.coroutines.Dispatchers

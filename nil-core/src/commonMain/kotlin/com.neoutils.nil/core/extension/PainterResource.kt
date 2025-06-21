@@ -22,7 +22,7 @@ fun PainterResource.copy(
     is PainterResource.Result.Success -> copy(painter = painter)
 }
 
-internal fun PainterResource.merge(
+fun PainterResource.merge(
     failure: Painter = EmptyPainter,
     loading: Painter = EmptyPainter
 ): PainterResource {

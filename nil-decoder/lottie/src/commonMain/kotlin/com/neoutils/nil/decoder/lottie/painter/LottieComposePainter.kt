@@ -10,7 +10,9 @@ import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
 
 class LottieComposePainter(
-    private val spec: LottieCompositionSpec
+    private val spec: LottieCompositionSpec,
+    private val iterations: Int? = null,
+    private val speed: Float? = null,
 ) : DelegatePainter() {
 
     @Composable
@@ -18,7 +20,11 @@ class LottieComposePainter(
 
         val composition by rememberLottieComposition { spec }
 
-        val progress by animateLottieCompositionAsState(composition)
+        val progress by animateLottieCompositionAsState(
+            composition = composition,
+            speed = speed ?: composition?.speed ?: 1f,
+            iterations = iterations ?: composition?.iterations ?: 1,
+        )
 
         return rememberLottiePainter(
             composition = composition,

@@ -7,14 +7,13 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.neoutils.nil.core.compose.asyncPainterResource
+import com.neoutils.nil.core.composable.asyncPainterResource
 import com.neoutils.nil.core.util.Input
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.decoder.gif.extension.gif
 import com.neoutils.nil.decoder.lottie.extension.lottie
 import com.neoutils.nil.example.resources.Res
-import com.neoutils.nil.example.resources.time
-import com.neoutils.nil.fetcher.network.extension.request
+import com.neoutils.nil.example.resources.time_lottie
 import com.neoutils.nil.fetcher.resources.extension.resource
 
 @Composable
@@ -24,11 +23,15 @@ fun App() = AppTheme {
         modifier = Modifier.fillMaxSize()
     ) {
         val resource = asyncPainterResource(
-            input = Input.resource(Res.drawable.time),
+            input = Input.resource(Res.drawable.time_lottie),
             settings = {
                 decoders {
                     lottie()
                     gif()
+                }
+
+                lottie {
+                    iterations = 2
                 }
             }
         )

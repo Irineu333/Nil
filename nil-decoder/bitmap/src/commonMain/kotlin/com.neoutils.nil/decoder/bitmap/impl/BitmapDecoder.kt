@@ -1,17 +1,18 @@
 package com.neoutils.nil.decoder.bitmap.impl
 
 import androidx.compose.ui.graphics.painter.BitmapPainter
-import com.neoutils.nil.core.decoder.Decoder
+import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.exception.NotSupportException
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.util.PainterResource
+import com.neoutils.nil.core.util.Params
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.bitmap.format.ImageFormat
 import org.jetbrains.compose.resources.decodeToImageBitmap
 
-class BitmapDecoder : Decoder {
+class BitmapDecoder : Decoder<Params>(Params::class) {
 
-    override suspend fun decode(input: ByteArray): PainterResource.Result {
+    override suspend fun decode(input: ByteArray, params: Params?): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
             return PainterResource.Result.Failure(NotSupportException())

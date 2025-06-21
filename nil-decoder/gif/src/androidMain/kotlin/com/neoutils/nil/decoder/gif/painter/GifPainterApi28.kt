@@ -6,7 +6,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.DefaultAlpha
 import androidx.compose.ui.graphics.asImageBitmap
@@ -29,7 +28,7 @@ class GifPainterApi28(
     private val drawable: AnimatedImageDrawable,
 ) : Painter(), PainterAnimation {
 
-    override val intrinsicSize: Size = IntSize(
+    override val intrinsicSize = IntSize(
         width = drawable.intrinsicWidth,
         height = drawable.intrinsicHeight
     ).toSize()
