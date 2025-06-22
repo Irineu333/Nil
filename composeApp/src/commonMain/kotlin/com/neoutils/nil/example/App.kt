@@ -13,7 +13,7 @@ import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.decoder.gif.extension.gif
 import com.neoutils.nil.decoder.lottie.extension.lottie
 import com.neoutils.nil.example.resources.Res
-import com.neoutils.nil.example.resources.time
+import com.neoutils.nil.example.resources.crazy_cat
 import com.neoutils.nil.fetcher.resources.extension.resource
 
 @Composable
@@ -23,7 +23,7 @@ fun App() = AppTheme {
         modifier = Modifier.fillMaxSize()
     ) {
         val resource = asyncPainterResource(
-            input = Input.resource(Res.drawable.time),
+            input = Input.resource(Res.drawable.crazy_cat),
             settings = {
                 decoders {
                     lottie()
@@ -32,6 +32,10 @@ fun App() = AppTheme {
 
                 lottie {
                     iterations = 2
+                }
+
+                gif {
+                    repeatCount = 1
                 }
             }
         )

@@ -5,16 +5,16 @@ import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.exception.NotSupportException
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.util.PainterResource
-import com.neoutils.nil.core.util.Params
+import com.neoutils.nil.core.util.Extra
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.svg.format.SVG_REGEX
 import com.neoutils.nil.decoder.svg.painter.SvgDelegatePainter
 
-actual class SvgDecoder : Decoder<Params>(Params::class) {
+actual class SvgDecoder : Decoder<Extra>(Extra::class) {
 
     actual override suspend fun decode(
         input: ByteArray,
-        params: Params?
+        extra: Extra?
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {

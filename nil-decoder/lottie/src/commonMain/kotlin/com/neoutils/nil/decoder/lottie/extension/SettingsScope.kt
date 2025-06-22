@@ -6,5 +6,5 @@ import com.neoutils.nil.decoder.lottie.scope.LottieScope
 fun SettingsScope.lottie(
     scope: LottieScope.() -> Unit
 ) {
-    params += LottieScope().apply(scope).build()
+    extras += LottieScope().apply(scope).build()
 }

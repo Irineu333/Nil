@@ -29,6 +29,7 @@ private val DefaultAnimationDuration = 60.milliseconds
 @Suppress("DEPRECATION")
 class GifPainterLowerApi(
     private val movie: Movie,
+    private val repeatCount: Int = Int.MAX_VALUE
 ) : Painter(), Animatable {
 
     override val intrinsicSize = IntSize(
@@ -36,15 +37,17 @@ class GifPainterLowerApi(
         height = movie.height()
     ).toSize()
 
-    private var alpha: Float by mutableFloatStateOf(DefaultAlpha)
-    private var colorFilter: ColorFilter? by mutableStateOf(null)
-
     private val frameCache = mutableMapOf<Int, ImageBitmap>()
 
-    private var imageBitmap by mutableStateOf(createBitmap())
+    private var alpha: Float by mutableFloatStateOf(DefaultAlpha)
+    private var colorFilter: ColorFilter? by mutableStateOf(null)
+    private var imageBitmap by mutableStateOf(createFrameBitmap(time = 0))
+
+    private var interactions = 0
 
     override suspend fun animate() = coroutineScope {
-        while (isActive) {
+        while (isActive && interactions++ <= repeatCount) {
+
             val times = 0.until(movie.duration()).step(
                 DefaultAnimationDuration.toInt(
                     DurationUnit.MILLISECONDS
@@ -53,18 +56,7 @@ class GifPainterLowerApi(
 
             for (time in times) {
 
-                imageBitmap = frameCache.getOrPut(time) {
-
-                    movie.setTime(time)
-
-                    createBitmap(
-                        movie.width(),
-                        movie.height(),
-                        Bitmap.Config.ARGB_8888
-                    ).also {
-                        movie.draw(Canvas(it), 0f, 0f)
-                    }.asImageBitmap()
-                }
+                imageBitmap = createFrameBitmap(time)
 
                 delay(DefaultAnimationDuration)
             }
@@ -90,11 +82,18 @@ class GifPainterLowerApi(
         return true
     }
 
-    fun createBitmap() = createBitmap(
-        movie.width(),
-        movie.height(),
-        Bitmap.Config.ARGB_8888
-    ).also {
-        movie.draw(Canvas(it), 0f, 0f)
-    }.asImageBitmap()
+    fun createFrameBitmap(time: Int): ImageBitmap {
+
+        movie.setTime(time)
+
+        return frameCache.getOrPut(time) {
+            createBitmap(
+                movie.width(),
+                movie.height(),
+                Bitmap.Config.ARGB_8888
+            ).also {
+                movie.draw(Canvas(it), 0f, 0f)
+            }.asImageBitmap()
+        }
+    }
 }

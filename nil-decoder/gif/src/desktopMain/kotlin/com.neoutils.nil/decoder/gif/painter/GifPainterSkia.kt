@@ -27,26 +27,28 @@ import kotlin.time.Duration.Companion.milliseconds
 private val DefaultAnimationDuration = 100.milliseconds
 
 class GifPainterSkia(
-    private val codec: Codec
+    private val codec: Codec,
+    private val repeatCount: Int = Int.MAX_VALUE
 ) : Painter(), Animatable {
-
-    private var imageBitmap by mutableStateOf(codec.createBitmap(index = 0))
 
     override val intrinsicSize = IntSize(
         width = codec.width,
         height = codec.height
     ).toSize()
 
+    private val frameCache = mutableMapOf<Int, ImageBitmap>()
+
+    private var imageBitmap by mutableStateOf(createBitmap(index = 0))
     private var alpha: Float by mutableFloatStateOf(DefaultAlpha)
     private var colorFilter: ColorFilter? by mutableStateOf(null)
 
-    private val frameCache = mutableMapOf<Int, ImageBitmap>()
+    private var interactions = 0
 
     override suspend fun animate() = coroutineScope {
-        while (isActive) {
+        while (isActive && interactions++ <= repeatCount) {
             for (index in 0 until codec.frameCount) {
 
-                imageBitmap = frameCache.getOrPut(index) { codec.createBitmap(index) }
+                imageBitmap = createBitmap(index)
 
                 val frameDuration = codec.framesInfo[index].duration.milliseconds
 
@@ -73,11 +75,13 @@ class GifPainterSkia(
         this.colorFilter = colorFilter
         return true
     }
-}
 
-private fun Codec.createBitmap(index: Int): ImageBitmap {
-    return Bitmap().also {
-        it.allocPixels(imageInfo)
-        readPixels(it, index)
-    }.asComposeImageBitmap()
+    fun createBitmap(index: Int): ImageBitmap {
+        return frameCache.getOrPut(index) {
+            Bitmap().also {
+                it.allocPixels(codec.imageInfo)
+                codec.readPixels(it, index)
+            }.asComposeImageBitmap()
+        }
+    }
 }

@@ -39,7 +39,7 @@ class Nil(
             .toPainterResource { decoder ->
                 decoder.decode(
                     input = bytes,
-                    params = settings.params.paramsFor(decoder),
+                    extra = settings.params.paramsFor(decoder),
                 )
             }
     }

@@ -4,20 +4,20 @@ import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.exception.NotSupportException
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.util.PainterResource
-import com.neoutils.nil.core.util.Params
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.gif.extension.startsWith
 import com.neoutils.nil.decoder.gif.format.GIF87A_SPEC
 import com.neoutils.nil.decoder.gif.format.GIF89A_SPEC
+import com.neoutils.nil.decoder.gif.model.GifParams
 import com.neoutils.nil.decoder.gif.painter.GifPainterSkia
 import org.jetbrains.skia.Codec
 import org.jetbrains.skia.Data
 
-actual class GifDecoder : Decoder<Params>(Params::class) {
+actual class GifDecoder : Decoder<GifParams>(GifParams::class) {
 
     actual override suspend fun decode(
         input: ByteArray,
-        params: Params?
+        extra: GifParams?
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
@@ -27,7 +27,11 @@ actual class GifDecoder : Decoder<Params>(Params::class) {
         return runCatching {
             val data = Data.makeFromBytes(input)
             val codec = Codec.makeFromData(data)
-            GifPainterSkia(codec)
+            
+            GifPainterSkia(
+                codec = codec,
+                repeatCount = extra?.repeatCount ?: Int.MAX_VALUE
+            )
         }.toPainterResource()
     }
 

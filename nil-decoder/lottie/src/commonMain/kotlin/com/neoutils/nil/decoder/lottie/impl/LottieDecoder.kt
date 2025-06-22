@@ -24,7 +24,7 @@ class LottieDecoder : Decoder<LottieParams>(LottieParams::class) {
 
     override suspend fun decode(
         input: ByteArray,
-        params: LottieParams?
+        extra: LottieParams?
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
@@ -40,8 +40,8 @@ class LottieDecoder : Decoder<LottieParams>(LottieParams::class) {
         return PainterResource.Result.Success(
             LottieComposePainter(
                 spec = spec,
-                iterations = params?.iterations,
-                speed = params?.speed
+                iterations = extra?.iterations,
+                speed = extra?.speed
             )
         )
     }
