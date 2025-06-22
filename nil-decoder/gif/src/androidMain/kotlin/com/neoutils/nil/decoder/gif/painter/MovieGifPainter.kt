@@ -27,7 +27,7 @@ import kotlin.time.DurationUnit
 private val DefaultAnimationDuration = 60.milliseconds
 
 @Suppress("DEPRECATION")
-class GifPainterLowerApi(
+class MovieGifPainter(
     private val movie: Movie,
     private val repeatCount: Int = Int.MAX_VALUE
 ) : Painter(), Animatable {
@@ -82,7 +82,7 @@ class GifPainterLowerApi(
         return true
     }
 
-    fun createFrameBitmap(time: Int): ImageBitmap {
+    private fun createFrameBitmap(time: Int): ImageBitmap {
 
         movie.setTime(time)
 

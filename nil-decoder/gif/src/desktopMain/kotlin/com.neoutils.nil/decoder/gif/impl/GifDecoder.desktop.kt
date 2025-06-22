@@ -9,7 +9,7 @@ import com.neoutils.nil.decoder.gif.extension.startsWith
 import com.neoutils.nil.decoder.gif.format.GIF87A_SPEC
 import com.neoutils.nil.decoder.gif.format.GIF89A_SPEC
 import com.neoutils.nil.decoder.gif.model.GifParams
-import com.neoutils.nil.decoder.gif.painter.GifPainterSkia
+import com.neoutils.nil.decoder.gif.painter.SkiaGifPainter
 import org.jetbrains.skia.Codec
 import org.jetbrains.skia.Data
 
@@ -28,7 +28,7 @@ actual class GifDecoder : Decoder<GifParams>(GifParams::class) {
             val data = Data.makeFromBytes(input)
             val codec = Codec.makeFromData(data)
             
-            GifPainterSkia(
+            SkiaGifPainter(
                 codec = codec,
                 repeatCount = extra?.repeatCount ?: Int.MAX_VALUE
             )

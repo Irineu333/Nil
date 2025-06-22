@@ -30,12 +30,14 @@ fun App() = AppTheme {
                     gif()
                 }
 
-                lottie {
-                    iterations = 2
-                }
+                extras {
+                    lottie {
+                        iterations = 2
+                    }
 
-                gif {
-                    repeatCount = 1
+                    gif {
+                        repeatCount = 1
+                    }
                 }
             }
         )

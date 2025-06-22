@@ -12,8 +12,8 @@ import com.neoutils.nil.decoder.gif.extension.startsWith
 import com.neoutils.nil.decoder.gif.format.GIF87A_SPEC
 import com.neoutils.nil.decoder.gif.format.GIF89A_SPEC
 import com.neoutils.nil.decoder.gif.model.GifParams
-import com.neoutils.nil.decoder.gif.painter.GifPainterApi28
-import com.neoutils.nil.decoder.gif.painter.GifPainterLowerApi
+import com.neoutils.nil.decoder.gif.painter.AnimatedImageGifPainter
+import com.neoutils.nil.decoder.gif.painter.MovieGifPainter
 
 actual class GifDecoder : Decoder<GifParams>(GifParams::class) {
     actual override suspend fun decode(
@@ -34,11 +34,11 @@ actual class GifDecoder : Decoder<GifParams>(GifParams::class) {
 
                     drawable.repeatCount = extra?.repeatCount ?: Int.MAX_VALUE
 
-                    GifPainterApi28(drawable)
+                    AnimatedImageGifPainter(drawable)
                 }
 
                 else -> @Suppress("DEPRECATION") {
-                    GifPainterLowerApi(
+                    MovieGifPainter(
                         movie = Movie.decodeStream(input.inputStream()),
                         repeatCount =  extra?.repeatCount ?: Int.MAX_VALUE
                     )

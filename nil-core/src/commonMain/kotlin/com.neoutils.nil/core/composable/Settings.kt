@@ -26,8 +26,8 @@ fun rememberSettings(block: SettingsScope.() -> Unit): Settings {
 
     val scope = remember(decoders, fetchers) {
         SettingsScope(
-            decoders = decoders.toMutableList(),
-            fetchers = fetchers.toMutableList(),
+            decoders = decoders,
+            fetchers = fetchers,
         )
     }
 

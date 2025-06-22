@@ -9,7 +9,7 @@ import com.neoutils.nil.core.util.Extra
 class SettingsScope internal constructor(
     var decoders: List<Decoder<Extra>>,
     var fetchers: List<Fetcher<Input>>,
-    var extras: List<Extra> = mutableListOf()
+    var extras: List<Extra> = listOf()
 ) {
     fun decoders(vararg decoders: Decoder<Extra>) {
         this.decoders += decoders
@@ -19,17 +19,25 @@ class SettingsScope internal constructor(
         this.fetchers += fetchers
     }
 
-    fun decoders(block: AddictionScope<Decoder<Extra>>.() -> Unit) {
-        decoders += AddictionScope(decoders).apply(block).values
+    fun extras(vararg extras: Extra) {
+        this.extras += extras
     }
 
-    fun fetchers(block: AddictionScope<Fetcher<Input>>.() -> Unit) {
-        fetchers += AddictionScope(fetchers).apply(block).values
+    fun decoders(scope: AddictionScope<Decoder<Extra>>.() -> Unit) {
+        decoders += AddictionScope(decoders).apply(scope).values
+    }
+
+    fun fetchers(scope: AddictionScope<Fetcher<Input>>.() -> Unit) {
+        fetchers += AddictionScope(fetchers).apply(scope).values
+    }
+
+    fun extras(scope: AddictionScope<Extra>.() -> Unit) {
+        extras += AddictionScope(extras).apply(scope).values
     }
 
     internal fun build() = Settings(
-        decoders = decoders.toList(),
-        fetchers = fetchers.toList(),
+        decoders = decoders,
+        fetchers = fetchers,
         params = extras
     )
 }
