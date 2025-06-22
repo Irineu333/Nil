@@ -6,11 +6,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.compose.compiler)
 }
 
 kotlin {
+
     jvm("desktop")
 
     androidTarget {
@@ -20,35 +19,16 @@ kotlin {
     }
 
     sourceSets {
-
         commonMain.dependencies {
 
-            // module
-            implementation(project(":nil-core"))
-            implementation(project(":nil-type"))
-
             // compose
-            implementation(compose.runtime)
-            implementation(compose.ui)
-
-            // coroutines
-            implementation(libs.kotlinx.coroutines)
+            implementation(libs.okio)
         }
-
-        androidMain.dependencies {
-
-            // androidx
-            implementation(libs.androidx.core)
-        }
-    }
-
-    compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 }
 
 android {
-    namespace = "com.neoutils.nil.decoder.gif"
+    namespace = "com.neoutils.nil.type"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {

@@ -27,7 +27,7 @@ import kotlin.time.DurationUnit
 private val DefaultAnimationDuration = 60.milliseconds
 
 @Suppress("DEPRECATION")
-class MovieGifPainter(
+internal class MovieGifPainter(
     private val movie: Movie,
     private val repeatCount: Int = Int.MAX_VALUE
 ) : Painter(), Animatable {

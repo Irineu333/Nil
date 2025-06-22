@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.LocalDensity
 import com.neoutils.nil.core.painter.DelegatePainter
 import org.jetbrains.compose.resources.decodeToImageVector
 
-class XmlDelegatePainter(
+internal class XmlDelegatePainter(
     private val input: ByteArray
 ) : DelegatePainter() {
     @Composable

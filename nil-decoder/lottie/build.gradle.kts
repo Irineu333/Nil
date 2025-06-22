@@ -26,6 +26,7 @@ kotlin {
 
             // module
             implementation(project(":nil-core"))
+            implementation(project(":nil-type"))
 
             // lottie
             implementation(libs.compottie)
@@ -41,9 +42,6 @@ kotlin {
 
             // json
             implementation(libs.kotlinx.serialization.json)
-
-            // file
-            implementation(libs.okio)
         }
 
         androidMain.dependencies {

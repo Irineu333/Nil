@@ -6,12 +6,8 @@ import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.lottie.model.LottieParams
 import com.neoutils.nil.decoder.lottie.painter.LottieComposePainter
+import com.neoutils.nil.type.Type
 import io.github.alexzhirkevich.compottie.*
-import okio.Buffer
-import okio.ByteString
-import okio.ByteString.Companion.decodeHex
-
-private val ZIP_SIGN = "504B0304".decodeHex()
 
 @OptIn(InternalCompottieApi::class)
 class LottieDecoder : Decoder<LottieParams> {
@@ -56,7 +52,7 @@ class LottieDecoder : Decoder<LottieParams> {
 
     private suspend fun isDotLottie(bytes: ByteArray): Boolean {
 
-        if (!bytes.matches(ZIP_SIGN)) return false
+        if (!Type.ZIP.matches(bytes)) return false
 
         try {
             bytes.decodeToLottieComposition(LottieAnimationFormat.DotLottie)
@@ -77,11 +73,4 @@ class LottieDecoder : Decoder<LottieParams> {
 
         return true
     }
-}
-
-private fun ByteArray.matches(
-    signature: ByteString
-) = Buffer().use {
-    it.write(this)
-    it.readByteString(signature.size.toLong()) == signature
 }

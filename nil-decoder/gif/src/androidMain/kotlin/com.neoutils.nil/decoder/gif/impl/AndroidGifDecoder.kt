@@ -8,12 +8,10 @@ import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
-import com.neoutils.nil.decoder.gif.extension.startsWith
-import com.neoutils.nil.decoder.gif.format.GIF87A_SPEC
-import com.neoutils.nil.decoder.gif.format.GIF89A_SPEC
 import com.neoutils.nil.decoder.gif.model.GifParams
 import com.neoutils.nil.decoder.gif.painter.AnimatedImageGifPainter
 import com.neoutils.nil.decoder.gif.painter.MovieGifPainter
+import com.neoutils.nil.type.Type
 
 class AndroidGifDecoder : Decoder<GifParams> {
 
@@ -53,11 +51,8 @@ class AndroidGifDecoder : Decoder<GifParams> {
     override suspend fun support(input: ByteArray): Support {
 
         if (input.isEmpty()) return Support.NONE
+        if (Type.GIF.matches(input)) return Support.TOTAL
 
-        return when {
-            input.startsWith(GIF87A_SPEC) -> Support.TOTAL
-            input.startsWith(GIF89A_SPEC) -> Support.TOTAL
-            else -> Support.NONE
-        }
+        return Support.NONE
     }
 }

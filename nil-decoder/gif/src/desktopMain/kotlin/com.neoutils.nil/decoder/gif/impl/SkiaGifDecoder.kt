@@ -5,11 +5,9 @@ import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
-import com.neoutils.nil.decoder.gif.extension.startsWith
-import com.neoutils.nil.decoder.gif.format.GIF87A_SPEC
-import com.neoutils.nil.decoder.gif.format.GIF89A_SPEC
 import com.neoutils.nil.decoder.gif.model.GifParams
 import com.neoutils.nil.decoder.gif.painter.SkiaGifPainter
+import com.neoutils.nil.type.Type
 import org.jetbrains.skia.Codec
 import org.jetbrains.skia.Data
 
@@ -41,10 +39,8 @@ class SkiaGifDecoder : Decoder<GifParams> {
 
         if (input.isEmpty()) return Support.NONE
 
-        return when {
-            input.startsWith(GIF87A_SPEC) -> Support.TOTAL
-            input.startsWith(GIF89A_SPEC) -> Support.TOTAL
-            else -> Support.NONE
-        }
+        if (Type.GIF.matches(input)) return Support.TOTAL
+
+        return Support.NONE
     }
 }

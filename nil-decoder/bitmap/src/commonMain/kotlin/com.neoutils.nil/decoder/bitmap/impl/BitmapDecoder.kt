@@ -7,7 +7,7 @@ import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.util.Extra
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
-import com.neoutils.nil.decoder.bitmap.format.ImageFormat
+import com.neoutils.nil.type.Type
 import org.jetbrains.compose.resources.decodeToImageBitmap
 
 class BitmapDecoder : Decoder<Extra> {
@@ -31,12 +31,12 @@ class BitmapDecoder : Decoder<Extra> {
     override suspend fun support(input: ByteArray): Support {
         if (input.isEmpty()) return Support.NONE
 
-        return when (ImageFormat.detect(input)) {
-            ImageFormat.PNG -> Support.TOTAL
-            ImageFormat.JPEG -> Support.TOTAL
-            ImageFormat.WEBP -> Support.TOTAL
-            ImageFormat.GIF -> Support.PARTIAL
-            null -> Support.NONE
+        return when (Type.detect(input)) {
+            Type.PNG -> Support.TOTAL
+            Type.JPEG -> Support.TOTAL
+            Type.WEBP -> Support.TOTAL
+            Type.GIF -> Support.PARTIAL
+            else -> Support.NONE
         }
     }
 }

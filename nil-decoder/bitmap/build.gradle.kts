@@ -25,6 +25,7 @@ kotlin {
 
             // module
             implementation(project(":nil-core"))
+            implementation(project(":nil-type"))
 
             // compose
             implementation(compose.runtime)

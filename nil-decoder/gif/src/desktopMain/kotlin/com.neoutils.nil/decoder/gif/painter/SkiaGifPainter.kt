@@ -26,7 +26,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 private val DefaultAnimationDuration = 100.milliseconds
 
-class SkiaGifPainter(
+internal class SkiaGifPainter(
     private val codec: Codec,
     private val repeatCount: Int = Int.MAX_VALUE
 ) : Painter(), Animatable {

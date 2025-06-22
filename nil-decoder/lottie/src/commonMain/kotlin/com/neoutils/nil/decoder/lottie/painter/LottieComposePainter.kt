@@ -9,7 +9,7 @@ import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
 
-class LottieComposePainter(
+internal class LottieComposePainter(
     private val spec: LottieCompositionSpec,
     private val iterations: Int? = null,
     private val speed: Float? = null,
