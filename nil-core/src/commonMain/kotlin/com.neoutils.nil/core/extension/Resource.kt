@@ -1,5 +1,7 @@
 package com.neoutils.nil.core.extension
 
+import androidx.compose.ui.graphics.painter.Painter
+import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Resource
 
 inline fun <T, R> Resource<T>.map(transform: (T) -> R): Resource<R> {
@@ -28,10 +30,26 @@ inline fun <T> Resource<T>.onSuccess(onSuccess: (T) -> Unit): Resource<T> {
     }
 }
 
-fun <T> Result<T>.toResource(): Resource.Result<T> {
-    return if (isSuccess) {
-        Resource.Result.Success(getOrThrow())
-    } else {
-        Resource.Result.Failure(checkNotNull(exceptionOrNull()))
+inline fun <T> Resource.Result<T>.toPainterResource(
+    transformation: (T) -> PainterResource.Result
+) = when (this) {
+    is Resource.Result.Failure -> {
+        PainterResource.Result.Failure(throwable)
     }
+
+    is Resource.Result.Success<T> -> transformation(data)
+}
+
+inline fun <T> Resource<T>.toPainterResource(
+    transformation: (T) -> PainterResource
+) = when (this) {
+    is Resource.Loading -> {
+        PainterResource.Loading(progress)
+    }
+
+    is Resource.Result.Failure -> {
+        PainterResource.Result.Failure(throwable)
+    }
+
+    is Resource.Result.Success<T> -> transformation(data)
 }

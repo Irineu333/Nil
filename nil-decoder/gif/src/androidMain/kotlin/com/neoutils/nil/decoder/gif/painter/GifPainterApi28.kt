@@ -4,6 +4,7 @@ import android.graphics.drawable.AnimatedImageDrawable
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ColorFilter
@@ -35,8 +36,8 @@ class GifPainterApi28(
 
     private var imageBitmap by mutableStateOf(drawable.toBitmap().asImageBitmap())
 
-    private var alpha: Float = DefaultAlpha
-    private var colorFilter: ColorFilter? = null
+    private var alpha: Float by mutableFloatStateOf(DefaultAlpha)
+    private var colorFilter: ColorFilter? by mutableStateOf(null)
 
     override suspend fun animate() = coroutineScope {
         drawable.start()

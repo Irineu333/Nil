@@ -1,5 +1,9 @@
 package com.neoutils.nil.core.util
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.DefaultAlpha
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -11,19 +15,8 @@ sealed class PainterResource : Painter() {
 
     internal abstract val painter: Painter
 
-    private var colorFilter: ColorFilter? = null
-
-    private var alpha: Float = DefaultAlpha
-
-    override fun DrawScope.onDraw() {
-        painter.run {
-            draw(
-                size = size,
-                alpha = alpha,
-                colorFilter = colorFilter,
-            )
-        }
-    }
+    private var alpha: Float by mutableFloatStateOf(DefaultAlpha)
+    private var colorFilter: ColorFilter? by mutableStateOf(null)
 
     override fun applyColorFilter(colorFilter: ColorFilter?): Boolean {
         this.colorFilter = colorFilter
@@ -35,20 +28,28 @@ sealed class PainterResource : Painter() {
         return true
     }
 
+    override fun DrawScope.onDraw() = with(painter) {
+        draw(
+            size = size,
+            alpha = alpha,
+            colorFilter = colorFilter,
+        )
+    }
+
     data class Loading(
         val progress: Float? = null,
-        public override val painter: Painter = EmptyPainter
+        override val painter: Painter = EmptyPainter
     ) : PainterResource()
 
     sealed class Result : PainterResource() {
 
         data class Success(
-            public override val painter: Painter
+            override val painter: Painter
         ) : Result()
 
         data class Failure(
             val throwable: Throwable,
-            public override val painter: Painter = EmptyPainter
+            override val painter: Painter = EmptyPainter
         ) : Result()
     }
 }

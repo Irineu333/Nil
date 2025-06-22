@@ -1,6 +1,7 @@
 package com.neoutils.nil.decoder.gif.painter
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ColorFilter
@@ -34,8 +35,8 @@ class GifPainterSkia(
         height = codec.height
     ).toSize()
 
-    private var alpha: Float = DefaultAlpha
-    private var colorFilter: ColorFilter? = null
+    private var alpha: Float by mutableFloatStateOf(DefaultAlpha)
+    private var colorFilter: ColorFilter? by mutableStateOf(null)
 
     private val frameCache = mutableMapOf<Int, ImageBitmap>()
 
