@@ -2,10 +2,10 @@
 
 package com.neoutils.nil.core.model
 
-import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.extension.decoderFor
 import com.neoutils.nil.core.extension.fetcherFor
 import com.neoutils.nil.core.extension.paramsFor
+import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.util.Input
 import com.neoutils.nil.core.util.PainterResource
@@ -20,39 +20,50 @@ import kotlinx.coroutines.flow.mapLatest
 class Nil(
     internal val settings: Settings
 ) {
-    fun execute(input: Input): Flow<PainterResource> = flow {
-        when (val fetcher = settings.fetchers.fetcherFor(input)) {
-            is Resource.Result.Failure -> emit(fetcher)
+
+    fun fetch(input: Input): Flow<Resource<ByteArray>> = flow {
+        when (val resource = settings.fetchers.fetcherFor(input)) {
+            is Resource.Result.Failure -> {
+                emit(Resource.Result.Failure(resource.throwable))
+            }
+
             is Resource.Result.Success<Fetcher<Input>> -> {
-                emitAll(fetcher.data.fetch(input))
+                val fetcher = resource.data
+                emitAll(fetcher.fetch(input))
             }
         }
-    }.mapLatest { output ->
-        when (output) {
+    }
+
+    suspend fun decode(bytes: ByteArray): PainterResource.Result {
+        return when (val decoder = settings.decoders.decoderFor(bytes)) {
+            is Resource.Result.Failure -> {
+                PainterResource.Result.Failure(decoder.throwable)
+            }
+
+            is Resource.Result.Success<Decoder<Params>> -> {
+                val decoder = decoder.data
+                val params = settings.params.paramsFor(decoder)
+
+                decoder.decode(
+                    input = bytes,
+                    params = params,
+                )
+            }
+        }
+    }
+
+    fun execute(input: Input) = fetch(input).mapLatest { resource ->
+        when (resource) {
             is Resource.Loading -> {
-                PainterResource.Loading(output.progress)
+                PainterResource.Loading(resource.progress)
             }
 
             is Resource.Result.Failure -> {
-                PainterResource.Result.Failure(output.throwable)
+                PainterResource.Result.Failure(resource.throwable)
             }
 
             is Resource.Result.Success<ByteArray> -> {
-                when (val decoder = settings.decoders.decoderFor(output.data)) {
-                    is Resource.Result.Failure -> {
-                        PainterResource.Result.Failure(decoder.throwable)
-                    }
-
-                    is Resource.Result.Success<Decoder<Params>> -> {
-
-                        val decoder = decoder.data
-
-                        decoder.decode(
-                            input = output.data,
-                            params = settings.params.paramsFor(decoder),
-                        )
-                    }
-                }
+                decode(bytes = resource.data)
             }
         }
     }
