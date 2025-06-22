@@ -8,4 +8,3 @@ import com.neoutils.nil.decoder.lottie.impl.LottieDecoder
 fun AddictionScope<Decoder<Params>>.lottie() {
     add(LottieDecoder())
 }
-

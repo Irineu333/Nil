@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.toIntSize
 import androidx.compose.ui.unit.toSize
 import com.neoutils.nil.core.extension.takeOrElse
-import com.neoutils.nil.core.painter.PainterAnimation
+import com.neoutils.nil.core.painter.Animatable
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -22,11 +22,13 @@ import org.jetbrains.skia.Bitmap
 import org.jetbrains.skia.Codec
 import kotlin.time.Duration.Companion.milliseconds
 
+// https://github.com/JetBrains/compose-multiplatform/tree/76681da4912de84bc2f94050d2ba970604f54d3e/components/AnimatedImage/library/src/desktopMain/kotlin/org/jetbrains/compose/animatedimage
+
 private val DefaultAnimationDuration = 100.milliseconds
 
 class GifPainterSkia(
     private val codec: Codec
-) : Painter(), PainterAnimation {
+) : Painter(), Animatable {
 
     private var imageBitmap by mutableStateOf(codec.createBitmap(index = 0))
 
@@ -42,7 +44,7 @@ class GifPainterSkia(
 
     override suspend fun animate() = coroutineScope {
         while (isActive) {
-            repeat(times = codec.frameCount - 1) { index ->
+            for (index in 0 until codec.frameCount) {
 
                 imageBitmap = frameCache.getOrPut(index) { codec.createBitmap(index) }
 

@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import com.neoutils.nil.core.extension.delegate
 import com.neoutils.nil.core.extension.merge
 import com.neoutils.nil.core.model.Nil
-import com.neoutils.nil.core.painter.PainterAnimation
+import com.neoutils.nil.core.painter.Animatable
 import com.neoutils.nil.core.scope.SettingsScope
 import com.neoutils.nil.core.util.EmptyPainter
 import com.neoutils.nil.core.util.Input
@@ -51,7 +51,7 @@ fun rememberPainterResource(
 
     LaunchedEffect(resource) {
         when (val painter = resource.painter) {
-            is PainterAnimation -> {
+            is Animatable -> {
                 painter.animate()
             }
         }

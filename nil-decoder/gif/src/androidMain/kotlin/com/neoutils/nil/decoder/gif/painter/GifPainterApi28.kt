@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.toIntSize
 import androidx.compose.ui.unit.toSize
 import androidx.core.graphics.drawable.toBitmap
-import com.neoutils.nil.core.painter.PainterAnimation
+import com.neoutils.nil.core.painter.Animatable
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -27,7 +27,7 @@ private val DefaultAnimationDuration = 10.milliseconds
 @RequiresApi(Build.VERSION_CODES.P)
 class GifPainterApi28(
     private val drawable: AnimatedImageDrawable,
-) : Painter(), PainterAnimation {
+) : Painter(), Animatable {
 
     override val intrinsicSize = IntSize(
         width = drawable.intrinsicWidth,

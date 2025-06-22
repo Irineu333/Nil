@@ -1,5 +1,5 @@
 package com.neoutils.nil.core.painter
 
-interface PainterAnimation {
+interface Animatable {
     suspend fun animate()
 }
