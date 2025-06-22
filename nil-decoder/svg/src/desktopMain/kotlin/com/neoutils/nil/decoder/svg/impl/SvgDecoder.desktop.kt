@@ -1,15 +1,14 @@
 package com.neoutils.nil.decoder.svg.impl
 
-import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.exception.NotSupportException
-import com.neoutils.nil.core.util.PainterResource
+import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.util.Extra
+import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.svg.format.SVG_REGEX
 import com.neoutils.nil.decoder.svg.painter.SvgDelegatePainter
-import kotlin.reflect.KClass
 
-actual class SvgDecoder : Decoder<Extra>{
+actual class SvgDecoder : Decoder<Extra> {
 
     override val extraType = Extra::class
 
