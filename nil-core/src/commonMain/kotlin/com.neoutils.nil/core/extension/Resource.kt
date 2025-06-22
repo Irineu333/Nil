@@ -31,7 +31,9 @@ inline fun <T> Resource<T>.onSuccess(onSuccess: (T) -> Unit): Resource<T> {
 }
 
 inline fun <T> Resource.Result<T>.toPainterResource(
-    transformation: (T) -> PainterResource.Result
+    transformation: (T) -> PainterResource.Result = {
+        PainterResource.Result.Success(it as Painter)
+    }
 ) = when (this) {
     is Resource.Result.Failure -> {
         PainterResource.Result.Failure(throwable)
@@ -41,7 +43,9 @@ inline fun <T> Resource.Result<T>.toPainterResource(
 }
 
 inline fun <T> Resource<T>.toPainterResource(
-    transformation: (T) -> PainterResource
+    transformation: (T) -> PainterResource = {
+        PainterResource.Result.Success(it as Painter)
+    }
 ) = when (this) {
     is Resource.Loading -> {
         PainterResource.Loading(progress)
