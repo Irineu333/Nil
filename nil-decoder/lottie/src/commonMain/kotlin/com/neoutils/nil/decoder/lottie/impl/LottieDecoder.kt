@@ -6,11 +6,7 @@ import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.lottie.model.LottieParams
 import com.neoutils.nil.decoder.lottie.painter.LottieComposePainter
-import io.github.alexzhirkevich.compottie.DotLottie
-import io.github.alexzhirkevich.compottie.InternalCompottieApi
-import io.github.alexzhirkevich.compottie.LottieAnimationFormat
-import io.github.alexzhirkevich.compottie.LottieCompositionSpec
-import io.github.alexzhirkevich.compottie.decodeToLottieComposition
+import io.github.alexzhirkevich.compottie.*
 import okio.Buffer
 import okio.ByteString
 import okio.ByteString.Companion.decodeHex
@@ -18,7 +14,9 @@ import okio.ByteString.Companion.decodeHex
 private val ZIP_SIGN = "504B0304".decodeHex()
 
 @OptIn(InternalCompottieApi::class)
-class LottieDecoder : Decoder<LottieParams>(LottieParams::class) {
+class LottieDecoder : Decoder<LottieParams> {
+
+    override val extraType = LottieParams::class
 
     private val cache = mutableMapOf<ByteArray, Support>()
 

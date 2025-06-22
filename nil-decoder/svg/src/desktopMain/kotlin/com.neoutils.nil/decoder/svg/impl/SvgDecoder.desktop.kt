@@ -7,8 +7,11 @@ import com.neoutils.nil.core.util.Extra
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.svg.format.SVG_REGEX
 import com.neoutils.nil.decoder.svg.painter.SvgDelegatePainter
+import kotlin.reflect.KClass
 
-actual class SvgDecoder : Decoder<Extra>(Extra::class) {
+actual class SvgDecoder : Decoder<Extra>{
+
+    override val extraType = Extra::class
 
     actual override suspend fun decode(
         input: ByteArray,

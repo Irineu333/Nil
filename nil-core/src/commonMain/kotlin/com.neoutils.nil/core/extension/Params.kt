@@ -5,4 +5,4 @@ import com.neoutils.nil.core.util.Extra
 
 fun List<Extra>.paramsFor(
     decoder: Decoder<Extra>
-): Extra? = find { it::class == decoder.type }
+): Extra? = find { it::class == decoder.extraType }
