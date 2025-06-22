@@ -39,8 +39,10 @@ class SkiaGifDecoder : Decoder<GifParams> {
 
         if (input.isEmpty()) return Support.NONE
 
-        if (Type.GIF.matches(input)) return Support.TOTAL
-
-        return Support.NONE
+        return when(Type.detect(input)) {
+            Type.GIF -> Support.TOTAL
+            Type.WEBP -> Support.TOTAL
+            else -> Support.NONE
+        }
     }
 }
