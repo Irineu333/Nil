@@ -24,15 +24,15 @@ class SettingsScope internal constructor(
     }
 
     fun decoders(scope: AddictionScope<Decoder<Extra>>.() -> Unit) {
-        decoders += AddictionScope(decoders).apply(scope).values
+        decoders = AddictionScope(decoders).apply(scope).values
     }
 
     fun fetchers(scope: AddictionScope<Fetcher<Input>>.() -> Unit) {
-        fetchers += AddictionScope(fetchers).apply(scope).values
+        fetchers = AddictionScope(fetchers).apply(scope).values
     }
 
     fun extras(scope: AddictionScope<Extra>.() -> Unit) {
-        extras += AddictionScope(extras).apply(scope).values
+        extras = AddictionScope(extras).apply(scope).values
     }
 
     internal fun build() = Settings(
