@@ -1,16 +1,17 @@
-package com.neoutils.nil.decoder.bitmap.impl
+package com.neoutils.nil.decoder.svg.impl
 
-import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.unit.Density
+import com.caverock.androidsvg.SVG
 import com.neoutils.nil.core.exception.NotSupportException
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.source.Decoder
-import com.neoutils.nil.core.util.Param
 import com.neoutils.nil.core.util.PainterResource
+import com.neoutils.nil.core.util.Param
 import com.neoutils.nil.core.util.Support
-import com.neoutils.nil.type.Type
-import org.jetbrains.compose.resources.decodeToImageBitmap
+import com.neoutils.nil.decoder.svg.format.SVG_REGEX
+import com.neoutils.nil.decoder.svg.painter.AndroidSvgPainter
 
-class BitmapDecoder : Decoder<Param> {
+class AndroidSvgDecoder(private val density: Density) : Decoder<Param> {
 
     override val paramType = Param::class
 
@@ -24,20 +25,19 @@ class BitmapDecoder : Decoder<Param> {
         }
 
         return runCatching {
-            BitmapPainter(input.decodeToImageBitmap())
+            AndroidSvgPainter(SVG.getFromInputStream(input.inputStream()), density)
         }.toPainterResource()
     }
 
     override suspend fun support(input: ByteArray): Support {
-        if (input.isEmpty()) return Support.NONE
 
-        return when (Type.detect(input)) {
-            Type.PNG -> Support.TOTAL
-            Type.JPEG -> Support.TOTAL
-            Type.WEBP -> Support.PARTIAL
-            Type.GIF -> Support.PARTIAL
-            else -> Support.NONE
+        val content = input.decodeToString()
+
+        if (content.contains(SVG_REGEX)) {
+            return Support.TOTAL
         }
+
+        return Support.NONE
     }
 }
 

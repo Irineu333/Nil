@@ -1,7 +1,7 @@
 package com.neoutils.nil.decoder.gif.model
 
-import com.neoutils.nil.core.util.Extra
+import com.neoutils.nil.core.util.Param
 
-data class GifParams(
+data class GifParam(
     val repeatCount: Int? =null
-): Extra
+): Param

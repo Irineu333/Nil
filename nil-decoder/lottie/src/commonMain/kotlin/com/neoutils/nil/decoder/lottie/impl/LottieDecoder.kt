@@ -12,13 +12,13 @@ import io.github.alexzhirkevich.compottie.*
 @OptIn(InternalCompottieApi::class)
 class LottieDecoder : Decoder<LottieParams> {
 
-    override val extraType = LottieParams::class
+    override val paramType = LottieParams::class
 
     private val cache = mutableMapOf<ByteArray, Support>()
 
     override suspend fun decode(
         input: ByteArray,
-        extra: LottieParams?
+        param: LottieParams?
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
@@ -34,8 +34,8 @@ class LottieDecoder : Decoder<LottieParams> {
         return PainterResource.Result.Success(
             LottieComposePainter(
                 spec = spec,
-                iterations = extra?.iterations,
-                speed = extra?.speed
+                iterations = param?.iterations,
+                speed = param?.speed
             )
         )
     }

@@ -1,20 +1,20 @@
 package com.neoutils.nil.core.source
 
 import androidx.compose.runtime.compositionLocalOf
-import com.neoutils.nil.core.util.Extra
+import com.neoutils.nil.core.util.Param
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
 import kotlin.reflect.KClass
 
-val LocalDecoders = compositionLocalOf<List<Decoder<Extra>>> { listOf() }
+val LocalDecoders = compositionLocalOf<List<Decoder<Param>>> { listOf() }
 
-interface Decoder<out T : Extra> {
+interface Decoder<out T : Param> {
 
-    val extraType: KClass<@UnsafeVariance T>
+    val paramType: KClass<@UnsafeVariance T>
 
     suspend fun decode(
         input: ByteArray,
-        extra: @UnsafeVariance T? = null
+        param: @UnsafeVariance T? = null
     ): PainterResource.Result
 
     suspend fun support(input: ByteArray): Support

@@ -1,8 +1,8 @@
 package com.neoutils.nil.core.extension
 
 import com.neoutils.nil.core.source.Decoder
-import com.neoutils.nil.core.util.Extra
+import com.neoutils.nil.core.util.Param
 
-fun List<Extra>.paramsFor(
-    decoder: Decoder<Extra>
-): Extra? = find { it::class == decoder.extraType }
+fun List<Param>.paramFor(
+    decoder: Decoder<Param>
+): Param? = find { it::class == decoder.paramType }

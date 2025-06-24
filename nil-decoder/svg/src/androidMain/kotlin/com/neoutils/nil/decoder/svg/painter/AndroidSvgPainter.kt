@@ -8,16 +8,15 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Density
 import com.caverock.androidsvg.PreserveAspectRatio
 import com.caverock.androidsvg.SVG
-import kotlin.math.ceil
 
-internal class SvgPainter(
-    private val dom: SVG,
+class AndroidSvgPainter(
+    private val svg: SVG,
     private val density: Density
 ) : Painter() {
 
     private val defaultSize: Size? = Size(
-        dom.documentWidth,
-        dom.documentHeight
+        svg.documentWidth,
+        svg.documentHeight
     ).takeUnless {
         it.height == 0f && it.width == 0f
     }
@@ -32,23 +31,14 @@ internal class SvgPainter(
         }
 
     override fun DrawScope.onDraw() {
-        drawSvg(
-            size = Size(
-                ceil(size.width),
-                ceil(size.height)
-            )
-        )
-    }
-
-    private fun DrawScope.drawSvg(size: Size) {
         drawIntoCanvas { canvas ->
-            if (dom.documentViewBox == null) {
-                dom.setDocumentViewBox(0f, 0f, dom.documentWidth, dom.documentHeight)
+            if (svg.documentViewBox == null) {
+                svg.setDocumentViewBox(0f, 0f, svg.documentWidth, svg.documentHeight)
             }
-            dom.documentWidth = size.width
-            dom.documentHeight = size.height
-            dom.documentPreserveAspectRatio = PreserveAspectRatio.STRETCH
-            dom.renderToCanvas(canvas.nativeCanvas)
+            svg.documentWidth = size.width
+            svg.documentHeight = size.height
+            svg.documentPreserveAspectRatio = PreserveAspectRatio.STRETCH
+            svg.renderToCanvas(canvas.nativeCanvas)
         }
     }
 }

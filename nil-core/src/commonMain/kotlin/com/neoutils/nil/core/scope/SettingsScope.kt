@@ -4,14 +4,14 @@ import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.util.Input
-import com.neoutils.nil.core.util.Extra
+import com.neoutils.nil.core.util.Param
 
 class SettingsScope internal constructor(
-    var decoders: List<Decoder<Extra>>,
+    var decoders: List<Decoder<Param>>,
     var fetchers: List<Fetcher<Input>>,
-    var extras: List<Extra> = listOf()
+    var params: List<Param> = listOf()
 ) {
-    fun decoders(vararg decoders: Decoder<Extra>) {
+    fun decoders(vararg decoders: Decoder<Param>) {
         this.decoders += decoders
     }
 
@@ -19,11 +19,11 @@ class SettingsScope internal constructor(
         this.fetchers += fetchers
     }
 
-    fun extras(vararg extras: Extra) {
-        this.extras += extras
+    fun extras(vararg params: Param) {
+        this.params += params
     }
 
-    fun decoders(scope: AddictionScope<Decoder<Extra>>.() -> Unit) {
+    fun decoders(scope: AddictionScope<Decoder<Param>>.() -> Unit) {
         decoders = AddictionScope(decoders).apply(scope).values
     }
 
@@ -31,13 +31,13 @@ class SettingsScope internal constructor(
         fetchers = AddictionScope(fetchers).apply(scope).values
     }
 
-    fun extras(scope: AddictionScope<Extra>.() -> Unit) {
-        extras = AddictionScope(extras).apply(scope).values
+    fun extras(scope: AddictionScope<Param>.() -> Unit) {
+        params = AddictionScope(params).apply(scope).values
     }
 
     internal fun build() = Settings(
         decoders = decoders,
         fetchers = fetchers,
-        params = extras
+        params = params
     )
 }

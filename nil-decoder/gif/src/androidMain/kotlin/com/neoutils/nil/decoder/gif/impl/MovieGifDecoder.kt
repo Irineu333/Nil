@@ -6,18 +6,18 @@ import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
-import com.neoutils.nil.decoder.gif.model.GifParams
+import com.neoutils.nil.decoder.gif.model.GifParam
 import com.neoutils.nil.decoder.gif.painter.MovieGifPainter
 import com.neoutils.nil.type.Type
 
 @Suppress("DEPRECATION")
-class MovieGifDecoder : Decoder<GifParams> {
+class MovieGifDecoder : Decoder<GifParam> {
 
-    override val extraType = GifParams::class
+    override val paramType = GifParam::class
 
     override suspend fun decode(
         input: ByteArray,
-        extra: GifParams?
+        param: GifParam?
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
@@ -27,7 +27,7 @@ class MovieGifDecoder : Decoder<GifParams> {
         return runCatching {
             MovieGifPainter(
                 movie = Movie.decodeStream(input.inputStream()),
-                repeatCount = extra?.repeatCount ?: Int.MAX_VALUE
+                repeatCount = param?.repeatCount ?: Int.MAX_VALUE
             )
         }.toPainterResource()
     }

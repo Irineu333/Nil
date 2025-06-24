@@ -5,19 +5,19 @@ import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
-import com.neoutils.nil.decoder.gif.model.GifParams
+import com.neoutils.nil.decoder.gif.model.GifParam
 import com.neoutils.nil.decoder.gif.painter.SkiaGifPainter
 import com.neoutils.nil.type.Type
 import org.jetbrains.skia.Codec
 import org.jetbrains.skia.Data
 
-class SkiaGifDecoder : Decoder<GifParams> {
+class SkiaGifDecoder : Decoder<GifParam> {
 
-    override val extraType = GifParams::class
+    override val paramType = GifParam::class
 
     override suspend fun decode(
         input: ByteArray,
-        extra: GifParams?
+        param: GifParam?
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
@@ -30,7 +30,7 @@ class SkiaGifDecoder : Decoder<GifParams> {
 
             SkiaGifPainter(
                 codec = codec,
-                repeatCount = extra?.repeatCount ?: Int.MAX_VALUE
+                repeatCount = param?.repeatCount ?: Int.MAX_VALUE
             )
         }.toPainterResource()
     }
@@ -39,7 +39,7 @@ class SkiaGifDecoder : Decoder<GifParams> {
 
         if (input.isEmpty()) return Support.NONE
 
-        return when(Type.detect(input)) {
+        return when (Type.detect(input)) {
             Type.GIF -> Support.TOTAL
             Type.WEBP -> Support.TOTAL
             else -> Support.NONE

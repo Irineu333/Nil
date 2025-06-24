@@ -1,22 +1,24 @@
 package com.neoutils.nil.decoder.svg.impl
 
-import com.caverock.androidsvg.SVG
+import androidx.compose.ui.unit.Density
 import com.neoutils.nil.core.exception.NotSupportException
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.source.Decoder
-import com.neoutils.nil.core.util.Extra
 import com.neoutils.nil.core.util.PainterResource
+import com.neoutils.nil.core.util.Param
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.svg.format.SVG_REGEX
-import com.neoutils.nil.decoder.svg.painter.SvgDelegatePainter
+import com.neoutils.nil.decoder.svg.painter.DesktopSvgPainter
+import org.jetbrains.skia.Data
+import org.jetbrains.skia.svg.SVGDOM
 
-actual class SvgDecoder : Decoder<Extra> {
+class DesktopSvgDecoder(private val density: Density) : Decoder<Param> {
 
-    override val extraType = Extra::class
+    override val paramType = Param::class
 
-    actual override suspend fun decode(
+    override suspend fun decode(
         input: ByteArray,
-        extra: Extra?
+        param: Param?
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
@@ -24,11 +26,11 @@ actual class SvgDecoder : Decoder<Extra> {
         }
 
         return runCatching {
-            SvgDelegatePainter(SVG.getFromInputStream(input.inputStream()))
+            DesktopSvgPainter(SVGDOM(Data.makeFromBytes(input)), density)
         }.toPainterResource()
     }
 
-    actual override suspend fun support(input: ByteArray): Support {
+    override suspend fun support(input: ByteArray): Support {
 
         val content = input.decodeToString()
 

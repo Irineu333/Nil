@@ -3,6 +3,7 @@ package com.neoutils.nil.core.composable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalDensity
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.scope.SettingsScope
 import com.neoutils.nil.core.source.LocalDecoders
@@ -23,6 +24,7 @@ fun rememberSettings(block: SettingsScope.() -> Unit): Settings {
 
     val decoders = LocalDecoders.current
     val fetchers = LocalFetchers.current
+    val density = LocalDensity.current
 
     val scope = remember(decoders, fetchers) {
         SettingsScope(
