@@ -14,8 +14,10 @@ import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.decoder.gif.extension.gif
 import com.neoutils.nil.decoder.lottie.extension.lottie
 import com.neoutils.nil.decoder.svg.extension.svg
+import com.neoutils.nil.decoder.xml.extension.xml
 import com.neoutils.nil.example.resources.Res
 import com.neoutils.nil.example.resources.atom
+import com.neoutils.nil.example.resources.atom_vector
 import com.neoutils.nil.fetcher.resources.extension.resource
 
 @Composable
@@ -27,10 +29,11 @@ fun App() = AppTheme {
         val density = LocalDensity.current
 
         val resource = asyncPainterResource(
-            input = Input.resource(Res.drawable.atom),
+            input = Input.resource(Res.drawable.atom_vector),
             settings = {
                 decoders {
                     svg(density)
+                    xml(density)
                     lottie()
                     gif()
                 }
