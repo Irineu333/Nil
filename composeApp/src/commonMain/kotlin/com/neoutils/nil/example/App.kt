@@ -12,7 +12,6 @@ import com.neoutils.nil.core.composable.asyncPainterResource
 import com.neoutils.nil.core.util.Input
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.decoder.gif.extension.gif
-import com.neoutils.nil.decoder.lottie.extension.lottie
 import com.neoutils.nil.decoder.svg.extension.svg
 import com.neoutils.nil.decoder.xml.extension.xml
 import com.neoutils.nil.example.resources.Res
@@ -33,7 +32,6 @@ fun App() = AppTheme {
                 decoders {
                     svg(density)
                     xml(density)
-                    lottie()
                     gif()
                 }
             }

@@ -4,7 +4,6 @@ package com.neoutils.nil.core.composable
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.painter.Painter
-import com.neoutils.nil.core.extension.delegate
 import com.neoutils.nil.core.extension.merge
 import com.neoutils.nil.core.model.Nil
 import com.neoutils.nil.core.painter.Animatable
@@ -47,7 +46,7 @@ fun rememberPainterResource(
             failure = fallback,
             loading = placeholder
         )
-    }.delegate()
+    }
 
     LaunchedEffect(resource) {
         when (val painter = resource.painter) {
