@@ -4,7 +4,6 @@ package com.neoutils.nil.core.model
 
 import com.neoutils.nil.core.extension.decoderFor
 import com.neoutils.nil.core.extension.fetcherFor
-import com.neoutils.nil.core.extension.paramFor
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.util.Input
@@ -39,7 +38,7 @@ class Nil(
             .toPainterResource { decoder ->
                 decoder.decode(
                     input = bytes,
-                    param = settings.params.paramFor(decoder),
+                    params = settings.extras[decoder.paramsKey],
                 )
             }
     }

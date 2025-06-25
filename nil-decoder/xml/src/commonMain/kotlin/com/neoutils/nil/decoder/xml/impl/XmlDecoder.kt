@@ -3,22 +3,24 @@ package com.neoutils.nil.decoder.xml.impl
 import androidx.compose.ui.unit.Density
 import com.neoutils.nil.core.exception.NotSupportException
 import com.neoutils.nil.core.extension.toPainterResource
+import com.neoutils.nil.core.scope.Extras
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.util.PainterResource
-import com.neoutils.nil.core.util.Param
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.xml.painter.VectorPainter
 import org.jetbrains.compose.resources.decodeToImageVector
 
 private val VECTOR_REGEX = Regex(pattern = "<vector[\\s\\S]+>[\\s\\S]+</vector>")
 
-class XmlDecoder(private val density: Density) : Decoder<Param> {
+class XmlDecoder(
+    private val density: Density
+) : Decoder<Any> {
 
-    override val paramType = Param::class
+    override val paramsKey = Extras.Key(Any())
 
     override suspend fun decode(
         input: ByteArray,
-        param: Param?
+        params: Any
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {

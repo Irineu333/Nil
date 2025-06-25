@@ -8,18 +8,18 @@ import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
-import com.neoutils.nil.decoder.gif.model.GifParam
+import com.neoutils.nil.decoder.gif.model.GifParams
 import com.neoutils.nil.decoder.gif.painter.AnimatedImageGifPainter
 import com.neoutils.nil.type.Type
 
 @RequiresApi(Build.VERSION_CODES.P)
-class AnimatedImageDecoder : Decoder<GifParam> {
+class AnimatedImageDecoder : Decoder<GifParams> {
 
-    override val paramType = GifParam::class
+    override val paramsKey = GifParams.ExtraKey
 
     override suspend fun decode(
         input: ByteArray,
-        param: GifParam?
+        params: GifParams
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
@@ -28,7 +28,7 @@ class AnimatedImageDecoder : Decoder<GifParam> {
 
         return runCatching {
             val drawable = createAnimatedImage(input).apply {
-                repeatCount = param?.repeatCount ?: Int.MAX_VALUE
+                repeatCount = params.repeatCount
             }
 
             AnimatedImageGifPainter(drawable)

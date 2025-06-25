@@ -16,6 +16,7 @@ import com.neoutils.nil.decoder.svg.extension.svg
 import com.neoutils.nil.decoder.xml.extension.xml
 import com.neoutils.nil.example.resources.Res
 import com.neoutils.nil.example.resources.atom_vector
+import com.neoutils.nil.example.resources.crazy_cat
 import com.neoutils.nil.fetcher.resources.extension.resource
 
 @Composable
@@ -27,12 +28,18 @@ fun App() = AppTheme {
         val density = LocalDensity.current
 
         val resource = asyncPainterResource(
-            input = Input.resource(Res.drawable.atom_vector),
+            input = Input.resource(Res.drawable.crazy_cat),
             settings = {
                 decoders {
                     svg(density)
                     xml(density)
                     gif()
+                }
+
+                extras {
+                    gif {
+                        repeatCount = 1
+                    }
                 }
             }
         )

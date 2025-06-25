@@ -4,20 +4,22 @@ import androidx.compose.ui.unit.Density
 import com.caverock.androidsvg.SVG
 import com.neoutils.nil.core.exception.NotSupportException
 import com.neoutils.nil.core.extension.toPainterResource
+import com.neoutils.nil.core.scope.Extras
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.util.PainterResource
-import com.neoutils.nil.core.util.Param
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.svg.format.SVG_REGEX
 import com.neoutils.nil.decoder.svg.painter.AndroidSvgPainter
 
-class AndroidSvgDecoder(private val density: Density) : Decoder<Param> {
+class AndroidSvgDecoder(
+    private val density: Density
+) : Decoder<Any> {
 
-    override val paramType = Param::class
+    override val paramsKey = Extras.Key(Any())
 
     override suspend fun decode(
         input: ByteArray,
-        param: Param?
+        params: Any
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {

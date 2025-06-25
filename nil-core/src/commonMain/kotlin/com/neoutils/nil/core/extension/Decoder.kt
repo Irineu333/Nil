@@ -1,15 +1,14 @@
 package com.neoutils.nil.core.extension
 
-import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.exception.NoDecoderFound
+import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.strings.DecoderErrorStrings
-import com.neoutils.nil.core.util.Param
 import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.core.util.Support
 
 private val error = DecoderErrorStrings()
 
-internal suspend fun List<Decoder<Param>>.decoderFor(bytes: ByteArray): Resource.Result<Decoder<Param>> {
+internal suspend fun List<Decoder<*>>.decoderFor(bytes: ByteArray): Resource.Result<Decoder<*>> {
 
     if (isEmpty()) {
         return Resource.Result.Failure(NoDecoderFound(error.notFound))

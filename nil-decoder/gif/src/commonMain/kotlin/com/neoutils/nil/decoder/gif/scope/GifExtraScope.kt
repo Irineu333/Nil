@@ -1,11 +1,11 @@
 package com.neoutils.nil.decoder.gif.scope
 
-import com.neoutils.nil.decoder.gif.model.GifParam
+import com.neoutils.nil.decoder.gif.model.GifParams
 
 class GifExtraScope(
-    var repeatCount: Int? = null,
+    var repeatCount: Int = Int.MAX_VALUE,
 ) {
-    internal fun build() = GifParam(
+    internal fun build() = GifParams(
         repeatCount = repeatCount,
     )
 }
