@@ -19,7 +19,7 @@ class SettingsScope internal constructor(
         this.fetchers += fetchers
     }
 
-    fun extras(vararg params: Param) {
+    fun params(vararg params: Param) {
         this.params += params
     }
 
@@ -31,7 +31,7 @@ class SettingsScope internal constructor(
         fetchers = AddictionScope(fetchers).apply(scope).values
     }
 
-    fun extras(scope: AddictionScope<Param>.() -> Unit) {
+    fun params(scope: AddictionScope<Param>.() -> Unit) {
         params = AddictionScope(params).apply(scope).values
     }
 

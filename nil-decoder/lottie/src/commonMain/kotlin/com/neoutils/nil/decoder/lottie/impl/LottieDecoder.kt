@@ -1,6 +1,7 @@
 package com.neoutils.nil.decoder.lottie.impl
 
 import com.neoutils.nil.core.exception.NotSupportException
+import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
@@ -8,6 +9,7 @@ import com.neoutils.nil.decoder.lottie.model.LottieParams
 import com.neoutils.nil.decoder.lottie.painter.LottieComposePainter
 import com.neoutils.nil.type.Type
 import io.github.alexzhirkevich.compottie.*
+import kotlinx.coroutines.runBlocking
 
 @OptIn(InternalCompottieApi::class)
 class LottieDecoder : Decoder<LottieParams> {
@@ -26,18 +28,18 @@ class LottieDecoder : Decoder<LottieParams> {
         }
 
         val spec = when {
-            isDotLottie(input) -> LottieCompositionSpec.Companion.DotLottie(input)
-            isJsonLottie(input) -> LottieCompositionSpec.Companion.JsonString(input.decodeToString())
+            isDotLottie(input) -> LottieCompositionSpec.DotLottie(input)
+            isJsonLottie(input) -> LottieCompositionSpec.JsonString(input.decodeToString())
             else -> return PainterResource.Result.Failure(NotSupportException())
         }
 
-        return PainterResource.Result.Success(
+        return runCatching {
             LottieComposePainter(
-                spec = spec,
+                composition = spec.load(),
                 iterations = param?.iterations,
                 speed = param?.speed
             )
-        )
+        }.toPainterResource()
     }
 
     override suspend fun support(input: ByteArray): Support {

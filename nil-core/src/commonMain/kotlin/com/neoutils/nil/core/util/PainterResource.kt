@@ -11,9 +11,9 @@ import androidx.compose.ui.graphics.painter.Painter
 
 sealed class PainterResource : Painter() {
 
-    override val intrinsicSize get() = painter.intrinsicSize
-
     internal abstract val painter: Painter
+
+    override val intrinsicSize get() = painter.intrinsicSize
 
     private var alpha: Float by mutableFloatStateOf(DefaultAlpha)
     private var colorFilter: ColorFilter? by mutableStateOf(null)
