@@ -27,7 +27,13 @@ class Nil(
 
             is Resource.Result.Success<Fetcher<Input>> -> {
                 val fetcher = resource.data
-                emitAll(fetcher.fetch(input))
+
+                emitAll(
+                    fetcher.fetch(
+                        input = input,
+                        extras = settings.extras
+                    )
+                )
             }
         }
     }
@@ -38,7 +44,7 @@ class Nil(
             .toPainterResource { decoder ->
                 decoder.decode(
                     input = bytes,
-                    params = settings.extras[decoder.paramsKey],
+                    extras = settings.extras,
                 )
             }
     }

@@ -5,11 +5,11 @@ import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.source.Fetcher
 
 class SettingsScope internal constructor(
-    var decoders: List<Decoder<*>>,
+    var decoders: List<Decoder>,
     var fetchers: List<Fetcher<*>>,
     val extras: Extras.Builder = Extras.Builder()
 ) {
-    fun decoders(vararg decoders: Decoder<*>) {
+    fun decoders(vararg decoders: Decoder) {
         this.decoders += decoders
     }
 
@@ -17,8 +17,8 @@ class SettingsScope internal constructor(
         this.fetchers += fetchers
     }
 
-    fun decoders(scope: AddictionScope<Decoder<*>>.() -> Unit) {
-        decoders += AddictionScope<Decoder<*>>().apply(scope).build()
+    fun decoders(scope: AddictionScope<Decoder>.() -> Unit) {
+        decoders += AddictionScope<Decoder>().apply(scope).build()
     }
 
     fun fetchers(scope: AddictionScope<Fetcher<*>>.() -> Unit) {
@@ -26,7 +26,7 @@ class SettingsScope internal constructor(
     }
 
     fun extras(scope: ExtrasScope.() -> Unit) {
-        extras.add(ExtrasScope().apply(scope).build())
+        ExtrasScope(extras).apply(scope)
     }
 
     internal fun build() = Settings(

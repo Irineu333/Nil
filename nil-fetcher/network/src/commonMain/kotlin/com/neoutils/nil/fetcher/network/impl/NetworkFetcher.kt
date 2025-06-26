@@ -1,8 +1,9 @@
 package com.neoutils.nil.fetcher.network.impl
 
-import com.neoutils.nil.fetcher.network.model.InputRequest
+import com.neoutils.nil.core.scope.Extras
 import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.util.Resource
+import com.neoutils.nil.fetcher.network.model.InputRequest
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
@@ -16,7 +17,10 @@ class NetworkFetcher(
     private val client: HttpClient = HttpClient()
 ) : Fetcher<InputRequest>(InputRequest::class) {
 
-    override suspend fun get(input: InputRequest): Resource.Result<ByteArray> {
+    override suspend fun get(
+        input: InputRequest,
+        extras: Extras
+    ): Resource.Result<ByteArray> {
         return runCatching {
             client.request(input.url) {
                 method = input.method
@@ -36,7 +40,10 @@ class NetworkFetcher(
         }
     }
 
-    override fun fetch(input: InputRequest) = channelFlow {
+    override fun fetch(
+        input: InputRequest,
+        extras: Extras
+    ) = channelFlow {
         runCatching {
             client.request(input.url) {
                 method = input.method

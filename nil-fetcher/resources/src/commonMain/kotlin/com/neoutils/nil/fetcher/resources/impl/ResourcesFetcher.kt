@@ -1,5 +1,6 @@
 package com.neoutils.nil.fetcher.resources.impl
 
+import com.neoutils.nil.core.scope.Extras
 import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.fetcher.resources.model.InputResource
@@ -12,7 +13,8 @@ import org.jetbrains.compose.resources.getDrawableResourceBytes
 class ResourcesFetcher() : Fetcher<InputResource>(InputResource::class) {
 
     override suspend fun get(
-        input: InputResource
+        input: InputResource,
+        extras: Extras
     ) = runCatching {
         withContext(Dispatchers.IO) {
             getDrawableResourceBytes(input.environment, input.res)
@@ -23,7 +25,10 @@ class ResourcesFetcher() : Fetcher<InputResource>(InputResource::class) {
         Resource.Result.Failure(it)
     }
 
-    override fun fetch(input: InputResource) = callbackFlow {
+    override fun fetch(
+        input: InputResource,
+        extras: Extras
+    ) = callbackFlow {
         runCatching {
             withContext(Dispatchers.IO) {
                 getDrawableResourceBytes(input.environment, input.res)

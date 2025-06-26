@@ -7,17 +7,13 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import com.neoutils.nil.core.composable.asyncPainterResource
 import com.neoutils.nil.core.util.Input
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.decoder.gif.extension.gif
 import com.neoutils.nil.decoder.svg.extension.svg
 import com.neoutils.nil.decoder.xml.extension.xml
-import com.neoutils.nil.example.resources.Res
-import com.neoutils.nil.example.resources.atom_vector
-import com.neoutils.nil.example.resources.crazy_cat
-import com.neoutils.nil.fetcher.resources.extension.resource
+import com.neoutils.nil.fetcher.network.extension.request
 
 @Composable
 fun App() = AppTheme {
@@ -25,14 +21,13 @@ fun App() = AppTheme {
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        val density = LocalDensity.current
 
         val resource = asyncPainterResource(
-            input = Input.resource(Res.drawable.crazy_cat),
+            input = Input.request("https://cataas.com/cat/gif"),
             settings = {
                 decoders {
-                    svg(density)
-                    xml(density)
+                    svg()
+                    xml()
                     gif()
                 }
 

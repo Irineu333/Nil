@@ -1,8 +1,9 @@
 package com.neoutils.nil.decoder.gif.impl
 
 import android.graphics.Movie
-import com.neoutils.nil.core.exception.NotSupportException
+import com.neoutils.nil.core.exception.NotSupportFormatException
 import com.neoutils.nil.core.extension.toPainterResource
+import com.neoutils.nil.core.scope.Extras
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
@@ -11,20 +12,20 @@ import com.neoutils.nil.decoder.gif.painter.MovieGifPainter
 import com.neoutils.nil.type.Type
 
 @Suppress("DEPRECATION")
-class MovieGifDecoder : Decoder<GifParams> {
-
-    override val paramsKey = GifParams.ExtraKey
+class MovieGifDecoder : Decoder {
 
     override suspend fun decode(
         input: ByteArray,
-        params: GifParams
+        extras: Extras
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
-            return PainterResource.Result.Failure(NotSupportException())
+            return PainterResource.Result.Failure(NotSupportFormatException())
         }
 
         return runCatching {
+            val params = extras[GifParams.ExtraKey]
+
             MovieGifPainter(
                 movie = Movie.decodeStream(input.inputStream()),
                 repeatCount = params.repeatCount

@@ -3,8 +3,9 @@ package com.neoutils.nil.decoder.gif.impl
 import android.graphics.drawable.AnimatedImageDrawable
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.neoutils.nil.core.exception.NotSupportException
+import com.neoutils.nil.core.exception.NotSupportFormatException
 import com.neoutils.nil.core.extension.toPainterResource
+import com.neoutils.nil.core.scope.Extras
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
@@ -13,20 +14,20 @@ import com.neoutils.nil.decoder.gif.painter.AnimatedImageGifPainter
 import com.neoutils.nil.type.Type
 
 @RequiresApi(Build.VERSION_CODES.P)
-class AnimatedImageDecoder : Decoder<GifParams> {
-
-    override val paramsKey = GifParams.ExtraKey
+class AnimatedImageDecoder : Decoder {
 
     override suspend fun decode(
         input: ByteArray,
-        params: GifParams
+        extras: Extras
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
-            return PainterResource.Result.Failure(NotSupportException())
+            return PainterResource.Result.Failure(NotSupportFormatException())
         }
 
         return runCatching {
+            val params = extras[GifParams.ExtraKey]
+
             val drawable = createAnimatedImage(input).apply {
                 repeatCount = params.repeatCount
             }

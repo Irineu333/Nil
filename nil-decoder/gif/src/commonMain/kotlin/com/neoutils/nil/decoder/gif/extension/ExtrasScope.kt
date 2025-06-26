@@ -2,10 +2,13 @@ package com.neoutils.nil.decoder.gif.extension
 
 import com.neoutils.nil.core.scope.ExtrasScope
 import com.neoutils.nil.decoder.gif.model.GifParams
-import com.neoutils.nil.decoder.gif.scope.GifExtraScope
 
 fun ExtrasScope.gif(
-    scope: GifExtraScope.() -> Unit
+    scope: GifParams.Builder.() -> Unit
 ) {
-    set(GifParams.ExtraKey, GifExtraScope().apply(scope).build())
+    extras.update(GifParams.ExtraKey) {
+        it.newBuilder()
+            .apply(scope)
+            .build()
+    }
 }

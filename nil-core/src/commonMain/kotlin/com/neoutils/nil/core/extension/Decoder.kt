@@ -8,7 +8,7 @@ import com.neoutils.nil.core.util.Support
 
 private val error = DecoderErrorStrings()
 
-internal suspend fun List<Decoder<*>>.decoderFor(bytes: ByteArray): Resource.Result<Decoder<*>> {
+internal suspend fun List<Decoder>.decoderFor(bytes: ByteArray): Resource.Result<Decoder> {
 
     if (isEmpty()) {
         return Resource.Result.Failure(NoDecoderFound(error.notFound))
