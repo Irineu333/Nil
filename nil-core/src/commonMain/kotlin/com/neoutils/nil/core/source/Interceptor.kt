@@ -5,6 +5,7 @@ import com.neoutils.nil.core.interceptor.DecodeInterceptor
 import com.neoutils.nil.core.interceptor.FetchInterceptor
 import com.neoutils.nil.core.model.Chain
 import com.neoutils.nil.core.model.Settings
+import kotlinx.coroutines.flow.Flow
 
 val LocalInterceptors = compositionLocalOf {
     listOf(
@@ -17,5 +18,5 @@ interface Interceptor {
     suspend fun intercept(
         settings: Settings,
         chain: Chain
-    ): Chain
+    ): Flow<Chain>
 }

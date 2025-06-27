@@ -23,7 +23,7 @@ fun App() = AppTheme {
     ) {
 
         val resource = asyncPainterResource(
-            request = Request.network("https://cataas.com/cat/gif"),
+            request = Request.network("https://cataas.com/cat"),
         ) {
             decoders {
                 svg()

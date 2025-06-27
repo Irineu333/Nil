@@ -10,6 +10,8 @@ import com.neoutils.nil.core.strings.DecoderErrorStrings
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.core.util.Support
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 private val error = DecoderErrorStrings()
 
@@ -17,8 +19,8 @@ class DecodeInterceptor : Interceptor {
     override suspend fun intercept(
         settings: Settings,
         chain: Chain
-    ): Chain {
-        return when (val data = chain.data) {
+    ): Flow<Chain> = flowOf(
+        when (val data = chain.data) {
             is Resource.Loading -> {
                 chain.copy(
                     painter = PainterResource.Loading(data.progress)
@@ -43,9 +45,8 @@ class DecodeInterceptor : Interceptor {
                         }
                 )
             }
-
         }
-    }
+    )
 
     private suspend fun Settings.decoderFor(bytes: ByteArray): Resource.Result<Decoder> {
 

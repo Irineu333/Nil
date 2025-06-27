@@ -3,33 +3,58 @@ package com.neoutils.nil.core.interceptor
 import com.neoutils.nil.core.exception.NoFetcherFound
 import com.neoutils.nil.core.model.Chain
 import com.neoutils.nil.core.model.Settings
+import com.neoutils.nil.core.scope.Extras
 import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.source.Interceptor
 import com.neoutils.nil.core.strings.FetcherErrorStrings
 import com.neoutils.nil.core.util.Request
 import com.neoutils.nil.core.util.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 private val error = FetcherErrorStrings()
+
+val EnableProgressExtrasKey = Extras.Key(true)
 
 class FetchInterceptor : Interceptor {
     override suspend fun intercept(
         settings: Settings,
         chain: Chain
-    ): Chain {
-        return when (val resource = settings.fetcherFor(chain.request)) {
+    ): Flow<Chain> = flow {
+
+        val enableProgress = settings.extras[EnableProgressExtrasKey]
+
+        when (val resource = settings.fetcherFor(chain.request)) {
             is Resource.Result.Failure -> {
-                chain.copy(
-                    data = Resource.Result.Failure(resource.throwable)
+                emit(
+                    chain.copy(
+                        data = Resource.Result.Failure(resource.throwable)
+                    )
                 )
             }
 
             is Resource.Result.Success<Fetcher<Request>> -> {
-                chain.copy(
-                    data = resource.value.get(
-                        input = chain.request,
-                        extras = settings.extras
+                if (enableProgress) {
+                    emitAll(
+                        resource.value.fetch(
+                            input = chain.request,
+                            extras = settings.extras
+                        ).map { data ->
+                            chain.copy(data = data)
+                        }
                     )
-                )
+                } else {
+                    emit(
+                        chain.copy(
+                            data = resource.value.get(
+                                input = chain.request,
+                                extras = settings.extras
+                            )
+                        )
+                    )
+                }
             }
         }
     }
