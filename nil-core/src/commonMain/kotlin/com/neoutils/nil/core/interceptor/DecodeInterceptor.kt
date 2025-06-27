@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.flowOf
 
 private val error = DecoderErrorStrings()
 
-class DecodeInterceptor : Interceptor {
+class DecodeInterceptor : Interceptor(Level.DECODE) {
     override suspend fun intercept(
         settings: Settings,
         chain: Chain

@@ -18,7 +18,7 @@ private val error = FetcherErrorStrings()
 
 val EnableProgressExtrasKey = Extras.Key(true)
 
-class FetchInterceptor : Interceptor {
+class FetchInterceptor : Interceptor(Level.FETCHER) {
     override suspend fun intercept(
         settings: Settings,
         chain: Chain
@@ -73,4 +73,10 @@ class FetchInterceptor : Interceptor {
             Resource.Result.Failure(NoFetcherFound(error.noRequiredFound))
         }
     }
+}
+
+enum class Level {
+    REQUEST,
+    FETCHER,
+    DECODE,
 }

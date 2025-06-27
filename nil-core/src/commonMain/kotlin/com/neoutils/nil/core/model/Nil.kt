@@ -15,12 +15,14 @@ class Nil(
 ) {
 
     fun execute(request: Request): Flow<PainterResource> {
-        return settings.interceptors.fold(
-            flowOf(Chain(request))
-        ) { chain, interceptor ->
-            chain.flatMapMerge { interceptor.intercept(settings, it) }
-        }.map { chain ->
-            chain.painter
-        }
+        return settings.interceptors
+            .sortedBy { it.level }
+            .fold(flowOf(Chain(request))) { chain, interceptor ->
+                chain.flatMapMerge {
+                    interceptor.intercept(settings, it)
+                }
+            }.map { chain ->
+                chain.painter
+            }
     }
 }
