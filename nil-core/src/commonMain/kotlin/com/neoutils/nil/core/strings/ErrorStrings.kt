@@ -1,5 +1,10 @@
 package com.neoutils.nil.core.strings
 
+internal data class ErrorStrings(
+    val decoder: DecoderErrorStrings = DecoderErrorStrings(),
+    val fetcher: FetcherErrorStrings = FetcherErrorStrings(),
+    val extras: ExtraErrorStrings = ExtraErrorStrings()
+)
 
 internal data class DecoderErrorStrings(
     val notFound: String = "No decoder found",

@@ -1,5 +1,5 @@
 package com.neoutils.nil.core.util
 
-interface Input {
+interface Request {
     companion object
 }

@@ -1,10 +1,10 @@
 package com.neoutils.nil.fetcher.resources.model
 
-import com.neoutils.nil.core.util.Input
+import com.neoutils.nil.core.util.Request
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ResourceEnvironment
 
-data class InputResource(
+data class RequestResource(
     val res: DrawableResource,
     val environment: ResourceEnvironment
-) : Input
+) : Request

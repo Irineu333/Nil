@@ -10,6 +10,7 @@ import com.neoutils.nil.core.scope.LocalExtras
 import com.neoutils.nil.core.scope.SettingsScope
 import com.neoutils.nil.core.source.LocalDecoders
 import com.neoutils.nil.core.source.LocalFetchers
+import com.neoutils.nil.core.source.LocalInterceptors
 
 @Composable
 fun ProvideSettings(
@@ -27,6 +28,7 @@ fun rememberSettings(block: SettingsScope.() -> Unit): Settings {
 
     val decoders = LocalDecoders.current
     val fetchers = LocalFetchers.current
+    val interceptors = LocalInterceptors.current
     val extras = LocalExtras.current
 
     val density = LocalDensity.current
@@ -35,6 +37,7 @@ fun rememberSettings(block: SettingsScope.() -> Unit): Settings {
         SettingsScope(
             decoders = decoders,
             fetchers = fetchers,
+            interceptors = interceptors,
             extras = extras.newBuilder().apply {
                 set(DensityExtraKey, density)
             }

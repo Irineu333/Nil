@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.neoutils.nil.core.composable.asyncPainterResource
-import com.neoutils.nil.core.util.Input
+import com.neoutils.nil.core.util.Request
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.decoder.gif.extension.gif
 import com.neoutils.nil.decoder.svg.extension.svg
@@ -23,7 +23,7 @@ fun App() = AppTheme {
     ) {
 
         val resource = asyncPainterResource(
-            input = Input.network("https://cataas.com/cat/gif"),
+            request = Request.network("https://cataas.com/cat/gif"),
         ) {
             decoders {
                 svg()

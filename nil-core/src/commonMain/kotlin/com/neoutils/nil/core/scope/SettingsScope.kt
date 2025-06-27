@@ -3,10 +3,12 @@ package com.neoutils.nil.core.scope
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.source.Fetcher
+import com.neoutils.nil.core.source.Interceptor
 
 class SettingsScope internal constructor(
     var decoders: List<Decoder>,
     var fetchers: List<Fetcher<*>>,
+    var interceptors: List<Interceptor>,
     val extras: Extras.Builder = Extras.Builder()
 ) {
     fun decoders(vararg decoders: Decoder) {
@@ -32,6 +34,7 @@ class SettingsScope internal constructor(
     internal fun build() = Settings(
         decoders = decoders,
         fetchers = fetchers,
+        interceptors = interceptors,
         extras = extras.build()
     )
 }
