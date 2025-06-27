@@ -33,12 +33,6 @@ fun App() = AppTheme {
                 xml()
                 gif()
             }
-
-            extras {
-                gif {
-                    repeatCount = 1
-                }
-            }
         }
 
         when (resource) {

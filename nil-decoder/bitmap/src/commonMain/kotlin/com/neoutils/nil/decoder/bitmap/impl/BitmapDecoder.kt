@@ -33,7 +33,7 @@ class BitmapDecoder : Decoder {
         return when (Type.detect(input)) {
             Type.PNG -> Support.RECOMMEND
             Type.JPEG -> Support.RECOMMEND
-            Type.WEBP -> Support.TOTAL
+            Type.WEBP -> Support.SUPPORT
             Type.GIF -> Support.PARTIAL
             else -> Support.NONE
         }

@@ -46,7 +46,7 @@ class SkiaGifDecoder : Decoder {
         return when (Type.detect(input)) {
             Type.GIF -> Support.RECOMMEND
             Type.WEBP if input.isAnimated() -> Support.RECOMMEND
-            Type.WEBP, Type.PNG, Type.JPEG -> Support.TOTAL
+            Type.WEBP, Type.PNG, Type.JPEG -> Support.SUPPORT
             else -> Support.NONE
         }
     }

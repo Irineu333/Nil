@@ -39,9 +39,10 @@ internal class MovieGifPainter(
 
     private val frameCache = mutableMapOf<Int, ImageBitmap>()
 
+    private var imageBitmap by mutableStateOf(createFrameBitmap(time = 0))
+
     private var alpha: Float by mutableFloatStateOf(DefaultAlpha)
     private var colorFilter: ColorFilter? by mutableStateOf(null)
-    private var imageBitmap by mutableStateOf(createFrameBitmap(time = 0))
 
     private var interactions = 0
 
