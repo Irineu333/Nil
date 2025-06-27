@@ -31,7 +31,7 @@ kotlin {
             implementation(libs.compose.ui.graphics)
 
             // ktor
-            implementation(libs.ktor.client.core)
+            api(libs.ktor.client.core)
 
             // coroutines
             implementation(libs.kotlinx.coroutines)

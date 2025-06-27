@@ -33,13 +33,6 @@ class Extras private constructor(
             set(key, block(extras.getOrDefault(key)))
         }
 
-        @Suppress("UNCHECKED_CAST")
-        fun add(extras: Extras) {
-            for ((key, value) in extras.extras) {
-                set(key as Key<Any>, value)
-            }
-        }
-
         fun build(): Extras {
             return Extras(extras.toMap())
         }

@@ -13,6 +13,8 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.withContext
 
+val HeadersExtrasKey = Extras.Key<Map<String, String>>(mapOf())
+
 class NetworkFetcher(
     private val client: HttpClient = HttpClient()
 ) : Fetcher<InputRequest>(InputRequest::class) {
@@ -20,24 +22,25 @@ class NetworkFetcher(
     override suspend fun get(
         input: InputRequest,
         extras: Extras
-    ): Resource.Result<ByteArray> {
-        return runCatching {
-            client.request(input.url) {
-                method = input.method
+    ) = runCatching {
 
-                input.headers.forEach {
-                    headers[it.key] = it.value
-                }
+        val headers = extras[HeadersExtrasKey]
+
+        client.request(input.url) {
+            method = input.method
+
+            headers.forEach {
+                this.headers[it.key] = it.value
             }
-        }.map { response ->
-            withContext(Dispatchers.Default) {
-                response.bodyAsBytes()
-            }
-        }.map { bytes ->
-            Resource.Result.Success(data = bytes)
-        }.getOrElse {
-            Resource.Result.Failure(it)
         }
+    }.map { response ->
+        withContext(Dispatchers.Default) {
+            response.bodyAsBytes()
+        }
+    }.map { bytes ->
+        Resource.Result.Success(data = bytes)
+    }.getOrElse {
+        Resource.Result.Failure(it)
     }
 
     override fun fetch(
@@ -45,11 +48,13 @@ class NetworkFetcher(
         extras: Extras
     ) = channelFlow {
         runCatching {
+            val headers = extras[HeadersExtrasKey]
+
             client.request(input.url) {
                 method = input.method
 
-                input.headers.forEach {
-                    headers[it.key] = it.value
+                headers.forEach {
+                    this.headers[it.key] = it.value
                 }
 
                 onProgress { progress ->

@@ -6,7 +6,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalDensity
 import com.neoutils.nil.core.key.DensityExtraKey
 import com.neoutils.nil.core.model.Settings
-import com.neoutils.nil.core.scope.Extras
 import com.neoutils.nil.core.scope.LocalExtras
 import com.neoutils.nil.core.scope.SettingsScope
 import com.neoutils.nil.core.source.LocalDecoders
@@ -29,7 +28,7 @@ fun rememberSettings(block: SettingsScope.() -> Unit): Settings {
     val decoders = LocalDecoders.current
     val fetchers = LocalFetchers.current
     val extras = LocalExtras.current
-    
+
     val density = LocalDensity.current
 
     val scope = remember(decoders, fetchers) {

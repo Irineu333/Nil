@@ -13,7 +13,7 @@ import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.decoder.gif.extension.gif
 import com.neoutils.nil.decoder.svg.extension.svg
 import com.neoutils.nil.decoder.xml.extension.xml
-import com.neoutils.nil.fetcher.network.extension.request
+import com.neoutils.nil.fetcher.network.extension.network
 
 @Composable
 fun App() = AppTheme {
@@ -23,21 +23,20 @@ fun App() = AppTheme {
     ) {
 
         val resource = asyncPainterResource(
-            input = Input.request("https://cataas.com/cat/gif"),
-            settings = {
-                decoders {
-                    svg()
-                    xml()
-                    gif()
-                }
+            input = Input.network("https://cataas.com/cat/gif"),
+        ) {
+            decoders {
+                svg()
+                xml()
+                gif()
+            }
 
-                extras {
-                    gif {
-                        repeatCount = 1
-                    }
+            extras {
+                gif {
+                    repeatCount = 1
                 }
             }
-        )
+        }
 
         when (resource) {
             is PainterResource.Result.Success -> {
