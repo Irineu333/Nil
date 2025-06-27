@@ -19,12 +19,20 @@ class SettingsScope internal constructor(
         this.fetchers += fetchers
     }
 
+    fun interceptors(vararg interceptors: Interceptor) {
+        this.interceptors += interceptors
+    }
+
     fun decoders(scope: AddictionScope<Decoder>.() -> Unit) {
         decoders += AddictionScope<Decoder>().apply(scope).build()
     }
 
     fun fetchers(scope: AddictionScope<Fetcher<*>>.() -> Unit) {
         fetchers += AddictionScope<Fetcher<*>>().apply(scope).build()
+    }
+
+    fun interceptors(scope: AddictionScope<Interceptor>.() -> Unit) {
+        interceptors += AddictionScope<Interceptor>().apply(scope).build()
     }
 
     fun extras(scope: ExtrasScope.() -> Unit) {

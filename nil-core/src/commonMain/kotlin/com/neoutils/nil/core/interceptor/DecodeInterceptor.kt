@@ -7,7 +7,7 @@ import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.source.Interceptor
 import com.neoutils.nil.core.strings.DecoderErrorStrings
-import com.neoutils.nil.core.util.PainterResource
+import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.core.util.Support
 import kotlinx.coroutines.flow.Flow
@@ -16,36 +16,23 @@ import kotlinx.coroutines.flow.flowOf
 private val error = DecoderErrorStrings()
 
 class DecodeInterceptor : Interceptor(Level.DECODE) {
+
     override suspend fun intercept(
         settings: Settings,
         chain: Chain
     ): Flow<Chain> = flowOf(
-        when (val data = chain.data) {
-            is Resource.Loading -> {
-                chain.copy(
-                    painter = PainterResource.Loading(data.progress)
-                )
+        chain.copy(
+            painter = chain.data.toPainterResource { data ->
+                settings
+                    .decoderFor(data)
+                    .toPainterResource { decoder ->
+                        decoder.decode(
+                            input = data,
+                            extras = settings.extras,
+                        )
+                    }
             }
-
-            is Resource.Result.Failure -> {
-                chain.copy(
-                    painter = PainterResource.Result.Failure(data.throwable)
-                )
-            }
-
-            is Resource.Result.Success<ByteArray> -> {
-                chain.copy(
-                    painter = settings
-                        .decoderFor(data.value)
-                        .toPainterResource { decoder ->
-                            decoder.decode(
-                                input = data.value,
-                                extras = settings.extras,
-                            )
-                        }
-                )
-            }
-        }
+        )
     )
 
     private suspend fun Settings.decoderFor(bytes: ByteArray): Resource.Result<Decoder> {

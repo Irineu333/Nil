@@ -25,7 +25,7 @@ fun asyncPainterResource(
 
     val nil = remember(settings) { Nil(settings) }
 
-    val flow = remember(nil, request) { nil.execute(request) }
+    val flow = remember(nil, request) { nil.async(request) }
 
     val painter by flow.collectAsState(PainterResource.Loading())
 

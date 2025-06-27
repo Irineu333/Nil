@@ -3,7 +3,7 @@ package com.neoutils.nil.fetcher.network.impl
 import com.neoutils.nil.core.scope.Extras
 import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.util.Resource
-import com.neoutils.nil.fetcher.network.model.RequestRequest
+import com.neoutils.nil.fetcher.network.model.RequestNetwork
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
@@ -17,10 +17,10 @@ val HeadersExtrasKey = Extras.Key<Map<String, String>>(mapOf())
 
 class NetworkFetcher(
     private val client: HttpClient = HttpClient()
-) : Fetcher<RequestRequest>(RequestRequest::class) {
+) : Fetcher<RequestNetwork>(RequestNetwork::class) {
 
     override suspend fun get(
-        input: RequestRequest,
+        input: RequestNetwork,
         extras: Extras
     ) = runCatching {
 
@@ -44,7 +44,7 @@ class NetworkFetcher(
     }
 
     override fun fetch(
-        input: RequestRequest,
+        input: RequestNetwork,
         extras: Extras
     ) = channelFlow {
         runCatching {

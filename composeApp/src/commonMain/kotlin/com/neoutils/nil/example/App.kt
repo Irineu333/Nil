@@ -11,6 +11,7 @@ import com.neoutils.nil.core.composable.asyncPainterResource
 import com.neoutils.nil.core.util.Request
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.decoder.gif.extension.gif
+import com.neoutils.nil.decoder.gif.model.GifParams
 import com.neoutils.nil.decoder.svg.extension.svg
 import com.neoutils.nil.decoder.xml.extension.xml
 import com.neoutils.nil.fetcher.network.extension.network

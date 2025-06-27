@@ -7,6 +7,7 @@ import com.neoutils.nil.core.scope.Extras
 import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.source.Interceptor
 import com.neoutils.nil.core.strings.FetcherErrorStrings
+import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.Request
 import com.neoutils.nil.core.util.Resource
 import kotlinx.coroutines.flow.Flow
@@ -19,6 +20,7 @@ private val error = FetcherErrorStrings()
 val EnableProgressExtrasKey = Extras.Key(true)
 
 class FetchInterceptor : Interceptor(Level.FETCHER) {
+
     override suspend fun intercept(
         settings: Settings,
         chain: Chain
@@ -26,35 +28,35 @@ class FetchInterceptor : Interceptor(Level.FETCHER) {
 
         val enableProgress = settings.extras[EnableProgressExtrasKey]
 
-        when (val resource = settings.fetcherFor(chain.request)) {
+        when (val fetcher = settings.fetcherFor(chain.request)) {
             is Resource.Result.Failure -> {
                 emit(
                     chain.copy(
-                        data = Resource.Result.Failure(resource.throwable)
+                        data = Resource.Result.Failure(fetcher.throwable)
                     )
                 )
             }
 
+            is Resource.Result.Success<Fetcher<Request>> if enableProgress -> {
+                emitAll(
+                    fetcher.value.fetch(
+                        input = chain.request,
+                        extras = settings.extras
+                    ).map { data ->
+                        chain.copy(data = data)
+                    }
+                )
+            }
+
             is Resource.Result.Success<Fetcher<Request>> -> {
-                if (enableProgress) {
-                    emitAll(
-                        resource.value.fetch(
+                emit(
+                    chain.copy(
+                        data = fetcher.value.get(
                             input = chain.request,
                             extras = settings.extras
-                        ).map { data ->
-                            chain.copy(data = data)
-                        }
-                    )
-                } else {
-                    emit(
-                        chain.copy(
-                            data = resource.value.get(
-                                input = chain.request,
-                                extras = settings.extras
-                            )
                         )
                     )
-                }
+                )
             }
         }
     }
@@ -73,10 +75,4 @@ class FetchInterceptor : Interceptor(Level.FETCHER) {
             Resource.Result.Failure(NoFetcherFound(error.noRequiredFound))
         }
     }
-}
-
-enum class Level {
-    REQUEST,
-    FETCHER,
-    DECODE,
 }

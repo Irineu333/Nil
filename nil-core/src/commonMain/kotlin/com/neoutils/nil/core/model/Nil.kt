@@ -11,18 +11,17 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 class Nil(
-    internal val settings: Settings
+    private val settings: Settings
 ) {
-
-    fun execute(request: Request): Flow<PainterResource> {
+    fun async(request: Request): Flow<PainterResource> {
         return settings.interceptors
             .sortedBy { it.level }
             .fold(flowOf(Chain(request))) { chain, interceptor ->
                 chain.flatMapMerge {
                     interceptor.intercept(settings, it)
                 }
-            }.map { chain ->
-                chain.painter
+            }.map {
+                it.painter
             }
     }
 }
