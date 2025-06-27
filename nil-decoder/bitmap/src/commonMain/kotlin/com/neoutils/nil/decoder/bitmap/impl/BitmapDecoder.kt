@@ -31,9 +31,9 @@ class BitmapDecoder : Decoder {
         if (input.isEmpty()) return Support.NONE
 
         return when (Type.detect(input)) {
-            Type.PNG -> Support.TOTAL
-            Type.JPEG -> Support.TOTAL
-            Type.WEBP -> Support.PARTIAL
+            Type.PNG -> Support.RECOMMEND
+            Type.JPEG -> Support.RECOMMEND
+            Type.WEBP -> Support.TOTAL
             Type.GIF -> Support.PARTIAL
             else -> Support.NONE
         }

@@ -36,7 +36,7 @@ class XmlDecoder() : Decoder {
         val content = input.decodeToString()
 
         if (content.contains(VECTOR_REGEX)) {
-            return Support.TOTAL
+            return Support.RECOMMEND
         }
 
         return Support.NONE

@@ -35,7 +35,7 @@ class AndroidSvgDecoder() : Decoder {
         val content = input.decodeToString()
 
         if (content.contains(SVG_REGEX)) {
-            return Support.TOTAL
+            return Support.RECOMMEND
         }
 
         return Support.NONE
