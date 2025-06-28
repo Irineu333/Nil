@@ -16,7 +16,7 @@ class Nil(
 ) {
     private val interceptors = Level.entries.flatMap { level ->
         settings.interceptors.filter {
-            it.level.contains(level)
+            it.levels.contains(level)
         }
     }
 
