@@ -11,26 +11,28 @@ import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.Request
 import com.neoutils.nil.core.util.Resource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 private val error = FetcherErrorStrings()
 
 val EnableProgressExtrasKey = Extras.Key(default = true)
 
-class FetchInterceptor : Interceptor(Level.FETCHER) {
+class FetchInterceptor : Interceptor(Level.DATA) {
 
     override suspend fun intercept(
         settings: Settings,
         chain: Chain
-    ): Flow<Chain> = flow {
+    ): Flow<Chain> {
+
+        if (!chain.painter.isLoading) return flowOf(chain)
+        if (!chain.data.isLoading) return flowOf(chain)
 
         val enableProgress = settings.extras[EnableProgressExtrasKey]
 
-        when (val fetcher = settings.fetcherFor(chain.request)) {
+        return when (val fetcher = settings.fetcherFor(chain.request)) {
             is Resource.Result.Failure -> {
-                emit(
+                flowOf(
                     chain.copy(
                         data = Resource.Result.Failure(fetcher.throwable)
                     )
@@ -38,18 +40,16 @@ class FetchInterceptor : Interceptor(Level.FETCHER) {
             }
 
             is Resource.Result.Success<Fetcher<Request>> if enableProgress -> {
-                emitAll(
-                    fetcher.value.fetch(
-                        input = chain.request,
-                        extras = settings.extras
-                    ).map { data ->
-                        chain.copy(data = data)
-                    }
-                )
+                fetcher.value.fetch(
+                    input = chain.request,
+                    extras = settings.extras
+                ).map { data ->
+                    chain.copy(data = data)
+                }
             }
 
             is Resource.Result.Success<Fetcher<Request>> -> {
-                emit(
+                flowOf(
                     chain.copy(
                         data = fetcher.value.get(
                             input = chain.request,
