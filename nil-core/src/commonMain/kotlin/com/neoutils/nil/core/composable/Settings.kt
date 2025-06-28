@@ -20,6 +20,7 @@ fun ProvideSettings(
     LocalDecoders provides settings.decoders,
     LocalFetchers provides settings.fetchers,
     LocalExtras provides settings.extras,
+    LocalInterceptors provides settings.interceptors,
     content = content
 )
 
@@ -33,7 +34,12 @@ fun rememberSettings(block: SettingsScope.() -> Unit): Settings {
 
     val density = LocalDensity.current
 
-    val scope = remember(decoders, fetchers) {
+    val scope = remember(
+        decoders,
+        fetchers,
+        interceptors,
+        extras
+    ) {
         SettingsScope(
             decoders = decoders,
             fetchers = fetchers,
