@@ -7,47 +7,13 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import com.neoutils.nil.core.composable.asyncPainterResource
-import com.neoutils.nil.core.model.Chain
-import com.neoutils.nil.core.model.Settings
-import com.neoutils.nil.core.source.Interceptor
-import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Request
 import com.neoutils.nil.decoder.gif.extension.gif
 import com.neoutils.nil.decoder.svg.extension.svg
 import com.neoutils.nil.decoder.xml.extension.xml
 import com.neoutils.nil.fetcher.network.extension.network
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-
-private val cache = mutableMapOf<Request, Painter>()
-
-class MemoryCacheInterceptor : Interceptor(Level.REQUEST, Level.PAINTER) {
-    override suspend fun intercept(
-        settings: Settings,
-        chain: Chain
-    ): Flow<Chain> {
-
-        if (chain.painter.isLoading) {
-
-            val painter = cache[chain.request] ?: return flowOf(chain)
-
-            return flowOf(
-                chain.copy(
-                    painter = PainterResource.Result.Success(painter)
-                )
-            )
-        }
-
-        if (chain.painter.isSuccess) {
-            cache[chain.request] = chain.painter
-        }
-
-        return flowOf(chain)
-    }
-}
 
 @Composable
 fun App() = AppTheme {
@@ -64,8 +30,6 @@ fun App() = AppTheme {
                 xml()
                 gif()
             }
-
-            interceptors += MemoryCacheInterceptor()
         }
 
         when (resource) {
