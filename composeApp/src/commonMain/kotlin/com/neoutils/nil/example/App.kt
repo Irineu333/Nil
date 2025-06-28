@@ -24,31 +24,22 @@ import kotlinx.coroutines.flow.flowOf
 
 private val cache = mutableMapOf<Request, Painter>()
 
-class MemoryCacheInterceptorRestore : Interceptor(Level.REQUEST) {
+class MemoryCacheInterceptor : Interceptor(Level.REQUEST, Level.PAINTER) {
     override suspend fun intercept(
         settings: Settings,
         chain: Chain
     ): Flow<Chain> {
 
-        if (!chain.painter.isLoading) {
-            return flowOf(chain)
-        }
+        if (chain.painter.isLoading) {
 
-        val painter = cache[chain.request] ?: return flowOf(chain)
+            val painter = cache[chain.request] ?: return flowOf(chain)
 
-        return flowOf(
-            chain.copy(
-                painter = PainterResource.Result.Success(painter)
+            return flowOf(
+                chain.copy(
+                    painter = PainterResource.Result.Success(painter)
+                )
             )
-        )
-    }
-}
-
-class MemoryCacheInterceptorSave : Interceptor(Level.PAINTER) {
-    override suspend fun intercept(
-        settings: Settings,
-        chain: Chain
-    ): Flow<Chain> {
+        }
 
         if (chain.painter.isSuccess) {
             cache[chain.request] = chain.painter
@@ -74,10 +65,7 @@ fun App() = AppTheme {
                 gif()
             }
 
-            interceptors += listOf(
-                MemoryCacheInterceptorSave(),
-                MemoryCacheInterceptorRestore()
-            )
+            interceptors += MemoryCacheInterceptor()
         }
 
         when (resource) {
