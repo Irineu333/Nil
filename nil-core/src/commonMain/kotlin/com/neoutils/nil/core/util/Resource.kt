@@ -9,7 +9,7 @@ sealed interface Resource<out T> {
     sealed interface Result<out T> : Resource<T> {
 
         data class Success<out T>(
-            val data: T
+            val value: T
         ) : Result<T>
 
         data class Failure(

@@ -3,7 +3,7 @@ package com.neoutils.nil.fetcher.network.impl
 import com.neoutils.nil.core.scope.Extras
 import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.util.Resource
-import com.neoutils.nil.fetcher.network.model.InputRequest
+import com.neoutils.nil.fetcher.network.model.RequestNetwork
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
@@ -17,10 +17,10 @@ val HeadersExtrasKey = Extras.Key<Map<String, String>>(mapOf())
 
 class NetworkFetcher(
     private val client: HttpClient = HttpClient()
-) : Fetcher<InputRequest>(InputRequest::class) {
+) : Fetcher<RequestNetwork>(RequestNetwork::class) {
 
     override suspend fun get(
-        input: InputRequest,
+        input: RequestNetwork,
         extras: Extras
     ) = runCatching {
 
@@ -38,13 +38,13 @@ class NetworkFetcher(
             response.bodyAsBytes()
         }
     }.map { bytes ->
-        Resource.Result.Success(data = bytes)
+        Resource.Result.Success(value = bytes)
     }.getOrElse {
         Resource.Result.Failure(it)
     }
 
     override fun fetch(
-        input: InputRequest,
+        input: RequestNetwork,
         extras: Extras
     ) = channelFlow {
         runCatching {
@@ -69,7 +69,7 @@ class NetworkFetcher(
             }
         }.onSuccess { bytes ->
             withContext(Dispatchers.Main) {
-                send(Resource.Result.Success(data = bytes))
+                send(Resource.Result.Success(value = bytes))
             }
         }.onFailure {
             withContext(Dispatchers.Main) {

@@ -1,12 +1,12 @@
 package com.neoutils.nil.fetcher.network.extension
 
 import androidx.compose.runtime.Stable
-import com.neoutils.nil.core.util.Input
-import com.neoutils.nil.fetcher.network.model.InputRequest
+import com.neoutils.nil.core.util.Request
+import com.neoutils.nil.fetcher.network.model.RequestNetwork
 import io.ktor.http.*
 
 @Stable
-fun Input.Companion.network(
+fun Request.Companion.network(
     url: String,
     method: HttpMethod = HttpMethod.Get
-) = InputRequest(url, method)
+) = RequestNetwork(url, method)
