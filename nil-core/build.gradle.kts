@@ -30,6 +30,10 @@ kotlin {
             // coroutines
             implementation(libs.kotlinx.coroutines)
         }
+
+        all {
+            languageSettings.enableLanguageFeature("WhenGuards")
+        }
     }
 }
 

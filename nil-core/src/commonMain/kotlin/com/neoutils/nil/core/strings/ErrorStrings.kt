@@ -1,6 +1,5 @@
 package com.neoutils.nil.core.strings
 
-
 internal data class DecoderErrorStrings(
     val notFound: String = "No decoder found",
     val notSupportedFound: String = "No supported decoder found",
