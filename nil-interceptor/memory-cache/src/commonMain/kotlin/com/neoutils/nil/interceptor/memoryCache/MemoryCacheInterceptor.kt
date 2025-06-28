@@ -1,4 +1,4 @@
-package com.neoutils.nil.core.interceptor
+package com.neoutils.nil.interceptor.memoryCache
 
 import androidx.compose.ui.graphics.painter.Painter
 import com.neoutils.nil.core.model.Chain

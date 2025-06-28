@@ -7,6 +7,7 @@ import com.neoutils.nil.decoder.bitmap.impl.BitmapDecoder
 import com.neoutils.nil.fetcher.network.extension.network
 import com.neoutils.nil.fetcher.network.impl.NetworkFetcher
 import com.neoutils.nil.fetcher.resources.impl.ResourcesFetcher
+import com.neoutils.nil.interceptor.memoryCache.MemoryCacheInterceptor
 
 @Composable
 fun AppTheme(content: @Composable () -> Unit) {
@@ -21,6 +22,8 @@ fun AppTheme(content: @Composable () -> Unit) {
                 NetworkFetcher(),
                 ResourcesFetcher()
             )
+
+            interceptors += MemoryCacheInterceptor()
 
             extras {
                 network {
