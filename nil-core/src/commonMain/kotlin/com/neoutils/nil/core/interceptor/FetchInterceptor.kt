@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.map
 
 private val error = FetcherErrorStrings()
 
-val EnableProgressExtrasKey = Extras.Key(default = true)
+val ProgressMonitor = Extras.Key(default = true)
 
 class FetchInterceptor : Interceptor(Level.DATA) {
 
@@ -28,7 +28,7 @@ class FetchInterceptor : Interceptor(Level.DATA) {
         if (!chain.painter.isLoading) return flowOf(chain)
         if (!chain.data.isLoading) return flowOf(chain)
 
-        val enableProgress = settings.extras[EnableProgressExtrasKey]
+        val enableProgress = settings.extras[ProgressMonitor]
 
         return when (val fetcher = settings.fetcherFor(chain.request)) {
             is Resource.Result.Failure -> {

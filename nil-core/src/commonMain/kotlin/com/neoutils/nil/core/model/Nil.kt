@@ -14,13 +14,13 @@ import kotlinx.coroutines.flow.map
 class Nil(
     private val settings: Settings
 ) {
-    fun async(request: Request): Flow<PainterResource> {
-
-        val interceptors = Level.entries.flatMap { level ->
-            settings.interceptors.filter {
-                it.level.contains(level)
-            }
+    private val interceptors = Level.entries.flatMap { level ->
+        settings.interceptors.filter {
+            it.level.contains(level)
         }
+    }
+
+    fun async(request: Request): Flow<PainterResource> {
 
         return interceptors.fold(
             flowOf(Chain(request))
