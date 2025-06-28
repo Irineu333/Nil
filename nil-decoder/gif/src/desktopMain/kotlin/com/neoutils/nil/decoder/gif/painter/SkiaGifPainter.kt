@@ -46,11 +46,11 @@ internal class SkiaGifPainter(
 
     override suspend fun animate() = coroutineScope {
         while (isActive && interactions++ <= repeatCount) {
-            for (index in 0 until codec.frameCount) {
+            for ((index, frame) in  codec.framesInfo.withIndex()) {
 
                 imageBitmap = createBitmap(index)
 
-                val frameDuration = codec.framesInfo[index].duration.milliseconds
+                val frameDuration = frame.duration.milliseconds
 
                 delay(frameDuration.takeOrElse { DefaultAnimationDuration })
             }

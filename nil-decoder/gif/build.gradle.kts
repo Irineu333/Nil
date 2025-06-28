@@ -40,6 +40,10 @@ kotlin {
             // androidx
             implementation(libs.androidx.core)
         }
+
+        all {
+            languageSettings.enableLanguageFeature("WhenGuards")
+        }
     }
 
     compilerOptions {

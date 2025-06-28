@@ -38,7 +38,7 @@ class MovieGifDecoder : Decoder {
         if (input.isEmpty()) return Support.NONE
 
         return when (Type.detect(input)) {
-            Type.GIF -> Support.TOTAL
+            Type.GIF -> Support.RECOMMEND
             else -> Support.NONE
         }
     }

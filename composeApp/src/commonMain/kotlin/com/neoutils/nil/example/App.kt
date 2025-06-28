@@ -8,13 +8,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.neoutils.nil.core.composable.asyncPainterResource
-import com.neoutils.nil.core.util.Request
 import com.neoutils.nil.core.util.PainterResource
+import com.neoutils.nil.core.util.Request
 import com.neoutils.nil.decoder.gif.extension.gif
-import com.neoutils.nil.decoder.gif.model.GifParams
 import com.neoutils.nil.decoder.svg.extension.svg
 import com.neoutils.nil.decoder.xml.extension.xml
-import com.neoutils.nil.fetcher.network.extension.network
+import com.neoutils.nil.example.resources.Res
+import com.neoutils.nil.example.resources.cute_cat
+import com.neoutils.nil.fetcher.resources.extension.resource
 
 @Composable
 fun App() = AppTheme {
@@ -24,18 +25,12 @@ fun App() = AppTheme {
     ) {
 
         val resource = asyncPainterResource(
-            request = Request.network("https://cataas.com/cat"),
+            request = Request.resource(Res.drawable.cute_cat),
         ) {
             decoders {
                 svg()
                 xml()
                 gif()
-            }
-
-            extras {
-                gif {
-                    repeatCount = 1
-                }
             }
         }
 

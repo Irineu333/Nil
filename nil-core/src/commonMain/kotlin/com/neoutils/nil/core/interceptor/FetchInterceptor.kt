@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.map
 
 private val error = FetcherErrorStrings()
 
-val EnableProgressExtrasKey = Extras.Key(true)
+val EnableProgressExtrasKey = Extras.Key(default = true)
 
 class FetchInterceptor : Interceptor(Level.FETCHER) {
 

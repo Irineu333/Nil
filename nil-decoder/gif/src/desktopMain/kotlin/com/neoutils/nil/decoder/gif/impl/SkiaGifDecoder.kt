@@ -14,6 +14,8 @@ import org.jetbrains.skia.Data
 
 class SkiaGifDecoder : Decoder {
 
+    private val cache = mutableMapOf<ByteArray, Codec>()
+
     override suspend fun decode(
         input: ByteArray,
         extras: Extras
@@ -26,8 +28,9 @@ class SkiaGifDecoder : Decoder {
         return runCatching {
             val params = extras[GifParams.ExtraKey]
 
-            val data = Data.Companion.makeFromBytes(input)
-            val codec = Codec.Companion.makeFromData(data)
+            val codec = cache.getOrElse(input) {
+                Codec.makeFromData(Data.makeFromBytes(input))
+            }
 
             SkiaGifPainter(
                 codec = codec,
@@ -41,9 +44,21 @@ class SkiaGifDecoder : Decoder {
         if (input.isEmpty()) return Support.NONE
 
         return when (Type.detect(input)) {
-            Type.GIF -> Support.TOTAL
-            Type.WEBP -> Support.TOTAL
+            Type.GIF -> Support.RECOMMEND
+            Type.WEBP if input.isAnimated() -> Support.RECOMMEND
+            Type.WEBP, Type.PNG, Type.JPEG -> Support.SUPPORT
             else -> Support.NONE
         }
+    }
+
+    fun ByteArray.isAnimated() = runCatching {
+
+        val codec = cache.getOrElse(this) {
+            Codec.makeFromData(Data.makeFromBytes(this))
+        }
+
+        codec.framesInfo.isNotEmpty()
+    }.getOrElse {
+        false
     }
 }
