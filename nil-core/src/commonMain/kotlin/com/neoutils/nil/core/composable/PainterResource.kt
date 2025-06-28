@@ -9,8 +9,8 @@ import com.neoutils.nil.core.model.Nil
 import com.neoutils.nil.core.painter.Animatable
 import com.neoutils.nil.core.scope.SettingsScope
 import com.neoutils.nil.core.util.EmptyPainter
-import com.neoutils.nil.core.util.Request
 import com.neoutils.nil.core.util.PainterResource
+import com.neoutils.nil.core.util.Request
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @Composable
@@ -23,7 +23,9 @@ fun asyncPainterResource(
 
     val settings = rememberSettings(settings)
 
-    val flow = remember(settings, request) { Nil(settings).execute(request) }
+    val nil = remember(settings) { Nil(settings) }
+
+    val flow = remember(nil, request) { nil.async(request) }
 
     val painter by flow.collectAsState(PainterResource.Loading())
 
