@@ -2,6 +2,7 @@
 
 package com.neoutils.nil.core.model
 
+import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Request
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,14 +15,21 @@ class Nil(
     private val settings: Settings
 ) {
     fun async(request: Request): Flow<PainterResource> {
-        return settings.interceptors
-            .sortedBy { it.level }
-            .fold(flowOf(Chain(request))) { chain, interceptor ->
-                chain.flatMapMerge {
-                    interceptor.intercept(settings, it)
-                }
-            }.map {
-                it.painter
+
+        val interceptors = Level.entries.flatMap { level ->
+            settings.interceptors.filter {
+                it.level.contains(level)
             }
+        }
+
+        return interceptors.fold(
+            flowOf(Chain(request))
+        ) { chain, interceptor ->
+            chain.flatMapMerge {
+                interceptor.intercept(settings, it)
+            }
+        }.map {
+            it.painter
+        }
     }
 }
