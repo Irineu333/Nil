@@ -9,12 +9,15 @@ import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.gif.model.GifParams
 import com.neoutils.nil.decoder.gif.painter.SkiaGifPainter
 import com.neoutils.nil.type.Type
+import io.github.reactivecircus.cache4k.Cache
 import org.jetbrains.skia.Codec
 import org.jetbrains.skia.Data
 
 class SkiaGifDecoder : Decoder {
 
-    private val cache = mutableMapOf<ByteArray, Codec>()
+    private val cache = Cache.Builder<ByteArray, Codec>()
+        .maximumCacheSize(size = 1)
+        .build()
 
     override suspend fun decode(
         input: ByteArray,
@@ -28,7 +31,7 @@ class SkiaGifDecoder : Decoder {
         return runCatching {
             val params = extras[GifParams.ExtrasKey]
 
-            val codec = cache.getOrElse(input) {
+            val codec = cache.get(input) {
                 Codec.makeFromData(Data.makeFromBytes(input))
             }
 
@@ -51,9 +54,9 @@ class SkiaGifDecoder : Decoder {
         }
     }
 
-    fun ByteArray.isAnimated() = runCatching {
+   private suspend fun ByteArray.isAnimated() = runCatching {
 
-        val codec = cache.getOrElse(this) {
+        val codec = cache.get(this) {
             Codec.makeFromData(Data.makeFromBytes(this))
         }
 

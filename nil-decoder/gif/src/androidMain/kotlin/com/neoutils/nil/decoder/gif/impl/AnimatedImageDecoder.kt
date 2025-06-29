@@ -14,11 +14,14 @@ import com.neoutils.nil.decoder.gif.model.GifParams
 import com.neoutils.nil.decoder.gif.painter.AnimatedImageGifPainter
 import com.neoutils.nil.decoder.gif.painter.DrawablePainter
 import com.neoutils.nil.type.Type
+import io.github.reactivecircus.cache4k.Cache
 
 @RequiresApi(Build.VERSION_CODES.P)
 class AnimatedImageDecoder : Decoder {
 
-    private val cache = mutableMapOf<ByteArray, Drawable>()
+    private val cache = Cache.Builder<ByteArray, Drawable>()
+        .maximumCacheSize(size = 1)
+        .build()
 
     override suspend fun decode(
         input: ByteArray,
@@ -58,18 +61,15 @@ class AnimatedImageDecoder : Decoder {
         }
     }
 
-    private fun ByteArray.toDrawable(): Drawable {
-
-        val drawable = cache.getOrPut(this) {
+    private suspend fun ByteArray.toDrawable(): Drawable {
+        return cache.get(this) {
             checkNotNull(
                 AnimatedImageDrawable.createFromStream(inputStream(), null)
             )
         }
-
-        return drawable
     }
 
-    private fun ByteArray.isAnimated() = runCatching {
+    private suspend fun ByteArray.isAnimated() = runCatching {
         toDrawable() is AnimatedImageDrawable
     }.getOrElse {
         false
