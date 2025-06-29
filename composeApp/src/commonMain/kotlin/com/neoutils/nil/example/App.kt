@@ -13,9 +13,7 @@ import com.neoutils.nil.core.util.Request
 import com.neoutils.nil.decoder.gif.extension.gif
 import com.neoutils.nil.decoder.svg.extension.svg
 import com.neoutils.nil.decoder.xml.extension.xml
-import com.neoutils.nil.example.resources.Res
-import com.neoutils.nil.example.resources.cute_cat
-import com.neoutils.nil.fetcher.resources.extension.resource
+import com.neoutils.nil.fetcher.network.extension.network
 
 @Composable
 fun App() = AppTheme {
@@ -25,7 +23,7 @@ fun App() = AppTheme {
     ) {
 
         val resource = asyncPainterResource(
-            request = Request.resource(Res.drawable.cute_cat),
+            request = Request.network("https://cataas.com/cat"),
         ) {
             decoders {
                 svg()

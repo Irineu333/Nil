@@ -29,6 +29,9 @@ kotlin {
 
             // coroutines
             implementation(libs.kotlinx.coroutines)
+
+            // lru cache
+            implementation(libs.cache4k)
         }
 
         all {

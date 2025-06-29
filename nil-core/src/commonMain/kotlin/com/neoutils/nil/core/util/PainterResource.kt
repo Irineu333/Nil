@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.DefaultAlpha
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
 
-sealed class PainterResource : Painter() {
+sealed class PainterResource : Painter(), State {
 
     internal abstract val painter: Painter
 
@@ -52,4 +52,8 @@ sealed class PainterResource : Painter() {
             override val painter: Painter = EmptyPainter
         ) : Result()
     }
+
+    override val isLoading get() = this is Loading
+    override val isSuccess get() = this is Result.Success
+    override val isFailure get() = this is Result.Failure
 }
