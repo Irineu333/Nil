@@ -8,8 +8,10 @@ import com.neoutils.nil.core.exception.NotSupportFormatException
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.scope.Extras
 import com.neoutils.nil.core.source.Decoder
+import com.neoutils.nil.core.util.ByteArrayKey
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
+import com.neoutils.nil.core.util.key
 import com.neoutils.nil.decoder.gif.model.GifParams
 import com.neoutils.nil.decoder.gif.painter.AnimatedImageGifPainter
 import com.neoutils.nil.decoder.gif.painter.DrawablePainter
@@ -19,7 +21,7 @@ import io.github.reactivecircus.cache4k.Cache
 @RequiresApi(Build.VERSION_CODES.P)
 class AnimatedImageDecoder : Decoder {
 
-    private val cache = Cache.Builder<ByteArray, Drawable>()
+    private val cache = Cache.Builder<ByteArrayKey, Drawable>()
         .maximumCacheSize(size = 1)
         .build()
 
@@ -62,7 +64,7 @@ class AnimatedImageDecoder : Decoder {
     }
 
     private suspend fun ByteArray.toDrawable(): Drawable {
-        return cache.get(this) {
+        return cache.get(key) {
             checkNotNull(
                 AnimatedImageDrawable.createFromStream(inputStream(), null)
             )

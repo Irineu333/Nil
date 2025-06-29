@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.DefaultAlpha
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asComposeImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
@@ -36,9 +35,12 @@ internal class SkiaGifPainter(
         height = codec.height
     ).toSize()
 
-    private val frameCache = mutableMapOf<Int, ImageBitmap>()
+    private val bitmap = Bitmap().also {
+        it.allocPixels(codec.imageInfo)
+        codec.readPixels(it, 0)
+    }
 
-    private var imageBitmap by mutableStateOf(createBitmap(index = 0))
+    private var imageBitmap by mutableStateOf(bitmap.asComposeImageBitmap())
     private var alpha: Float by mutableFloatStateOf(DefaultAlpha)
     private var colorFilter: ColorFilter? by mutableStateOf(null)
 
@@ -46,9 +48,10 @@ internal class SkiaGifPainter(
 
     override suspend fun animate() = coroutineScope {
         while (isActive && interactions++ <= repeatCount) {
-            for ((index, frame) in  codec.framesInfo.withIndex()) {
+            for ((index, frame) in codec.framesInfo.withIndex()) {
 
-                imageBitmap = createBitmap(index)
+                codec.readPixels(bitmap, index)
+                imageBitmap = bitmap.asComposeImageBitmap()
 
                 val frameDuration = frame.duration.milliseconds
 
@@ -74,14 +77,5 @@ internal class SkiaGifPainter(
     override fun applyColorFilter(colorFilter: ColorFilter?): Boolean {
         this.colorFilter = colorFilter
         return true
-    }
-
-    private fun createBitmap(index: Int): ImageBitmap {
-        return frameCache.getOrPut(index) {
-            Bitmap().also {
-                it.allocPixels(codec.imageInfo)
-                codec.readPixels(it, index)
-            }.asComposeImageBitmap()
-        }
     }
 }
