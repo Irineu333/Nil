@@ -30,7 +30,7 @@ class AnimatedImageDecoder : Decoder {
         }
 
         return runCatching {
-            val params = extras[GifParams.ExtraKey]
+            val params = extras[GifParams.ExtrasKey]
 
             when (val drawable = input.toDrawable()) {
                 is AnimatedImageDrawable -> {

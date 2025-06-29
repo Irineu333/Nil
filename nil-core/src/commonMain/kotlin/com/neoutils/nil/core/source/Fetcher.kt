@@ -12,11 +12,6 @@ val LocalFetchers = compositionLocalOf<List<Fetcher<Request>>> { listOf() }
 abstract class Fetcher<out T : Request>(
     internal val type: KClass<@UnsafeVariance T>
 ) {
-    abstract suspend fun get(
-        input: @UnsafeVariance T,
-        extras: Extras = Extras.EMPTY
-    ): Resource.Result<ByteArray>
-
     abstract fun fetch(
         input: @UnsafeVariance T,
         extras: Extras = Extras.EMPTY

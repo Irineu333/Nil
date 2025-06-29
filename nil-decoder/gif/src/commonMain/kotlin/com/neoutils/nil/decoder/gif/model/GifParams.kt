@@ -19,6 +19,6 @@ data class GifParams(
     }
 
     companion object {
-        val ExtraKey = Extras.Key(GifParams())
+        val ExtrasKey = Extras.Key(GifParams())
     }
 }

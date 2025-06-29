@@ -24,7 +24,7 @@ class MovieGifDecoder : Decoder {
         }
 
         return runCatching {
-            val params = extras[GifParams.ExtraKey]
+            val params = extras[GifParams.ExtrasKey]
 
             MovieGifPainter(
                 movie = Movie.decodeStream(input.inputStream()),

@@ -26,7 +26,7 @@ class SkiaGifDecoder : Decoder {
         }
 
         return runCatching {
-            val params = extras[GifParams.ExtraKey]
+            val params = extras[GifParams.ExtrasKey]
 
             val codec = cache.getOrElse(input) {
                 Codec.makeFromData(Data.makeFromBytes(input))

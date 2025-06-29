@@ -12,7 +12,7 @@ import io.github.reactivecircus.cache4k.Cache
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-val MemoryCacheExtra = Extras.Key(
+val MemoryCacheExtrasKey = Extras.Key(
     default = Cache.Builder<Request, Painter>()
         .maximumCacheSize(100)
         .build()
@@ -20,12 +20,12 @@ val MemoryCacheExtra = Extras.Key(
 
 class MemoryCacheInterceptor : Interceptor(Level.REQUEST, Level.PAINTER) {
 
-    override suspend fun intercept(
+    override fun intercept(
         settings: Settings,
         chain: Chain
     ): Flow<Chain> {
 
-        val cache = settings.extras[MemoryCacheExtra]
+        val cache = settings.extras[MemoryCacheExtrasKey]
 
         if (chain.painter.isLoading) {
 
