@@ -2,12 +2,13 @@ package com.neoutils.nil.core.source
 
 import androidx.compose.runtime.compositionLocalOf
 import com.neoutils.nil.core.scope.Extras
+import com.neoutils.nil.core.util.Dynamic
 import com.neoutils.nil.core.util.Request
 import com.neoutils.nil.core.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
-val LocalFetchers = compositionLocalOf<List<Fetcher<Request>>> { listOf() }
+val LocalFetchers = compositionLocalOf { Dynamic.fetchers }
 
 abstract class Fetcher<out T : Request>(
     internal val type: KClass<@UnsafeVariance T>

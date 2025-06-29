@@ -26,9 +26,9 @@ fun App() = AppTheme {
             request = Request.network("https://cataas.com/cat"),
         ) {
             decoders {
-                svg()
-                xml()
                 gif()
+                xml()
+                svg()
             }
         }
 
