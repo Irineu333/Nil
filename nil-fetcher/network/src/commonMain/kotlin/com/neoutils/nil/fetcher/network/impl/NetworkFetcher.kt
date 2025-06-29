@@ -15,9 +15,9 @@ val HeadersExtrasKey = Extras.Key<Map<String, String>>(mapOf())
 
 val ProgressMonitorExtrasKey = Extras.Key(default = true)
 
-class NetworkFetcher(
-    private val client: HttpClient = HttpClient()
-) : Fetcher<RequestNetwork>(RequestNetwork::class) {
+val HttpClientExtra = Extras.Key(HttpClient())
+
+class NetworkFetcher : Fetcher<RequestNetwork>(RequestNetwork::class) {
 
     override fun fetch(
         input: RequestNetwork,
@@ -27,6 +27,7 @@ class NetworkFetcher(
         try {
             val progress = extras[ProgressMonitorExtrasKey]
             val headers = extras[HeadersExtrasKey]
+            val client = extras[HttpClientExtra]
 
             val response = client.request(input.url) {
                 method = input.method
