@@ -32,6 +32,7 @@ kotlin {
             implementation(project(":nil-decoder:gif"))
             implementation(project(":nil-decoder:svg"))
             implementation(project(":nil-decoder:xml"))
+            implementation(project(":nil-interceptor:memory-cache"))
 
             // compose
             implementation(compose.runtime)

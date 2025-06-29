@@ -3,19 +3,19 @@ package com.neoutils.nil.core.source
 import androidx.compose.runtime.compositionLocalOf
 import com.neoutils.nil.core.interceptor.DecodeInterceptor
 import com.neoutils.nil.core.interceptor.FetchInterceptor
-import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.model.Chain
 import com.neoutils.nil.core.model.Settings
+import com.neoutils.nil.core.util.Level
 import kotlinx.coroutines.flow.Flow
 
 val LocalInterceptors = compositionLocalOf {
     listOf(
         FetchInterceptor(),
-        DecodeInterceptor()
+        DecodeInterceptor(),
     )
 }
 
-abstract class Interceptor(val level: Level) {
+abstract class Interceptor(vararg val levels: Level) {
     abstract suspend fun intercept(
         settings: Settings,
         chain: Chain
