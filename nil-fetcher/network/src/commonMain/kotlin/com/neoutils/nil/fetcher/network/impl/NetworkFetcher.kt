@@ -8,73 +8,43 @@ import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.callbackFlow
 
 val HeadersExtrasKey = Extras.Key<Map<String, String>>(mapOf())
+
+val ProgressMonitorExtrasKey = Extras.Key(default = true)
 
 class NetworkFetcher(
     private val client: HttpClient = HttpClient()
 ) : Fetcher<RequestNetwork>(RequestNetwork::class) {
 
-    override suspend fun get(
-        input: RequestNetwork,
-        extras: Extras
-    ) = runCatching {
-
-        val headers = extras[HeadersExtrasKey]
-
-        client.request(input.url) {
-            method = input.method
-
-            headers.forEach {
-                this.headers[it.key] = it.value
-            }
-        }
-    }.map { response ->
-        withContext(Dispatchers.Default) {
-            response.bodyAsBytes()
-        }
-    }.map { bytes ->
-        Resource.Result.Success(value = bytes)
-    }.getOrElse {
-        Resource.Result.Failure(it)
-    }
-
     override fun fetch(
         input: RequestNetwork,
         extras: Extras
-    ) = channelFlow {
-        runCatching {
+    ) = callbackFlow {
+
+        try {
+            val progress = extras[ProgressMonitorExtrasKey]
             val headers = extras[HeadersExtrasKey]
 
-            client.request(input.url) {
+            val response = client.request(input.url) {
                 method = input.method
 
                 headers.forEach {
                     this.headers[it.key] = it.value
                 }
 
-                onProgress { progress ->
-                    withContext(Dispatchers.Main) {
+                if (progress) {
+                    onProgress { progress ->
                         send(Resource.Loading(progress))
                     }
                 }
             }
-        }.map { response ->
-            withContext(Dispatchers.Default) {
-                response.bodyAsBytes()
-            }
-        }.onSuccess { bytes ->
-            withContext(Dispatchers.Main) {
-                send(Resource.Result.Success(value = bytes))
-            }
-        }.onFailure {
-            withContext(Dispatchers.Main) {
-                send(Resource.Result.Failure(it))
-            }
+
+            send(Resource.Result.Success(value = response.bodyAsBytes()))
+        } catch (error: Throwable) {
+            send(Resource.Result.Failure(error))
         }
 
         awaitClose()

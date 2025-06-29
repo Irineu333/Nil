@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalDensity
-import com.neoutils.nil.core.key.DensityExtraKey
+import com.neoutils.nil.core.constant.DensityExtrasKey
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.scope.LocalExtras
 import com.neoutils.nil.core.scope.SettingsScope
@@ -45,7 +45,7 @@ fun rememberSettings(block: SettingsScope.() -> Unit): Settings {
             fetchers = fetchers,
             interceptors = interceptors,
             extras = extras.newBuilder().apply {
-                set(DensityExtraKey, density)
+                set(DensityExtrasKey, density)
             }
         )
     }

@@ -16,7 +16,7 @@ val LocalInterceptors = compositionLocalOf {
 }
 
 abstract class Interceptor(vararg val levels: Level) {
-    abstract suspend fun intercept(
+    abstract fun intercept(
         settings: Settings,
         chain: Chain
     ): Flow<Chain>

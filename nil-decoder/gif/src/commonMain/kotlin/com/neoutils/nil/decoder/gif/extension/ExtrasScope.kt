@@ -6,7 +6,7 @@ import com.neoutils.nil.decoder.gif.model.GifParams
 fun ExtrasScope.gif(
     scope: GifParams.Builder.() -> Unit
 ) {
-    extras.update(GifParams.ExtraKey) {
+    extras.update(GifParams.ExtrasKey) {
         it.newBuilder()
             .apply(scope)
             .build()
