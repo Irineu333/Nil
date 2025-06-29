@@ -39,29 +39,21 @@ sealed class PainterResource : Painter(), State {
     data class Loading(
         val progress: Float? = null,
         override val painter: Painter = EmptyPainter
-    ) : PainterResource() {
-        override val isLoading = true
-        override val isSuccess = false
-        override val isFailure = false
-    }
+    ) : PainterResource()
 
     sealed class Result : PainterResource() {
 
         data class Success(
             override val painter: Painter
-        ) : Result() {
-            override val isLoading = false
-            override val isSuccess = true
-            override val isFailure = false
-        }
+        ) : Result()
 
         data class Failure(
             val throwable: Throwable,
             override val painter: Painter = EmptyPainter
-        ) : Result() {
-            override val isLoading = false
-            override val isSuccess = false
-            override val isFailure = true
-        }
+        ) : Result()
     }
+
+    override val isLoading get() = this is Loading
+    override val isSuccess get() = this is Result.Success
+    override val isFailure get() = this is Result.Failure
 }
