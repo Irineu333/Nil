@@ -2,10 +2,11 @@ package com.neoutils.nil.core.source
 
 import androidx.compose.runtime.compositionLocalOf
 import com.neoutils.nil.core.scope.Extras
+import com.neoutils.nil.core.util.Dynamic
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
 
-val LocalDecoders = compositionLocalOf<List<Decoder>> { listOf() }
+val LocalDecoders = compositionLocalOf { Dynamic.decoders }
 
 interface Decoder {
     suspend fun decode(
