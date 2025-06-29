@@ -7,6 +7,7 @@ import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Request
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -25,7 +26,7 @@ class Nil(
         return interceptors.fold(
             flowOf(Chain(request))
         ) { chain, interceptor ->
-            chain.flatMapMerge {
+            chain.flatMapConcat {
                 interceptor.intercept(settings, it)
             }
         }.map {
