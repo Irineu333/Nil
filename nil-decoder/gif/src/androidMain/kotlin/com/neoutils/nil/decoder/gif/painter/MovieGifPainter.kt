@@ -37,10 +37,15 @@ internal class MovieGifPainter(
         height = movie.height()
     ).toSize()
 
+    private val bitmap = createBitmap(
+        movie.width(),
+        movie.height(),
+        Bitmap.Config.ARGB_8888
+    )
+
     private val frameCache = mutableMapOf<Int, ImageBitmap>()
 
     private var imageBitmap by mutableStateOf(createFrameBitmap(time = 0))
-
     private var alpha: Float by mutableFloatStateOf(DefaultAlpha)
     private var colorFilter: ColorFilter? by mutableStateOf(null)
 
@@ -88,13 +93,8 @@ internal class MovieGifPainter(
         movie.setTime(time)
 
         return frameCache.getOrPut(time) {
-            createBitmap(
-                movie.width(),
-                movie.height(),
-                Bitmap.Config.ARGB_8888
-            ).also {
-                movie.draw(Canvas(it), 0f, 0f)
-            }.asImageBitmap()
+            movie.draw(Canvas(bitmap), 0f, 0f)
+            bitmap.asImageBitmap()
         }
     }
 }

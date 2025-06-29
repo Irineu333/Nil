@@ -4,8 +4,10 @@ import com.neoutils.nil.core.exception.NotSupportFormatException
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.scope.Extras
 import com.neoutils.nil.core.source.Decoder
+import com.neoutils.nil.core.util.ByteArrayKey
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
+import com.neoutils.nil.core.util.key
 import com.neoutils.nil.decoder.gif.model.GifParams
 import com.neoutils.nil.decoder.gif.painter.SkiaGifPainter
 import com.neoutils.nil.type.Type
@@ -15,7 +17,7 @@ import org.jetbrains.skia.Data
 
 class SkiaGifDecoder : Decoder {
 
-    private val cache = Cache.Builder<ByteArray, Codec>()
+    private val cache = Cache.Builder<ByteArrayKey, Codec>()
         .maximumCacheSize(size = 1)
         .build()
 
@@ -31,7 +33,7 @@ class SkiaGifDecoder : Decoder {
         return runCatching {
             val params = extras[GifParams.ExtrasKey]
 
-            val codec = cache.get(input) {
+            val codec = cache.get(input.key) {
                 Codec.makeFromData(Data.makeFromBytes(input))
             }
 
@@ -56,7 +58,7 @@ class SkiaGifDecoder : Decoder {
 
    private suspend fun ByteArray.isAnimated() = runCatching {
 
-        val codec = cache.get(this) {
+        val codec = cache.get(key) {
             Codec.makeFromData(Data.makeFromBytes(this))
         }
 
