@@ -11,7 +11,9 @@ import com.neoutils.nil.core.scope.SettingsScope
 import com.neoutils.nil.core.util.EmptyPainter
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Request
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.withContext
 
 @Composable
 fun asyncPainterResource(
@@ -53,7 +55,9 @@ fun rememberPainterResource(
     LaunchedEffect(resource) {
         when (val painter = resource.painter) {
             is Animatable -> {
-                painter.animate()
+                withContext(Dispatchers.Default) {
+                    painter.animate()
+                }
             }
         }
     }
