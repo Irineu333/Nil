@@ -11,7 +11,6 @@ data class GifParams(
         repeatCount = repeatCount
     )
 
-    @SettingsDsl
     class Builder(
         var repeatCount: Int = Int.MAX_VALUE
     ) {
