@@ -1,6 +1,6 @@
 package com.neoutils.nil.decoder.gif.model
 
-import com.neoutils.nil.core.scope.Extras
+import com.neoutils.nil.core.util.Extras
 
 data class GifParams(
     val repeatCount: Int = Int.MAX_VALUE

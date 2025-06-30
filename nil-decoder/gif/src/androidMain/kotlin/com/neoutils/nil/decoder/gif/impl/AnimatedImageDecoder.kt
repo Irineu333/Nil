@@ -6,7 +6,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.neoutils.nil.core.exception.NotSupportFormatException
 import com.neoutils.nil.core.extension.toPainterResource
-import com.neoutils.nil.core.scope.Extras
+import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.util.ByteArrayKey
 import com.neoutils.nil.core.util.PainterResource
