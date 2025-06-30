@@ -6,7 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalDensity
 import com.neoutils.nil.core.constant.DensityExtrasKey
 import com.neoutils.nil.core.model.Settings
-import com.neoutils.nil.core.scope.LocalExtras
+import com.neoutils.nil.core.util.LocalExtras
 import com.neoutils.nil.core.scope.SettingsScope
 import com.neoutils.nil.core.source.LocalDecoders
 import com.neoutils.nil.core.source.LocalFetchers

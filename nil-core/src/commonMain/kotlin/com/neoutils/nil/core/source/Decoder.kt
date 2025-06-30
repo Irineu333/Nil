@@ -1,7 +1,7 @@
 package com.neoutils.nil.core.source
 
 import androidx.compose.runtime.compositionLocalOf
-import com.neoutils.nil.core.scope.Extras
+import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.Dynamic
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support

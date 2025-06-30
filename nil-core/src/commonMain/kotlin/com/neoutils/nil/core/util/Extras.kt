@@ -1,7 +1,7 @@
-package com.neoutils.nil.core.scope
+package com.neoutils.nil.core.util
 
 import androidx.compose.runtime.compositionLocalOf
-import com.neoutils.nil.core.scope.Extras.Key
+import com.neoutils.nil.core.util.Extras.Key
 import com.neoutils.nil.core.strings.ExtraErrorStrings
 
 val LocalExtras = compositionLocalOf { Extras.EMPTY }
