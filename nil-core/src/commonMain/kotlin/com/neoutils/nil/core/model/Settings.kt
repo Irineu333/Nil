@@ -1,6 +1,6 @@
 package com.neoutils.nil.core.model
 
-import com.neoutils.nil.core.scope.Extras
+import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.source.Interceptor

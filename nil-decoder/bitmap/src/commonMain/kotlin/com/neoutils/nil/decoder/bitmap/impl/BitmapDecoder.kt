@@ -3,7 +3,7 @@ package com.neoutils.nil.decoder.bitmap.impl
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import com.neoutils.nil.core.exception.NotSupportFormatException
 import com.neoutils.nil.core.extension.toPainterResource
-import com.neoutils.nil.core.scope.Extras
+import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Support
