@@ -1,6 +1,7 @@
 package com.neoutils.nil.decoder.gif.model
 
 import com.neoutils.nil.core.scope.Extras
+import com.neoutils.nil.core.scope.SettingsDsl
 
 data class GifParams(
     val repeatCount: Int = Int.MAX_VALUE
@@ -10,6 +11,7 @@ data class GifParams(
         repeatCount = repeatCount
     )
 
+    @SettingsDsl
     class Builder(
         var repeatCount: Int = Int.MAX_VALUE
     ) {
