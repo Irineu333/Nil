@@ -5,6 +5,7 @@ import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.source.Interceptor
 
+@SettingsDsl
 class SettingsScope internal constructor(
     var decoders: List<Decoder>,
     var fetchers: List<Fetcher<*>>,
@@ -36,7 +37,7 @@ class SettingsScope internal constructor(
     }
 
     fun extras(scope: ExtrasScope.() -> Unit) {
-        ExtrasScope(extras).apply(scope)
+        ExtrasScope(extras).scope()
     }
 
     internal fun build() = Settings(

@@ -1,5 +1,6 @@
 package com.neoutils.nil.core.scope
 
+@SettingsDsl
 class AddictionScope<T>(
     private var values: MutableList<T> = mutableListOf()
 ) {
