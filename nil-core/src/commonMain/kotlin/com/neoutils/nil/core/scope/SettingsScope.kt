@@ -4,7 +4,7 @@ import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.source.Decoder
 import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.source.Interceptor
-import com.neoutils.nil.core.util.Request
+import com.neoutils.nil.core.util.Extras
 
 @SettingsDsl
 class SettingsScope internal constructor(

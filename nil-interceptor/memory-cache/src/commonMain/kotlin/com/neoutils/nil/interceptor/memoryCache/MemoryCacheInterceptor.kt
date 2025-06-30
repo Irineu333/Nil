@@ -3,7 +3,7 @@ package com.neoutils.nil.interceptor.memoryCache
 import androidx.compose.ui.graphics.painter.Painter
 import com.neoutils.nil.core.model.Chain
 import com.neoutils.nil.core.model.Settings
-import com.neoutils.nil.core.scope.Extras
+import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.source.Interceptor
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.PainterResource
