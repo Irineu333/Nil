@@ -39,7 +39,7 @@ fun asyncPainterResource(
 }
 
 @Composable
-fun rememberPainterResource(
+private fun rememberPainterResource(
     resource: PainterResource,
     placeholder: Painter = EmptyPainter,
     fallback: Painter = EmptyPainter

@@ -34,7 +34,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines)
 
             // lru cache
-            implementation(libs.cache4k)
+            api(libs.cache4k)
         }
     }
 }

@@ -4,6 +4,6 @@ import com.neoutils.nil.core.strings.DecoderErrorStrings
 
 private val error = DecoderErrorStrings()
 
-class NotSupportFormatException(
+class NotSupportFormat(
     message: String = error.notSupportedFormat
 ) : Exception(message)

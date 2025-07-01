@@ -1,7 +1,7 @@
 package com.neoutils.nil.decoder.gif.impl
 
 import android.graphics.Movie
-import com.neoutils.nil.core.exception.NotSupportFormatException
+import com.neoutils.nil.core.exception.NotSupportFormat
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.source.Decoder
@@ -20,7 +20,7 @@ class MovieGifDecoder : Decoder {
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
-            return PainterResource.Result.Failure(NotSupportFormatException())
+            return PainterResource.Result.Failure(NotSupportFormat())
         }
 
         return runCatching {

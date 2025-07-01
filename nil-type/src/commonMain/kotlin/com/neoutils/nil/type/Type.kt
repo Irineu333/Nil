@@ -30,7 +30,9 @@ enum class Type(private vararg val sign: ByteString) {
 
 private fun ByteArray.matches(
     signature: ByteString
-) = Buffer().use {
-    it.write(this)
-    it.rangeEquals(0, signature)
+) = let { data ->
+    Buffer().use {
+        it.write(data)
+        it.rangeEquals(0, signature)
+    }
 }
