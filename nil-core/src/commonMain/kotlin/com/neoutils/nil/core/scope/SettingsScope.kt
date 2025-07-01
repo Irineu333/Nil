@@ -6,11 +6,12 @@ import com.neoutils.nil.core.source.Fetcher
 import com.neoutils.nil.core.source.Interceptor
 import com.neoutils.nil.core.util.Extras
 
+@SettingsDsl
 class SettingsScope internal constructor(
     var decoders: List<Decoder>,
     var fetchers: List<Fetcher<*>>,
     var interceptors: List<Interceptor>,
-    val extras: Extras.Builder = Extras.Builder()
+    val extras: Extras.Builder
 ) {
     fun decoders(vararg decoders: Decoder) {
         this.decoders += decoders
@@ -24,20 +25,29 @@ class SettingsScope internal constructor(
         this.interceptors += interceptors
     }
 
-    fun decoders(scope: AddictionScope<Decoder>.() -> Unit) {
-        decoders += AddictionScope<Decoder>().apply(scope).build()
+    fun decoders(scope: ListScope<Decoder>.() -> Unit) {
+        decoders = ListScope
+            .from(decoders)
+            .apply(scope)
+            .get()
     }
 
-    fun fetchers(scope: AddictionScope<Fetcher<*>>.() -> Unit) {
-        fetchers += AddictionScope<Fetcher<*>>().apply(scope).build()
+    fun fetchers(scope: ListScope<Fetcher<*>>.() -> Unit) {
+        fetchers = ListScope
+            .from(fetchers)
+            .apply(scope)
+            .get()
     }
 
-    fun interceptors(scope: AddictionScope<Interceptor>.() -> Unit) {
-        interceptors += AddictionScope<Interceptor>().apply(scope).build()
+    fun interceptors(scope: ListScope<Interceptor>.() -> Unit) {
+        interceptors = ListScope
+            .from(interceptors)
+            .apply(scope)
+            .get()
     }
 
     fun extras(scope: ExtrasScope.() -> Unit) {
-        ExtrasScope(extras).apply(scope)
+        ExtrasScope(extras).scope()
     }
 
     internal fun build() = Settings(
