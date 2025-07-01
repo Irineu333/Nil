@@ -1,7 +1,7 @@
 package com.neoutils.nil.decoder.svg.impl
 
 import com.caverock.androidsvg.SVG
-import com.neoutils.nil.core.exception.NotSupportFormatException
+import com.neoutils.nil.core.exception.NotSupportFormat
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.constant.DensityExtrasKey
 import com.neoutils.nil.core.util.Extras
@@ -19,7 +19,7 @@ class AndroidSvgDecoder() : Decoder {
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
-            return PainterResource.Result.Failure(NotSupportFormatException())
+            return PainterResource.Result.Failure(NotSupportFormat())
         }
 
         return runCatching {

@@ -4,7 +4,7 @@ import android.graphics.drawable.AnimatedImageDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.neoutils.nil.core.exception.NotSupportFormatException
+import com.neoutils.nil.core.exception.NotSupportFormat
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.source.Decoder
@@ -31,7 +31,7 @@ class AnimatedImageDecoder : Decoder {
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
-            return PainterResource.Result.Failure(NotSupportFormatException())
+            return PainterResource.Result.Failure(NotSupportFormat())
         }
 
         return runCatching {

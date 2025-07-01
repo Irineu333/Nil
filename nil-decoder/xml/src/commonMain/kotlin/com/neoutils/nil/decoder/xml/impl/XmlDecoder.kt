@@ -1,6 +1,6 @@
 package com.neoutils.nil.decoder.xml.impl
 
-import com.neoutils.nil.core.exception.NotSupportFormatException
+import com.neoutils.nil.core.exception.NotSupportFormat
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.constant.DensityExtrasKey
 import com.neoutils.nil.core.util.Extras
@@ -20,7 +20,7 @@ class XmlDecoder() : Decoder {
     ): PainterResource.Result {
 
         if (support(input) == Support.NONE) {
-            return PainterResource.Result.Failure(NotSupportFormatException())
+            return PainterResource.Result.Failure(NotSupportFormat())
         }
 
         return runCatching {
