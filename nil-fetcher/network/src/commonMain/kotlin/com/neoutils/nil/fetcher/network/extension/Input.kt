@@ -8,5 +8,6 @@ import io.ktor.http.*
 @Stable
 fun Request.Companion.network(
     url: String,
-    method: HttpMethod = HttpMethod.Get
-) = RequestNetwork(url, method)
+    method: HttpMethod = HttpMethod.Get,
+    key: String =  url
+) = RequestNetwork(url, method, key)
