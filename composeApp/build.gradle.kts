@@ -33,6 +33,7 @@ kotlin {
             implementation(project(":nil-decoder:svg"))
             implementation(project(":nil-decoder:xml"))
             implementation(project(":nil-interceptor:memory-cache"))
+            implementation(project(":nil-interceptor:disk-cache"))
 
             // compose
             implementation(compose.runtime)

@@ -14,6 +14,7 @@ import com.neoutils.nil.decoder.gif.extension.gif
 import com.neoutils.nil.decoder.svg.extension.svg
 import com.neoutils.nil.decoder.xml.extension.xml
 import com.neoutils.nil.fetcher.network.extension.network
+import com.neoutils.nil.interceptor.diskcache.DiskCacheInterceptor
 
 @Composable
 fun App() = AppTheme {
@@ -29,6 +30,10 @@ fun App() = AppTheme {
                 gif()
                 xml()
                 svg()
+            }
+
+            interceptors {
+                add(DiskCacheInterceptor())
             }
         }
 
