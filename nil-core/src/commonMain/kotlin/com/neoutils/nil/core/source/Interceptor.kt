@@ -15,7 +15,7 @@ val DefaultInterceptors = listOf(
 )
 
 val LocalInterceptors = compositionLocalOf {
-    DefaultInterceptors + Dynamic.interceptors
+    Dynamic.interceptors + DefaultInterceptors
 }
 
 abstract class Interceptor(vararg val levels: Level) {
