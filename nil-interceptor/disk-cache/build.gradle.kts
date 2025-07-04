@@ -36,6 +36,9 @@ kotlin {
             // okio
             api(libs.okio)
         }
+        all {
+            languageSettings.enableLanguageFeature("WhenGuards")
+        }
     }
 }
 

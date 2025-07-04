@@ -1,6 +1,5 @@
 package com.neoutils.nil.interceptor.diskcache.impl
 
-import com.neoutils.nil.core.extension.onSuccess
 import com.neoutils.nil.core.model.Chain
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.source.Interceptor
@@ -33,27 +32,29 @@ class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
 
         val file = path / key.clear()
 
-        if (fileSystem.exists(file)) {
+        return flowOf(
+            when (val data = chain.data) {
+                is Resource.Loading if fileSystem.exists(file) -> {
+                    chain.copy(
+                        data = Resource.Result.Success(
+                            fileSystem.read(file) {
+                                readByteArray()
+                            }
+                        )
+                    )
+                }
 
-            val bytes = fileSystem.read(file) {
-                readByteArray()
+                is Resource.Result.Success<ByteArray> -> {
+                    fileSystem.createDirectories(path)
+                    fileSystem.write(file) {
+                        write(data.value)
+                    }
+                    chain
+                }
+
+                else -> chain
             }
-
-            return flowOf(
-                chain.copy(
-                    data = Resource.Result.Success(bytes)
-                )
-            )
-        }
-
-        chain.data.onSuccess { chain ->
-            fileSystem.createDirectories(path)
-            fileSystem.write(file) {
-                write(chain)
-            }
-        }
-
-        return flowOf(chain)
+        )
     }
 
     private fun String.clear() = replace(
