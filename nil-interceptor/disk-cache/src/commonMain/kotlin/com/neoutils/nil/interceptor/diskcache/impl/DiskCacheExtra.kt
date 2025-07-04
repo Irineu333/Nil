@@ -2,6 +2,7 @@ package com.neoutils.nil.interceptor.diskcache.impl
 
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.interceptor.diskcache.extension.mb
+import com.neoutils.nil.interceptor.diskcache.util.LruDiskCache
 import com.neoutils.nil.interceptor.diskcache.util.SizeUnit
 import okio.FileSystem
 import okio.Path
@@ -14,11 +15,13 @@ class DiskCacheExtra(
     val maxSize: SizeUnit = 100.mb,
     val enabled: Boolean = true,
 ) {
-
-    operator fun component1() = fileSystem
-    operator fun component2() = path
-    operator fun component3() = maxSize
-    operator fun component4() = enabled
+    val cache by lazy {
+        LruDiskCache(
+            fileSystem = fileSystem,
+            path = path,
+            maxSize = maxSize
+        )
+    }
 
     fun newBuilder() = Builder(
         fileSystem = fileSystem,

@@ -1,6 +1,6 @@
 package com.neoutils.nil.fetcher.network.model
 
-import com.neoutils.nil.core.util.Cacheable
+import com.neoutils.nil.core.contract.Cacheable
 import com.neoutils.nil.core.util.Request
 import io.ktor.http.*
 
