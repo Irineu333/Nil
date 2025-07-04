@@ -31,12 +31,6 @@ fun App() = AppTheme {
                 xml()
                 svg()
             }
-
-            extras {
-                diskCache {
-                    enabled = true
-                }
-            }
         }
 
         when (resource) {
