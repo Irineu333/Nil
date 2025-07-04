@@ -4,20 +4,15 @@ import com.neoutils.nil.core.extension.onSuccess
 import com.neoutils.nil.core.model.Chain
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.source.Interceptor
-import com.neoutils.nil.core.util.*
+import com.neoutils.nil.core.util.Cacheable
+import com.neoutils.nil.core.util.Level
+import com.neoutils.nil.core.util.Request
+import com.neoutils.nil.core.util.Resource
+import com.neoutils.nil.interceptor.diskcache.extension.DiskCacheExtra
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import okio.FileSystem
-
-private const val DefaultCachePath = "nil-cache"
-
-val DiskCachePathExtrasKey = Extras.Key(
-    default = FileSystem.SYSTEM_TEMPORARY_DIRECTORY / DefaultCachePath
-)
 
 class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
-
-    private val fileSystem by lazy { FileSystem.SYSTEM }
 
     private val Request.key
         get() = when (this) {
@@ -32,7 +27,9 @@ class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
 
         val key = chain.request.key ?: return flowOf(chain)
 
-        val path = settings.extras[DiskCachePathExtrasKey]
+        val (fileSystem, path, enabled) = settings.extras[DiskCacheExtra.ExtrasKey]
+
+        if (!enabled) return flowOf(chain)
 
         val file = path / key.clear()
 
