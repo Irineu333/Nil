@@ -1,10 +1,9 @@
 package com.neoutils.nil.interceptor.memoryCache
 
-import androidx.compose.ui.graphics.painter.Painter
 import com.neoutils.nil.core.model.Chain
 import com.neoutils.nil.core.model.Settings
-import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.source.Interceptor
+import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.PainterResource
 import com.neoutils.nil.core.util.Request
@@ -13,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 val MemoryCacheExtrasKey = Extras.Key(
-    default = Cache.Builder<Request, Painter>()
+    default = Cache.Builder<Request, PainterResource>()
         .maximumCacheSize(100)
         .build()
 )
@@ -33,7 +32,7 @@ class MemoryCacheInterceptor : Interceptor(Level.REQUEST, Level.PAINTER) {
 
             return flowOf(
                 chain.copy(
-                    painter = PainterResource.Result.Success(painter)
+                    painter = painter
                 )
             )
         }
