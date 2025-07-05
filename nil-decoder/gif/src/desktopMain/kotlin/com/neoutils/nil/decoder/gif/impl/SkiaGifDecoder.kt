@@ -8,7 +8,7 @@ import com.neoutils.nil.core.util.ByteArrayKey
 import com.neoutils.nil.core.painter.PainterResource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.core.util.key
-import com.neoutils.nil.decoder.gif.model.GifParams
+import com.neoutils.nil.decoder.gif.model.GifExtra
 import com.neoutils.nil.decoder.gif.painter.SkiaGifPainter
 import com.neoutils.nil.type.Type
 import io.github.reactivecircus.cache4k.Cache
@@ -31,7 +31,7 @@ class SkiaGifDecoder : Decoder {
         }
 
         return runCatching {
-            val params = extras[GifParams.ExtrasKey]
+            val params = extras[GifExtra.ExtrasKey]
 
             val codec = cache.get(input.key) {
                 Codec.makeFromData(Data.makeFromBytes(input))

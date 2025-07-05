@@ -7,7 +7,7 @@ import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.foundation.Decoder
 import com.neoutils.nil.core.painter.PainterResource
 import com.neoutils.nil.core.util.Support
-import com.neoutils.nil.decoder.gif.model.GifParams
+import com.neoutils.nil.decoder.gif.model.GifExtra
 import com.neoutils.nil.decoder.gif.painter.MovieGifPainter
 import com.neoutils.nil.type.Type
 
@@ -24,7 +24,7 @@ class MovieGifDecoder : Decoder {
         }
 
         return runCatching {
-            val params = extras[GifParams.ExtrasKey]
+            val params = extras[GifExtra.ExtrasKey]
 
             MovieGifPainter(
                 movie = Movie.decodeStream(input.inputStream()),
