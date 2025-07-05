@@ -11,7 +11,7 @@ data class MemoryCacheExtra(
         enabled = enabled
     )
 
-    class Builder(
+    class Builder internal constructor(
         var maxSize: Int,
         var enabled: Boolean,
     ) {

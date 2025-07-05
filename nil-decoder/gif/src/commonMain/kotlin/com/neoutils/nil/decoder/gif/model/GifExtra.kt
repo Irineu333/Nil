@@ -9,7 +9,7 @@ data class GifExtra(
         repeatCount = repeatCount
     )
 
-    class Builder(
+    class Builder internal constructor(
         var repeatCount: Int
     ) {
         internal fun build() = GifExtra(

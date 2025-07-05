@@ -4,13 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalDensity
+import com.neoutils.nil.core.annotation.NilDsl
 import com.neoutils.nil.core.constant.DensityExtrasKey
-import com.neoutils.nil.core.model.Settings
-import com.neoutils.nil.core.util.LocalExtras
-import com.neoutils.nil.core.scope.SettingsScope
 import com.neoutils.nil.core.foundation.LocalDecoders
 import com.neoutils.nil.core.foundation.LocalFetchers
 import com.neoutils.nil.core.foundation.LocalInterceptors
+import com.neoutils.nil.core.model.Settings
+import com.neoutils.nil.core.scope.SettingsScope
+import com.neoutils.nil.core.util.LocalExtras
 
 @Composable
 fun ProvideSettings(
@@ -25,7 +26,7 @@ fun ProvideSettings(
 )
 
 @Composable
-fun rememberSettings(block: SettingsScope.() -> Unit): Settings {
+fun rememberSettings(block: @NilDsl SettingsScope.() -> Unit): Settings {
 
     val decoders = LocalDecoders.current
     val fetchers = LocalFetchers.current
