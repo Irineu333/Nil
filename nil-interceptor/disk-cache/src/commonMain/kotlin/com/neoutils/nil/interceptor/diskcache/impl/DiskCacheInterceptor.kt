@@ -1,11 +1,11 @@
 package com.neoutils.nil.interceptor.diskcache.impl
 
+import com.neoutils.nil.core.contract.Cacheable
+import com.neoutils.nil.core.contract.Request
+import com.neoutils.nil.core.foundation.Interceptor
 import com.neoutils.nil.core.model.Chain
 import com.neoutils.nil.core.model.Settings
-import com.neoutils.nil.core.foundation.Interceptor
-import com.neoutils.nil.core.contract.Cacheable
 import com.neoutils.nil.core.util.Level
-import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -29,18 +29,18 @@ class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
 
         val key = chain.request.hash ?: return flowOf(chain)
 
-        val diskCache = settings.extras[DiskCacheExtra.ExtrasKey]
+        val cache = settings.extras[DiskCacheExtra.ExtrasKey]
 
         return flowOf(
             when (val data = chain.data) {
-                is Resource.Result.Success<ByteArray> if diskCache.enabled -> {
-                    diskCache.cache[key] = data.value
+                is Resource.Result.Success<ByteArray> if cache.enabled -> {
+                    cache[key] = data.value
                     chain
                 }
 
-                is Resource.Loading if diskCache.enabled && diskCache.cache.has(key) -> {
+                is Resource.Loading if cache.enabled && cache.has(key) -> {
                     chain.copy(
-                        data = Resource.Result.Success(diskCache.cache[key])
+                        data = Resource.Result.Success(cache[key])
                     )
                 }
 

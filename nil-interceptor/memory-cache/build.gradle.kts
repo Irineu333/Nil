@@ -32,9 +32,6 @@ kotlin {
 
             // coroutines
             implementation(libs.kotlinx.coroutines)
-
-            // lru cache
-            api(libs.cache4k)
         }
     }
 }
