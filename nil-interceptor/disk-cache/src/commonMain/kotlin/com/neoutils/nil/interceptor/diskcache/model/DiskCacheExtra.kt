@@ -21,7 +21,7 @@ data class DiskCacheExtra(
         maxSize = maxSize
     )
 
-    class Builder(
+    class Builder internal constructor(
         var fileSystem: FileSystem,
         var path: Path,
         var enabled: Boolean,

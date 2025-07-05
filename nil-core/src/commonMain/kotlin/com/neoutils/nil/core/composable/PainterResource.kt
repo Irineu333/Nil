@@ -4,13 +4,14 @@ package com.neoutils.nil.core.composable
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.painter.Painter
+import com.neoutils.nil.core.annotation.NilDsl
+import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.extension.merge
 import com.neoutils.nil.core.model.Nil
 import com.neoutils.nil.core.painter.Animatable
-import com.neoutils.nil.core.scope.SettingsScope
 import com.neoutils.nil.core.painter.EmptyPainter
 import com.neoutils.nil.core.painter.PainterResource
-import com.neoutils.nil.core.contract.Request
+import com.neoutils.nil.core.scope.SettingsScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.withContext
@@ -20,7 +21,7 @@ fun asyncPainterResource(
     request: Request,
     placeholder: Painter = EmptyPainter,
     fallback: Painter = EmptyPainter,
-    settings: SettingsScope.() -> Unit = {}
+    settings: @NilDsl SettingsScope.() -> Unit = {}
 ): PainterResource {
 
     val settings = rememberSettings(settings)
