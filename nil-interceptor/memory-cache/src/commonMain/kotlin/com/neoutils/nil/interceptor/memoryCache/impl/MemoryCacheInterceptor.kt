@@ -6,8 +6,11 @@ import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.painter.PainterResource
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.interceptor.memoryCache.model.MemoryCacheExtra
+import com.neoutils.nil.interceptor.memoryCache.util.LruMemoryCache
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+
+private val caches = mutableMapOf<MemoryCacheExtra, LruMemoryCache>()
 
 class MemoryCacheInterceptor : Interceptor(Level.REQUEST, Level.PAINTER) {
 
@@ -16,19 +19,25 @@ class MemoryCacheInterceptor : Interceptor(Level.REQUEST, Level.PAINTER) {
         chain: Chain
     ): Flow<Chain> {
 
-        val cache = settings.extras[MemoryCacheExtra.ExtrasKey]
+        val extra = settings.extras[MemoryCacheExtra.ExtrasKey]
+
+        val cache = caches.getOrPut(extra) {
+            LruMemoryCache(
+                maxSize = extra.maxSize
+            )
+        }
 
         return flowOf(
             when (chain.painter) {
-                is PainterResource.Loading if cache.enabled && cache.has(chain.request) -> {
+                is PainterResource.Result.Success if extra.enabled -> {
+                    cache[chain.request] = chain.painter
+                    chain
+                }
+
+                is PainterResource.Loading if extra.enabled && cache.has(chain.request) -> {
                     chain.copy(
                         painter = cache[chain.request]
                     )
-                }
-
-                is PainterResource.Result.Success if cache.enabled -> {
-                    cache[chain.request] = chain.painter
-                    chain
                 }
 
                 else -> chain
