@@ -14,6 +14,8 @@ import com.neoutils.nil.decoder.gif.extension.gif
 import com.neoutils.nil.decoder.svg.extension.svg
 import com.neoutils.nil.decoder.xml.extension.xml
 import com.neoutils.nil.fetcher.network.extension.network
+import com.neoutils.nil.interceptor.diskcache.extension.diskCache
+import com.neoutils.nil.interceptor.diskcache.extension.mb
 
 @Composable
 fun App() = AppTheme {
@@ -29,6 +31,12 @@ fun App() = AppTheme {
                 gif()
                 xml()
                 svg()
+            }
+
+            extras {
+                diskCache {
+                    maxSize = 10.mb
+                }
             }
         }
 
