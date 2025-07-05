@@ -16,7 +16,10 @@ import com.neoutils.nil.decoder.xml.extension.xml
 import com.neoutils.nil.fetcher.network.extension.network
 import com.neoutils.nil.interceptor.diskcache.extension.diskCache
 import com.neoutils.nil.interceptor.diskcache.extension.mb
+import com.neoutils.nil.interceptor.diskcache.impl.DiskCacheInterceptor
 import com.neoutils.nil.interceptor.memoryCache.extension.memoryCache
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 @Composable
 fun App() = AppTheme {

@@ -5,12 +5,11 @@ package com.neoutils.nil.interceptor.memoryCache.util
 import com.neoutils.nil.core.contract.Cache
 import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.painter.PainterResource
-import com.neoutils.nil.interceptor.memoryCache.util.LruMemoryCache.Value
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-private val cache = mutableMapOf<Request, Value<PainterResource>>()
+private val cache = mutableMapOf<Request, ValueWithTime<PainterResource>>()
 
 class LruMemoryCache(
     val maxSize: Int,
@@ -23,7 +22,7 @@ class LruMemoryCache(
     override fun has(key: Request) = cache.contains(key)
 
     override fun set(key: Request, value: PainterResource) {
-        cache[key] = Value(value)
+        cache[key] = ValueWithTime(value)
         ensureSize()
     }
 
@@ -36,14 +35,14 @@ class LruMemoryCache(
 
         cache.entries
             .sortedBy { it.value.time }
-            .subList(minOf(maxSize, cache.size), cache.size)
+            .subList(maxSize.coerceAtMost(cache.size), cache.size)
             .forEach {
                 cache.remove(it.key)
             }
     }
-
-    data class Value<T>(
-        val painter: T,
-        val time: Instant = Clock.System.now()
-    )
 }
+
+private data class ValueWithTime<T>(
+    val painter: T,
+    val time: Instant = Clock.System.now()
+)

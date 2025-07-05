@@ -8,6 +8,8 @@ fun ExtrasScope.memoryCache(
     scope: @NilDsl MemoryCacheExtra.Builder.() -> Unit
 ) {
     extras.update(MemoryCacheExtra.ExtrasKey) {
-        it.newBuilder().apply(scope).build()
+        it.newBuilder()
+            .apply(scope)
+            .build()
     }
 }
