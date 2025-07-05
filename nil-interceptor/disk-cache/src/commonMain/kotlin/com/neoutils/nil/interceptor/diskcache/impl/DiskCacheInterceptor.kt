@@ -7,6 +7,7 @@ import com.neoutils.nil.core.model.Chain
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.Resource
+import com.neoutils.nil.interceptor.diskcache.model.DiskCacheExtra
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import okio.ByteString.Companion.encodeUtf8

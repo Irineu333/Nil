@@ -3,6 +3,7 @@ package com.neoutils.nil.interceptor.memoryCache.impl
 import com.neoutils.nil.core.foundation.Interceptor
 import com.neoutils.nil.core.model.Chain
 import com.neoutils.nil.core.model.Settings
+import com.neoutils.nil.core.painter.PainterResource
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.interceptor.memoryCache.model.MemoryCacheExtra
 import kotlinx.coroutines.flow.Flow
@@ -15,25 +16,23 @@ class MemoryCacheInterceptor : Interceptor(Level.REQUEST, Level.PAINTER) {
         chain: Chain
     ): Flow<Chain> {
 
-        val cache = settings.extras[MemoryCacheExtra.Companion.ExtrasKey]
+        val cache = settings.extras[MemoryCacheExtra.ExtrasKey]
 
-        if (!cache.enabled) return flowOf(chain)
+        return flowOf(
+            when (chain.painter) {
+                is PainterResource.Loading if cache.enabled && cache.has(chain.request) -> {
+                    chain.copy(
+                        painter = cache[chain.request]
+                    )
+                }
 
-        if (chain.painter.isLoading && cache.has(chain.request)) {
+                is PainterResource.Result.Success if cache.enabled -> {
+                    cache[chain.request] = chain.painter
+                    chain
+                }
 
-            val painter = cache[chain.request]
-
-            return flowOf(
-                chain.copy(
-                    painter = painter
-                )
-            )
-        }
-
-        if (chain.painter.isSuccess) {
-            cache[chain.request] = chain.painter
-        }
-
-        return flowOf(chain)
+                else -> chain
+            }
+        )
     }
 }

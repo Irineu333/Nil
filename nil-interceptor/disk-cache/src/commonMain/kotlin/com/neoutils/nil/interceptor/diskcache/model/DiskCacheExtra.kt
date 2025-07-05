@@ -1,4 +1,4 @@
-package com.neoutils.nil.interceptor.diskcache.impl
+package com.neoutils.nil.interceptor.diskcache.model
 
 import com.neoutils.nil.core.contract.Cache
 import com.neoutils.nil.core.util.Extras
