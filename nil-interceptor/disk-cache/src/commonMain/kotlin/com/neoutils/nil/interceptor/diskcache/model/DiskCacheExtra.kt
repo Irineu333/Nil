@@ -17,7 +17,7 @@ class DiskCacheExtra(
     val enabled: Boolean = true,
 ) : Cache<String, ByteArray> by LruDiskCache(fileSystem, path, maxSize) {
 
-    fun newBuilder() = Builder(
+    internal fun newBuilder() = Builder(
         fileSystem = fileSystem,
         path = path,
         enabled = enabled,

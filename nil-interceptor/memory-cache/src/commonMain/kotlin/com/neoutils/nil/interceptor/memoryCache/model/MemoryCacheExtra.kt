@@ -11,7 +11,7 @@ class MemoryCacheExtra(
     val enabled: Boolean = true,
 ) : Cache<Request, PainterResource> by LruMemoryCache(maxSize) {
 
-    fun newBuilder() = Builder(
+    internal fun newBuilder() = Builder(
         maxSize = maxSize,
         enabled = enabled
     )

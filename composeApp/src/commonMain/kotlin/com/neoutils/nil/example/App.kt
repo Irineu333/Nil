@@ -31,8 +31,8 @@ fun App() = AppTheme {
         ) {
             decoders {
                 gif()
-                xml()
                 svg()
+                xml()
             }
 
             extras {
