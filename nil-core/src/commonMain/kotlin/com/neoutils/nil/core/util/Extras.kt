@@ -1,10 +1,10 @@
 package com.neoutils.nil.core.util
 
-import androidx.compose.runtime.compositionLocalOf
-import com.neoutils.nil.core.util.Extras.Key
+import androidx.compose.runtime.staticCompositionLocalOf
 import com.neoutils.nil.core.strings.ExtraErrorStrings
+import com.neoutils.nil.core.util.Extras.Key
 
-val LocalExtras = compositionLocalOf { Extras.EMPTY }
+val LocalExtras = staticCompositionLocalOf { Extras.EMPTY }
 
 private val error = ExtraErrorStrings()
 
