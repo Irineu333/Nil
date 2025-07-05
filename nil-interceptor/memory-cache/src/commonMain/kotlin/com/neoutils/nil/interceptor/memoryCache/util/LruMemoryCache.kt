@@ -5,7 +5,12 @@ package com.neoutils.nil.interceptor.memoryCache.util
 import com.neoutils.nil.core.contract.Cache
 import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.painter.PainterResource
+import com.neoutils.nil.interceptor.memoryCache.util.LruMemoryCache.Value
+import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
+
+private val cache = mutableMapOf<Request, Value<PainterResource>>()
 
 class LruMemoryCache(
     val maxSize: Int,
@@ -37,7 +42,8 @@ class LruMemoryCache(
             }
     }
 
-    companion object {
-        private val cache = mutableMapOf<Request, Value<PainterResource>>()
-    }
+    data class Value<T>(
+        val painter: T,
+        val time: Instant = Clock.System.now()
+    )
 }
