@@ -1,6 +1,6 @@
 package com.neoutils.nil.core.foundation
 
-import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.staticCompositionLocalOf
 import com.neoutils.nil.core.interceptor.DecodeInterceptor
 import com.neoutils.nil.core.interceptor.FetchInterceptor
 import com.neoutils.nil.core.model.Chain
@@ -14,7 +14,7 @@ val DefaultInterceptors = listOf(
     DecodeInterceptor()
 )
 
-val LocalInterceptors = compositionLocalOf {
+val LocalInterceptors = staticCompositionLocalOf {
     DefaultInterceptors + Dynamic.interceptors
 }
 
