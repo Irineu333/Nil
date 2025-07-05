@@ -2,10 +2,10 @@ package com.neoutils.nil.interceptor.diskcache.impl
 
 import com.neoutils.nil.core.model.Chain
 import com.neoutils.nil.core.model.Settings
-import com.neoutils.nil.core.source.Interceptor
+import com.neoutils.nil.core.foundation.Interceptor
 import com.neoutils.nil.core.contract.Cacheable
 import com.neoutils.nil.core.util.Level
-import com.neoutils.nil.core.util.Request
+import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf

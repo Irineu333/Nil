@@ -8,9 +8,9 @@ import com.neoutils.nil.core.extension.merge
 import com.neoutils.nil.core.model.Nil
 import com.neoutils.nil.core.painter.Animatable
 import com.neoutils.nil.core.scope.SettingsScope
-import com.neoutils.nil.core.util.EmptyPainter
-import com.neoutils.nil.core.util.PainterResource
-import com.neoutils.nil.core.util.Request
+import com.neoutils.nil.core.painter.EmptyPainter
+import com.neoutils.nil.core.painter.PainterResource
+import com.neoutils.nil.core.contract.Request
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.withContext

@@ -1,4 +1,4 @@
-package com.neoutils.nil.core.source
+package com.neoutils.nil.core.foundation
 
 import androidx.compose.runtime.compositionLocalOf
 import com.neoutils.nil.core.interceptor.DecodeInterceptor

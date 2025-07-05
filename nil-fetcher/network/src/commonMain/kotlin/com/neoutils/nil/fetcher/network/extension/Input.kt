@@ -1,7 +1,7 @@
 package com.neoutils.nil.fetcher.network.extension
 
 import androidx.compose.runtime.Stable
-import com.neoutils.nil.core.util.Request
+import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.fetcher.network.model.RequestNetwork
 import io.ktor.http.*
 

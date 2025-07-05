@@ -1,4 +1,4 @@
-package com.neoutils.nil.core.util
+package com.neoutils.nil.core.painter
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.DefaultAlpha
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
+import com.neoutils.nil.core.contract.State
 
 sealed class PainterResource : Painter(), State {
 

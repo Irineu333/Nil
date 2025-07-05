@@ -4,8 +4,8 @@ import com.neoutils.nil.core.exception.NoDecoderFound
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.model.Chain
 import com.neoutils.nil.core.model.Settings
-import com.neoutils.nil.core.source.Decoder
-import com.neoutils.nil.core.source.Interceptor
+import com.neoutils.nil.core.foundation.Decoder
+import com.neoutils.nil.core.foundation.Interceptor
 import com.neoutils.nil.core.strings.DecoderErrorStrings
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.Resource

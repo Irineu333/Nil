@@ -1,7 +1,7 @@
 package com.neoutils.nil.fetcher.network.impl
 
 import com.neoutils.nil.core.util.Extras
-import com.neoutils.nil.core.source.Fetcher
+import com.neoutils.nil.core.foundation.Fetcher
 import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.fetcher.network.model.RequestNetwork
 import io.ktor.client.*
