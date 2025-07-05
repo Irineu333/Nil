@@ -1,9 +1,9 @@
-package com.neoutils.nil.core.source
+package com.neoutils.nil.core.foundation
 
 import androidx.compose.runtime.compositionLocalOf
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.Dynamic
-import com.neoutils.nil.core.util.Request
+import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass

@@ -1,8 +1,8 @@
 package com.neoutils.nil.core.extension
 
 import androidx.compose.ui.graphics.painter.Painter
-import com.neoutils.nil.core.util.EmptyPainter
-import com.neoutils.nil.core.util.PainterResource
+import com.neoutils.nil.core.painter.EmptyPainter
+import com.neoutils.nil.core.painter.PainterResource
 
 fun PainterResource.merge(
     failure: Painter = EmptyPainter,

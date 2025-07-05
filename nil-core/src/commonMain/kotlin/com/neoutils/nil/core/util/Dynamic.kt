@@ -1,8 +1,8 @@
 package com.neoutils.nil.core.util
 
-import com.neoutils.nil.core.source.Decoder
-import com.neoutils.nil.core.source.Fetcher
-import com.neoutils.nil.core.source.Interceptor
+import com.neoutils.nil.core.foundation.Decoder
+import com.neoutils.nil.core.foundation.Fetcher
+import com.neoutils.nil.core.foundation.Interceptor
 import java.util.*
 
 object Dynamic {

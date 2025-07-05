@@ -1,4 +1,4 @@
-package com.neoutils.nil.core.util
+package com.neoutils.nil.core.contract
 
 interface State {
     val isLoading: Boolean

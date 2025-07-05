@@ -5,8 +5,8 @@ import com.neoutils.nil.core.exception.NotSupportFormat
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.constant.DensityExtrasKey
 import com.neoutils.nil.core.util.Extras
-import com.neoutils.nil.core.source.Decoder
-import com.neoutils.nil.core.util.PainterResource
+import com.neoutils.nil.core.foundation.Decoder
+import com.neoutils.nil.core.painter.PainterResource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.svg.format.SVG_REGEX
 import com.neoutils.nil.decoder.svg.painter.AndroidSvgPainter

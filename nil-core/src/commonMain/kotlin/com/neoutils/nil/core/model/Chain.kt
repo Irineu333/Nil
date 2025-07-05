@@ -1,7 +1,7 @@
 package com.neoutils.nil.core.model
 
-import com.neoutils.nil.core.util.PainterResource
-import com.neoutils.nil.core.util.Request
+import com.neoutils.nil.core.painter.PainterResource
+import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.util.Resource
 
 data class Chain(

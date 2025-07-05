@@ -2,11 +2,11 @@ package com.neoutils.nil.interceptor.memoryCache
 
 import com.neoutils.nil.core.model.Chain
 import com.neoutils.nil.core.model.Settings
-import com.neoutils.nil.core.source.Interceptor
+import com.neoutils.nil.core.foundation.Interceptor
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.Level
-import com.neoutils.nil.core.util.PainterResource
-import com.neoutils.nil.core.util.Request
+import com.neoutils.nil.core.painter.PainterResource
+import com.neoutils.nil.core.contract.Request
 import io.github.reactivecircus.cache4k.Cache
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
