@@ -1,5 +1,6 @@
 package com.neoutils.nil.interceptor.diskcache.impl
 
+import com.neoutils.nil.core.contract.Cache
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.interceptor.diskcache.extension.mb
 import com.neoutils.nil.interceptor.diskcache.util.LruDiskCache
@@ -14,14 +15,7 @@ class DiskCacheExtra(
     val path: Path = FileSystem.SYSTEM_TEMPORARY_DIRECTORY / DEFAULT_CACHE_PATH,
     val maxSize: SizeUnit = 100.mb,
     val enabled: Boolean = true,
-) {
-    val cache by lazy {
-        LruDiskCache(
-            fileSystem = fileSystem,
-            path = path,
-            maxSize = maxSize
-        )
-    }
+) : Cache<String, ByteArray> by LruDiskCache(fileSystem, path, maxSize) {
 
     fun newBuilder() = Builder(
         fileSystem = fileSystem,

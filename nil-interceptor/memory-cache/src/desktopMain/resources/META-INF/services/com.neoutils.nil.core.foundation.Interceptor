@@ -1,1 +1,1 @@
-com.neoutils.nil.interceptor.memoryCache.MemoryCacheInterceptor
+com.neoutils.nil.interceptor.memoryCache.impl.MemoryCacheInterceptor

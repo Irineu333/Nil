@@ -8,7 +8,7 @@ class ListScope<T : Any>(
     private var values: MutableList<T>
 ) {
     fun add(value: T) = values.add(value)
-    fun remove(clazz: KClass<T>) = values.removeIf { it::class == clazz }
+    fun remove(clazz: KClass<out T>) = values.removeIf { it::class == clazz }
 
     internal fun get() = values.toList()
 
