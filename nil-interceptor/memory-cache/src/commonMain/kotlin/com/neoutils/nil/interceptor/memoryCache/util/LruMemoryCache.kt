@@ -12,7 +12,7 @@ import kotlin.time.Instant
 private val cache = mutableMapOf<Request, ValueWithTime<PainterResource>>()
 
 class LruMemoryCache(
-    val maxSize: Int,
+    private val maxSize: Int,
 ) : Cache<Request, PainterResource> {
 
     init {
@@ -27,7 +27,9 @@ class LruMemoryCache(
     }
 
     override fun get(key: Request): PainterResource {
-        return checkNotNull(cache[key]).painter
+        return checkNotNull(cache[key]).also {
+            cache[key] = it.copy(time = Clock.System.now())
+        }.painter
     }
 
     private fun ensureSize() {
