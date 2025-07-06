@@ -14,9 +14,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import okio.ByteString.Companion.encodeUtf8
 
-private val remember = Remember<LruDiskCache>()
-
 class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
+
+    private val caches = Remember<LruDiskCache>()
 
     private val Request.hash
         get() = when (this) {
@@ -36,7 +36,7 @@ class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
 
         val extra = settings.extras[DiskCacheExtra.ExtrasKey]
 
-        val cache = remember(extra) {
+        val cache = caches(extra) {
             LruDiskCache(
                 fileSystem = extra.fileSystem,
                 path = extra.path,
