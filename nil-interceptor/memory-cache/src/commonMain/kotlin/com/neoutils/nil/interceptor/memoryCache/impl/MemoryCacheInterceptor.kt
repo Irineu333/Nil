@@ -11,9 +11,9 @@ import com.neoutils.nil.util.Remember
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-private val remember = Remember<LruMemoryCache>()
-
 class MemoryCacheInterceptor : Interceptor(Level.REQUEST, Level.PAINTER) {
+
+    private val caches = Remember<LruMemoryCache>()
 
     override fun intercept(
         settings: Settings,
@@ -22,7 +22,7 @@ class MemoryCacheInterceptor : Interceptor(Level.REQUEST, Level.PAINTER) {
 
         val extra = settings.extras[MemoryCacheExtra.ExtrasKey]
 
-        val cache = remember(extra) {
+        val cache = caches(extra) {
             LruMemoryCache(
                 maxSize = extra.maxSize
             )
