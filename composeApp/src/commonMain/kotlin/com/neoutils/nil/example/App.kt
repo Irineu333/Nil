@@ -11,8 +11,9 @@ import androidx.compose.ui.Modifier
 import com.neoutils.nil.core.composable.asyncPainterResource
 import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.painter.PainterResource
+import com.neoutils.nil.decoder.xml.extension.xml
 import com.neoutils.nil.example.resources.Res
-import com.neoutils.nil.example.resources.cute_cat
+import com.neoutils.nil.example.resources.atom_vector
 import com.neoutils.nil.fetcher.resources.extension.resource
 
 @Composable
@@ -21,8 +22,12 @@ fun App() = Box(
     modifier = Modifier.fillMaxSize()
 ) {
     val resource = asyncPainterResource(
-        request = Request.resource(Res.drawable.cute_cat),
-    )
+        request = Request.resource(Res.drawable.atom_vector),
+    ) {
+        decoders {
+            xml()
+        }
+    }
 
     when (resource) {
         is PainterResource.Result.Success -> {
