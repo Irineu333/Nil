@@ -40,6 +40,7 @@ kotlin {
             implementation(project(":nil-fetcher:resources"))
             implementation(project(":nil-fetcher:network"))
             implementation(project(":nil-decoder:bitmap"))
+            implementation(project(":nil-decoder:xml"))
             implementation(project(":nil-interceptor:disk-cache"))
             implementation(project(":nil-interceptor:memory-cache"))
 
