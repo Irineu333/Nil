@@ -19,6 +19,17 @@ kotlin {
         }
     }
 
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "ComposeApp"
+            isStatic = true
+        }
+    }
+
     sourceSets {
         val desktopMain by getting
 
@@ -29,11 +40,11 @@ kotlin {
             implementation(project(":nil-fetcher:resources"))
             implementation(project(":nil-fetcher:network"))
             implementation(project(":nil-decoder:bitmap"))
-            implementation(project(":nil-decoder:gif"))
-            implementation(project(":nil-decoder:svg"))
             implementation(project(":nil-decoder:xml"))
-            implementation(project(":nil-interceptor:memory-cache"))
+            implementation(project(":nil-decoder:svg"))
+            implementation(project(":nil-decoder:gif"))
             implementation(project(":nil-interceptor:disk-cache"))
+            implementation(project(":nil-interceptor:memory-cache"))
 
             // compose
             implementation(compose.runtime)
@@ -68,6 +79,12 @@ kotlin {
 
             // slf4j
             implementation("org.slf4j:slf4j-nop:2.0.9")
+        }
+
+        iosMain.dependencies {
+
+            // ktor
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
