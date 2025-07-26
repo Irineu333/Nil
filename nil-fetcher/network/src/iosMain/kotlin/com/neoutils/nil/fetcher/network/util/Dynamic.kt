@@ -6,6 +6,6 @@ import com.neoutils.nil.core.util.fetchers
 import com.neoutils.nil.fetcher.network.impl.NetworkFetcher
 
 @EagerInitialization
-private val initHook = {
+private val initHook = run {
     fetchers.add(NetworkFetcher())
-}.invoke()
+}

@@ -6,6 +6,6 @@ import com.neoutils.nil.core.util.decoders
 import com.neoutils.nil.decoder.bitmap.impl.BitmapDecoder
 
 @EagerInitialization
-private val initHook = {
+private val initHook = run {
     decoders.add(BitmapDecoder())
-}.invoke()
+}
