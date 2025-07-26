@@ -42,6 +42,7 @@ kotlin {
             implementation(project(":nil-decoder:bitmap"))
             implementation(project(":nil-decoder:xml"))
             implementation(project(":nil-decoder:svg"))
+            implementation(project(":nil-decoder:gif"))
             implementation(project(":nil-interceptor:disk-cache"))
             implementation(project(":nil-interceptor:memory-cache"))
 
