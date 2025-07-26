@@ -8,7 +8,9 @@ class ListScope<T : Any>(
     fun add(value: T) = values.add(value)
 
     fun remove(clazz: KClass<out T>) {
-        values.removeIf { it::class == clazz }
+        values = values.filter {
+            it::class != clazz
+        }.toMutableList()
     }
 
     internal fun get() = values.toList()
