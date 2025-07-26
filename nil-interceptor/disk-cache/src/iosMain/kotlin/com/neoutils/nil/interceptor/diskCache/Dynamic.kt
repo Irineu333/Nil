@@ -6,6 +6,6 @@ import com.neoutils.nil.core.util.interceptors
 import com.neoutils.nil.interceptor.diskcache.impl.DiskCacheInterceptor
 
 @EagerInitialization
-private val initHook = {
+private val initHook = run {
     interceptors.add(DiskCacheInterceptor())
-}.invoke()
+}

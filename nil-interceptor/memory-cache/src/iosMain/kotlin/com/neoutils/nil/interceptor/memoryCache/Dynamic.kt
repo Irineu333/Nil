@@ -6,6 +6,6 @@ import com.neoutils.nil.core.util.interceptors
 import com.neoutils.nil.interceptor.memoryCache.impl.MemoryCacheInterceptor
 
 @EagerInitialization
-private val initHook = {
+private val initHook = run {
     interceptors.add(MemoryCacheInterceptor())
-}.invoke()
+}
