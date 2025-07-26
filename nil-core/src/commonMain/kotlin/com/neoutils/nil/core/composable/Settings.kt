@@ -15,6 +15,15 @@ import com.neoutils.nil.core.util.LocalExtras
 
 @Composable
 fun ProvideSettings(
+    settings: @NilDsl SettingsScope.() -> Unit,
+    content: @Composable () -> Unit
+) = ProvideSettings(
+    settings = rememberSettings(settings),
+    content = content
+)
+
+@Composable
+fun ProvideSettings(
     settings: Settings,
     content: @Composable () -> Unit
 ) = CompositionLocalProvider(
