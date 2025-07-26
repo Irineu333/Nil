@@ -3,6 +3,7 @@ package com.neoutils.nil.type
 import okio.Buffer
 import okio.ByteString
 import okio.ByteString.Companion.decodeHex
+import okio.use
 
 // https://en.wikipedia.org/wiki/List_of_file_signatures
 private val PNG_SIGN = "89504E470D0A1A0A".decodeHex()
