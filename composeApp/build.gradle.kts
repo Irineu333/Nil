@@ -31,8 +31,6 @@ kotlin {
     }
 
     sourceSets {
-        val desktopMain by getting
-
         commonMain.dependencies {
 
             // modules
@@ -67,19 +65,21 @@ kotlin {
             implementation(libs.ktor.client.android)
         }
 
-        desktopMain.dependencies {
+        val desktopMain by getting {
+            dependencies {
 
-            // compose
-            implementation(compose.desktop.currentOs)
+                // compose
+                implementation(compose.desktop.currentOs)
 
-            // ktor
-            implementation(libs.ktor.client.java)
+                // ktor
+                implementation(libs.ktor.client.java)
 
-            // coroutines
-            implementation(libs.kotlinx.coroutines.swing)
+                // coroutines
+                implementation(libs.kotlinx.coroutines.swing)
 
-            // slf4j
-            implementation("org.slf4j:slf4j-nop:2.0.9")
+                // slf4j
+                implementation("org.slf4j:slf4j-nop:2.0.9")
+            }
         }
 
         iosMain.dependencies {
