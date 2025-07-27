@@ -12,6 +12,7 @@ import com.neoutils.nil.core.composable.asyncPainterResource
 import com.neoutils.nil.core.composable.painterResource
 import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.painter.PainterResource
+import com.neoutils.nil.decoder.bitmap.extension.bitmap
 import com.neoutils.nil.decoder.gif.extension.gif
 import com.neoutils.nil.decoder.svg.extension.svg
 import com.neoutils.nil.decoder.xml.extension.xml
@@ -65,15 +66,17 @@ fun App() = Box(
 @Preview
 @Composable
 fun AppPreview() {
-    ResourcesPreview {
+    ResourcesPreview(
+        decoders = {
+            xml()
+            bitmap()
+            gif()
+        }
+    ) {
         Image(
             painter = painterResource(
                 request = Request.resource(Res.drawable.atom_vector),
-            ) {
-                decoders {
-                    xml()
-                }
-            },
+            ),
             contentDescription = null,
         )
     }

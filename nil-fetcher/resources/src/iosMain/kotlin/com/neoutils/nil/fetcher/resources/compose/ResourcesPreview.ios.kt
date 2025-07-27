@@ -7,7 +7,7 @@ import com.neoutils.nil.core.model.Settings
 @Composable
 actual fun ResourcesPreview(
     settings: Settings,
-    content: @Composable () -> Unit
+    content: @Composable (() -> Unit)
 ) {
     ProvideSettings(
         settings = settings,

@@ -11,6 +11,7 @@ import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.svg.format.SVG_REGEX
 import com.neoutils.nil.decoder.svg.painter.AndroidSvgPainter
 
+// don't support preview
 class AndroidSvgDecoder() : Decoder {
 
     override suspend fun decode(
