@@ -2,7 +2,8 @@ package com.neoutils.nil.interceptor.diskcache.impl
 
 import com.neoutils.nil.core.contract.Cacheable
 import com.neoutils.nil.core.contract.Request
-import com.neoutils.nil.core.foundation.Interceptor
+import com.neoutils.nil.core.foundation.ChainResult
+import com.neoutils.nil.core.foundation.Interceptor2
 import com.neoutils.nil.core.model.Chain
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.util.Level
@@ -10,11 +11,9 @@ import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.interceptor.diskcache.model.DiskCacheExtra
 import com.neoutils.nil.interceptor.diskcache.util.LruDiskCache
 import com.neoutils.nil.util.Remember
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import okio.ByteString.Companion.encodeUtf8
 
-class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
+class DiskCacheInterceptor : Interceptor2(Level.REQUEST, Level.DATA) {
 
     private val caches = Remember<LruDiskCache>()
 
@@ -27,12 +26,11 @@ class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
             else -> null
         }
 
-    override suspend fun sync(
+    override fun intercept(
         settings: Settings,
         chain: Chain
-    ): Chain {
-
-        val key = chain.request.hash ?: return chain
+    ): ChainResult {
+        val key = chain.request.hash ?: return ChainResult.Skip
 
         val extra = settings.extras[DiskCacheExtra.ExtrasKey]
 
@@ -44,19 +42,21 @@ class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
             )
         }
 
-        return when (val data = chain.data) {
-            is Resource.Result.Success<ByteArray> if extra.enabled -> {
-                cache[key] = data.value
-                chain
-            }
+        return ChainResult.Process {
+            when (val data = chain.data) {
+                is Resource.Result.Success<ByteArray> if extra.enabled -> {
+                    cache[key] = data.value
+                    chain
+                }
 
-            is Resource.Loading if extra.enabled && cache.has(key) -> {
-                chain.copy(
-                    data = Resource.Result.Success(cache[key])
-                )
-            }
+                is Resource.Loading if extra.enabled && cache.has(key) -> {
+                    chain.copy(
+                        data = Resource.Result.Success(cache[key])
+                    )
+                }
 
-            else -> chain
+                else -> chain
+            }
         }
     }
 }
