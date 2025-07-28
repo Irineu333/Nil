@@ -1,8 +1,8 @@
 package com.neoutils.nil.core.extension
 
 import com.neoutils.nil.core.foundation.Interceptor
-import com.neoutils.nil.core.model.Chain
-import com.neoutils.nil.core.model.ChainResult
+import com.neoutils.nil.core.chain.Chain
+import com.neoutils.nil.core.chain.ChainResult
 import com.neoutils.nil.core.model.Settings
 import kotlinx.coroutines.flow.*
 
@@ -17,8 +17,6 @@ fun Interceptor.async(
         }
     }
 }
-
-fun Flow<Chain>.asAsync(): Flow<Chain.Async> = map { chain -> chain as Chain.Async }
 
 suspend fun Interceptor.sync(
     settings: Settings,

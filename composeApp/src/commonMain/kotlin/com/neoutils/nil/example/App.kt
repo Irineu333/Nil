@@ -16,20 +16,17 @@ import com.neoutils.nil.decoder.gif.extension.gif
 import com.neoutils.nil.decoder.svg.extension.svg
 import com.neoutils.nil.decoder.xml.extension.xml
 import com.neoutils.nil.example.resources.Res
-import com.neoutils.nil.example.resources.atom
-import com.neoutils.nil.example.resources.atom_vector
 import com.neoutils.nil.example.resources.crazy_cat
 import com.neoutils.nil.fetcher.network.extension.network
 import com.neoutils.nil.fetcher.resources.extension.resource
-import com.neoutils.nil.interceptor.diskcache.extension.diskCache
 
 @Composable
 fun App() = Box(
     contentAlignment = Alignment.Center,
     modifier = Modifier.fillMaxSize()
 ) {
-    val resource = painterResource(
-        request = Request.resource(Res.drawable.crazy_cat),
+    val resource = asyncPainterResource(
+        request = Request.network("https://cataas.com/cat"),
     ) {
         decoders {
             xml()
