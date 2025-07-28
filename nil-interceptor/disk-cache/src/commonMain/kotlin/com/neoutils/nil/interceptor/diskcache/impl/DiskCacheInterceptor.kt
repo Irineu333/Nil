@@ -2,16 +2,16 @@ package com.neoutils.nil.interceptor.diskcache.impl
 
 import com.neoutils.nil.core.contract.Cacheable
 import com.neoutils.nil.core.contract.Request
+import com.neoutils.nil.core.extension.getOrElse
 import com.neoutils.nil.core.foundation.Interceptor
-import com.neoutils.nil.core.model.Chain
+import com.neoutils.nil.core.chain.Chain
+import com.neoutils.nil.core.chain.ChainResult
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.interceptor.diskcache.model.DiskCacheExtra
 import com.neoutils.nil.interceptor.diskcache.util.LruDiskCache
 import com.neoutils.nil.util.Remember
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import okio.ByteString.Companion.encodeUtf8
 
 class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
@@ -27,14 +27,15 @@ class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
             else -> null
         }
 
-    override fun intercept(
+    override suspend fun intercept(
         settings: Settings,
         chain: Chain
-    ): Flow<Chain> {
-
-        val key = chain.request.hash ?: return flowOf(chain)
+    ): ChainResult {
+        val key = chain.request.hash ?: return ChainResult.Skip
 
         val extra = settings.extras[DiskCacheExtra.ExtrasKey]
+
+        if (!extra.enabled) return ChainResult.Skip
 
         val cache = caches(extra) {
             LruDiskCache(
@@ -44,21 +45,19 @@ class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
             )
         }
 
-        return flowOf(
-            when (val data = chain.data) {
-                is Resource.Result.Success<ByteArray> if extra.enabled -> {
-                    cache[key] = data.value
-                    chain
-                }
+        if (chain.data == null && cache.has(key)) {
 
-                is Resource.Loading if extra.enabled && cache.has(key) -> {
-                    chain.copy(
-                        data = Resource.Result.Success(cache[key])
-                    )
-                }
+            return ChainResult.Process(
+                chain.doCopy(
+                    data = Resource.Result.Success(cache[key])
+                )
+            )
+        }
 
-                else -> chain
-            }
-        )
+        val data = chain.data ?: return ChainResult.Skip
+
+        cache[key] = data.getOrElse { return ChainResult.Skip }
+
+        return ChainResult.Skip
     }
 }

@@ -14,6 +14,7 @@ import com.neoutils.nil.core.painter.PainterResource
 import com.neoutils.nil.core.scope.SettingsScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 @Composable
@@ -37,6 +38,31 @@ fun asyncPainterResource(
         placeholder = placeholder,
         fallback = fallback
     )
+}
+
+@Composable
+fun painterResource(
+    request: Request.Sync,
+    settings: @NilDsl SettingsScope.() -> Unit = {}
+): PainterResource.Result {
+
+    val settings = rememberSettings(settings)
+
+    val nil = remember(settings) { Nil(settings) }
+
+    val result = remember(nil, request) { runBlocking { nil.sync(request) } }
+
+    LaunchedEffect(result) {
+        when (val painter = result.painter) {
+            is Animatable -> {
+                withContext(Dispatchers.Default) {
+                    painter.animate()
+                }
+            }
+        }
+    }
+
+    return result
 }
 
 @Composable

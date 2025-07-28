@@ -1,11 +1,12 @@
 package com.neoutils.nil.decoder.gif.impl
 
+import androidx.compose.ui.graphics.painter.Painter
 import com.neoutils.nil.core.exception.NotSupportFormat
-import com.neoutils.nil.core.extension.toPainterResource
+import com.neoutils.nil.core.extension.resourceCatching
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.foundation.Decoder
 import com.neoutils.nil.core.util.ByteArrayKey
-import com.neoutils.nil.core.painter.PainterResource
+import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.core.util.key
 import com.neoutils.nil.decoder.gif.model.GifExtra
@@ -24,13 +25,13 @@ class SkiaGifDecoder : Decoder {
     override suspend fun decode(
         input: ByteArray,
         extras: Extras
-    ): PainterResource.Result {
+    ): Resource.Result<Painter> {
 
         if (support(input) == Support.NONE) {
-            return PainterResource.Result.Failure(NotSupportFormat())
+            return Resource.Result.Failure(NotSupportFormat())
         }
 
-        return runCatching {
+        return resourceCatching {
             val params = extras[GifExtra.ExtrasKey]
 
             val codec = cache.get(input.key) {
@@ -41,7 +42,7 @@ class SkiaGifDecoder : Decoder {
                 codec = codec,
                 repeatCount = params.repeatCount
             )
-        }.toPainterResource()
+        }
     }
 
     override suspend fun support(input: ByteArray): Support {
