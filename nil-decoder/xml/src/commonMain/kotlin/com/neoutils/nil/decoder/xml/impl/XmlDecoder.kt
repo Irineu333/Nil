@@ -1,11 +1,12 @@
 package com.neoutils.nil.decoder.xml.impl
 
+import androidx.compose.ui.graphics.painter.Painter
 import com.neoutils.nil.core.exception.NotSupportFormat
-import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.constant.DensityExtrasKey
+import com.neoutils.nil.core.extension.resourceCatching
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.foundation.Decoder
-import com.neoutils.nil.core.painter.PainterResource
+import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.xml.painter.VectorPainter
 import org.jetbrains.compose.resources.decodeToImageVector
@@ -17,18 +18,18 @@ class XmlDecoder() : Decoder {
     override suspend fun decode(
         input: ByteArray,
         extras: Extras
-    ): PainterResource.Result {
+    ):  Resource.Result<Painter> {
 
         if (support(input) == Support.NONE) {
-            return PainterResource.Result.Failure(NotSupportFormat())
+            return  Resource.Result.Failure(NotSupportFormat())
         }
 
-        return runCatching {
+        return resourceCatching {
 
             val density = extras[DensityExtrasKey]
 
             VectorPainter(input.decodeToImageVector(density), density)
-        }.toPainterResource()
+        }
     }
 
     override suspend fun support(input: ByteArray): Support {
@@ -42,4 +43,3 @@ class XmlDecoder() : Decoder {
         return Support.NONE
     }
 }
-

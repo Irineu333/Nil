@@ -7,6 +7,10 @@ import com.neoutils.nil.core.foundation.Interceptor
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.util.Extras
 
+typealias FetchersScope = ListScope<Fetcher<*>>
+typealias DecodersScope = ListScope<Decoder>
+typealias InterceptorsScope = ListScope<Interceptor>
+
 class SettingsScope internal constructor(
     var decoders: List<Decoder>,
     var fetchers: List<Fetcher<*>>,
@@ -25,22 +29,21 @@ class SettingsScope internal constructor(
         this.interceptors += interceptors
     }
 
-    fun decoders(scope: @NilDsl ListScope<Decoder>.() -> Unit) {
+    fun decoders(scope: @NilDsl DecodersScope.() -> Unit) {
         decoders = ListScope
             .from(decoders)
             .apply(scope)
             .get()
     }
 
-    fun fetchers(scope: @NilDsl ListScope<Fetcher<*>>.() -> Unit) {
+    fun fetchers(scope: @NilDsl FetchersScope.() -> Unit) {
         fetchers = ListScope
             .from(fetchers)
             .apply(scope)
             .get()
     }
 
-
-    fun interceptors(scope: @NilDsl ListScope<Interceptor>.() -> Unit) {
+    fun interceptors(scope: @NilDsl InterceptorsScope.() -> Unit) {
         interceptors = ListScope
             .from(interceptors)
             .apply(scope)
