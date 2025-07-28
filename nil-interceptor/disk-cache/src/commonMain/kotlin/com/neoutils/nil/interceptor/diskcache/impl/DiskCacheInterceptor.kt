@@ -2,8 +2,9 @@ package com.neoutils.nil.interceptor.diskcache.impl
 
 import com.neoutils.nil.core.contract.Cacheable
 import com.neoutils.nil.core.contract.Request
-import com.neoutils.nil.core.foundation.Interceptor3
+import com.neoutils.nil.core.foundation.Interceptor
 import com.neoutils.nil.core.model.Chain
+import com.neoutils.nil.core.model.ChainResult
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.Resource
@@ -12,7 +13,7 @@ import com.neoutils.nil.interceptor.diskcache.util.LruDiskCache
 import com.neoutils.nil.util.Remember
 import okio.ByteString.Companion.encodeUtf8
 
-class DiskCacheInterceptor : Interceptor3(Level.REQUEST, Level.DATA) {
+class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
 
     private val caches = Remember<LruDiskCache>()
 
@@ -28,8 +29,8 @@ class DiskCacheInterceptor : Interceptor3(Level.REQUEST, Level.DATA) {
     override suspend fun intercept(
         settings: Settings,
         chain: Chain
-    ): Chain.Result {
-        val key = chain.request.hash ?: return Chain.Result.Skip
+    ): ChainResult {
+        val key = chain.request.hash ?: return ChainResult.Skip
 
         val extra = settings.extras[DiskCacheExtra.ExtrasKey]
 
@@ -44,18 +45,18 @@ class DiskCacheInterceptor : Interceptor3(Level.REQUEST, Level.DATA) {
         return when (val data = chain.data) {
             is Resource.Result.Success<ByteArray> if extra.enabled -> {
                 cache[key] = data.value
-                Chain.Result.Skip
+                ChainResult.Skip
             }
 
             is Resource.Loading if extra.enabled && cache.has(key) -> {
-                Chain.Result.Sync(
+                ChainResult.Process(
                     chain.doCopy(
                         data = Resource.Result.Success(cache[key])
                     )
                 )
             }
 
-            else -> Chain.Result.Skip
+            else -> ChainResult.Skip
         }
     }
 }

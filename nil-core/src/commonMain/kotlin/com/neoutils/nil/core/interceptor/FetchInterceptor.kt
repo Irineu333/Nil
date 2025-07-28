@@ -3,8 +3,9 @@ package com.neoutils.nil.core.interceptor
 import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.exception.NoFetcherFound
 import com.neoutils.nil.core.foundation.Fetcher
-import com.neoutils.nil.core.foundation.Interceptor3
+import com.neoutils.nil.core.foundation.Interceptor
 import com.neoutils.nil.core.model.Chain
+import com.neoutils.nil.core.model.ChainResult
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.strings.FetcherErrorStrings
 import com.neoutils.nil.core.util.Level
@@ -13,18 +14,18 @@ import kotlinx.coroutines.flow.map
 
 private val error = FetcherErrorStrings()
 
-class FetchInterceptor : Interceptor3(Level.DATA) {
+class FetchInterceptor : Interceptor(Level.DATA) {
 
     override suspend fun intercept(
         settings: Settings,
         chain: Chain
-    ): Chain.Result {
-        if (!chain.painter.isLoading) return Chain.Result.Skip
-        if (!chain.data.isLoading) return Chain.Result.Skip
+    ): ChainResult {
+        if (!chain.painter.isLoading) return ChainResult.Skip
+        if (!chain.data.isLoading) return ChainResult.Skip
 
         return when (val fetcher = settings.fetcherFor(chain.request)) {
             is Resource.Result.Failure -> {
-                Chain.Result.Sync(
+                ChainResult.Process(
                     chain.doCopy(
                         data = Resource.Result.Failure(
                             fetcher.throwable
@@ -34,8 +35,8 @@ class FetchInterceptor : Interceptor3(Level.DATA) {
             }
 
             is Resource.Result.Success<Fetcher<Request>> if chain is Chain.Async -> {
-                Chain.Result.Async(
-                    flow = fetcher.value.fetch(
+                ChainResult.Process(
+                     fetcher.value.fetch(
                         input = chain.request,
                         extras = settings.extras
                     ).map { data ->
@@ -45,7 +46,7 @@ class FetchInterceptor : Interceptor3(Level.DATA) {
             }
 
             is Resource.Result.Success<Fetcher<Request>> -> {
-                Chain.Result.Sync(
+                ChainResult.Process(
                     chain.doCopy(
                         data = fetcher.value.get(
                             input = chain.request,
