@@ -18,7 +18,7 @@ import com.neoutils.nil.decoder.svg.extension.svg
 import com.neoutils.nil.decoder.xml.extension.xml
 import com.neoutils.nil.example.resources.Res
 import com.neoutils.nil.example.resources.atom_vector
-import com.neoutils.nil.example.resources.crazy_cat
+import com.neoutils.nil.fetcher.network.extension.network
 import com.neoutils.nil.fetcher.resources.compose.ResourcesPreview
 import com.neoutils.nil.fetcher.resources.extension.resource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -29,7 +29,7 @@ fun App() = Box(
     modifier = Modifier.fillMaxSize()
 ) {
     val resource = asyncPainterResource(
-        request = Request.resource(Res.drawable.crazy_cat),
+        request = Request.network("https://cataas.com/cat"),
     ) {
         decoders {
             xml()
