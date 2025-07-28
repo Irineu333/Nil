@@ -1,11 +1,12 @@
 package com.neoutils.nil.decoder.bitmap.impl
 
 import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.Painter
 import com.neoutils.nil.core.exception.NotSupportFormat
-import com.neoutils.nil.core.extension.painterCatching
-import com.neoutils.nil.core.util.Extras
+import com.neoutils.nil.core.extension.resourceCatching
 import com.neoutils.nil.core.foundation.Decoder
-import com.neoutils.nil.core.painter.PainterResource
+import com.neoutils.nil.core.util.Extras
+import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.type.Type
 import org.jetbrains.compose.resources.decodeToImageBitmap
@@ -15,13 +16,13 @@ class BitmapDecoder : Decoder {
     override suspend fun decode(
         input: ByteArray,
         extras: Extras
-    ): PainterResource.Result {
+    ): Resource.Result<Painter> {
 
         if (support(input) == Support.NONE) {
-            return PainterResource.Result.Failure(NotSupportFormat())
+            return Resource.Result.Failure(NotSupportFormat())
         }
 
-        return painterCatching {
+        return resourceCatching {
             BitmapPainter(input.decodeToImageBitmap())
         }
     }
@@ -39,4 +40,3 @@ class BitmapDecoder : Decoder {
         }
     }
 }
-

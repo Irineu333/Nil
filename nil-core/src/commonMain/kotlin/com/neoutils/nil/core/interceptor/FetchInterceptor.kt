@@ -4,8 +4,8 @@ import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.exception.NoFetcherFound
 import com.neoutils.nil.core.foundation.Fetcher
 import com.neoutils.nil.core.foundation.Interceptor
-import com.neoutils.nil.core.model.Chain
-import com.neoutils.nil.core.model.ChainResult
+import com.neoutils.nil.core.chain.Chain
+import com.neoutils.nil.core.chain.ChainResult
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.strings.FetcherErrorStrings
 import com.neoutils.nil.core.util.Level
@@ -20,16 +20,14 @@ class FetchInterceptor : Interceptor(Level.DATA) {
         settings: Settings,
         chain: Chain
     ): ChainResult {
-        if (!chain.painter.isLoading) return ChainResult.Skip
-        if (!chain.data.isLoading) return ChainResult.Skip
+        if (chain.painter != null) return ChainResult.Skip
+        if (chain.data != null) return ChainResult.Skip
 
         return when (val fetcher = settings.fetcherFor(chain.request)) {
             is Resource.Result.Failure -> {
                 ChainResult.Process(
                     chain.doCopy(
-                        data = Resource.Result.Failure(
-                            fetcher.throwable
-                        )
+                        data = Resource.Result.Failure(fetcher.throwable)
                     )
                 )
             }

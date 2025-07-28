@@ -1,4 +1,4 @@
-package com.neoutils.nil.core.model
+package com.neoutils.nil.core.chain
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf

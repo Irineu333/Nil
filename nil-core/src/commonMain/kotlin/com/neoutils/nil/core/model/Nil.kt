@@ -2,8 +2,10 @@
 
 package com.neoutils.nil.core.model
 
+import com.neoutils.nil.core.chain.Chain
 import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.extension.async
+import com.neoutils.nil.core.extension.resolve
 import com.neoutils.nil.core.extension.sync
 import com.neoutils.nil.core.painter.PainterResource
 import com.neoutils.nil.core.util.Level
@@ -29,7 +31,7 @@ class Nil(
             flow.flatMapConcat { chain ->
                 interceptor.async(settings, chain)
             }
-        }.getAsFlow()
+        }.resolve()
     }
 
     suspend fun sync(
@@ -40,6 +42,6 @@ class Nil(
             Chain.Sync(request)
         ) { chain, interceptor ->
             interceptor.sync(settings, chain)
-        }.getAsResult()
+        }.resolve()
     }
 }

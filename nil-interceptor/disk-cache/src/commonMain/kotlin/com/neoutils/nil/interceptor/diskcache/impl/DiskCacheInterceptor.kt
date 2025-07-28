@@ -2,9 +2,10 @@ package com.neoutils.nil.interceptor.diskcache.impl
 
 import com.neoutils.nil.core.contract.Cacheable
 import com.neoutils.nil.core.contract.Request
+import com.neoutils.nil.core.extension.getOrElse
 import com.neoutils.nil.core.foundation.Interceptor
-import com.neoutils.nil.core.model.Chain
-import com.neoutils.nil.core.model.ChainResult
+import com.neoutils.nil.core.chain.Chain
+import com.neoutils.nil.core.chain.ChainResult
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.Resource
@@ -34,6 +35,8 @@ class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
 
         val extra = settings.extras[DiskCacheExtra.ExtrasKey]
 
+        if (!extra.enabled) return ChainResult.Skip
+
         val cache = caches(extra) {
             LruDiskCache(
                 fileSystem = extra.fileSystem,
@@ -42,21 +45,19 @@ class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
             )
         }
 
-        return when (val data = chain.data) {
-            is Resource.Result.Success<ByteArray> if extra.enabled -> {
-                cache[key] = data.value
-                ChainResult.Skip
-            }
+        if (chain.data == null && cache.has(key)) {
 
-            is Resource.Loading if extra.enabled && cache.has(key) -> {
-                ChainResult.Process(
-                    chain.doCopy(
-                        data = Resource.Result.Success(cache[key])
-                    )
+            return ChainResult.Process(
+                chain.doCopy(
+                    data = Resource.Result.Success(cache[key])
                 )
-            }
-
-            else -> ChainResult.Skip
+            )
         }
+
+        val data = chain.data ?: return ChainResult.Skip
+
+        cache[key] = data.getOrElse { return ChainResult.Skip }
+
+        return ChainResult.Skip
     }
 }
