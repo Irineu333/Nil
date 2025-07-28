@@ -31,10 +31,20 @@ fun asyncPainterResource(
 
     val flow = remember(nil, request) { nil.async(request) }
 
-    val painter by flow.collectAsState(PainterResource.Loading())
+    val resource by flow.collectAsState(PainterResource.Loading())
 
-    return rememberPainterResource(
-        resource = painter,
+    LaunchedEffect(resource) {
+        when (val painter = resource.painter) {
+            is Animatable -> {
+                withContext(Dispatchers.Default) {
+                    painter.animate()
+                }
+            }
+        }
+    }
+
+    return rememberMerged(
+        resource = resource,
         placeholder = placeholder,
         fallback = fallback
     )
@@ -43,6 +53,7 @@ fun asyncPainterResource(
 @Composable
 fun painterResource(
     request: Request.Sync,
+    fallback: Painter = EmptyPainter,
     settings: @NilDsl SettingsScope.() -> Unit = {}
 ): PainterResource.Result {
 
@@ -62,32 +73,30 @@ fun painterResource(
         }
     }
 
-    return result
+    return rememberMerged(
+        resource = result,
+        fallback = fallback,
+    )
 }
 
 @Composable
-private fun rememberPainterResource(
+private fun rememberMerged(
     resource: PainterResource,
     placeholder: Painter = EmptyPainter,
     fallback: Painter = EmptyPainter
-): PainterResource {
+) = remember(resource, placeholder, fallback) {
+    resource.merge(
+        failure = fallback,
+        loading = placeholder
+    )
+}
 
-    val resource = remember(resource, placeholder, fallback) {
-        resource.merge(
-            failure = fallback,
-            loading = placeholder
-        )
-    }
-
-    LaunchedEffect(resource) {
-        when (val painter = resource.painter) {
-            is Animatable -> {
-                withContext(Dispatchers.Default) {
-                    painter.animate()
-                }
-            }
-        }
-    }
-
-    return resource
+@Composable
+private fun rememberMerged(
+    resource: PainterResource.Result,
+    fallback: Painter = EmptyPainter
+) = remember(resource, fallback) {
+    resource.merge(
+        failure = fallback,
+    )
 }
