@@ -8,8 +8,8 @@ import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.util.Dynamic
 import com.neoutils.nil.core.util.Level
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 
 val DefaultInterceptors = listOf(
     FetchInterceptor(),
@@ -20,48 +20,34 @@ val LocalInterceptors = staticCompositionLocalOf {
     DefaultInterceptors + Dynamic.interceptors
 }
 
-abstract class Interceptor2(vararg val levels: Level) {
+abstract class Interceptor3(vararg val levels: Level) {
 
-    abstract fun intercept(
+    abstract suspend fun intercept(
         settings: Settings,
         chain: Chain,
-    ): ChainResult
+    ): Chain.Result
+}
 
-    fun async(
-        settings: Settings,
-        chain: Chain
-    ): Flow<Chain> {
-        return when (val result = intercept(settings, chain)) {
-            is ChainResult.Process -> result.async
-            is ChainResult.Skip -> flowOf(chain)
-        }
-    }
-
-    suspend fun sync(
-        settings: Settings,
-        chain: Chain
-    ): Chain {
-        return when (val result = intercept(settings, chain)) {
-            is ChainResult.Process -> result.sync()
-            is ChainResult.Skip -> chain
+fun Interceptor3.async(
+    settings: Settings,
+    chain: Chain
+): Flow<Chain> {
+    return flow {
+        when (val result = intercept(settings, chain)) {
+            is Chain.Result.Sync -> emit(result.chain)
+            is Chain.Result.Async -> emitAll(result.flow)
+            is Chain.Result.Skip -> emit(chain)
         }
     }
 }
 
-typealias SyncChain = suspend () -> Chain
-
-sealed class ChainResult {
-
-    data class Process(
-        val async: Flow<Chain>,
-        val sync: SyncChain,
-    ): ChainResult() {
-        constructor(chain: suspend () -> Chain) : this(
-            async = flow { emit(chain()) },
-            sync = chain,
-        )
+suspend fun Interceptor3.sync(
+    settings: Settings,
+    chain: Chain.Sync
+): Chain.Sync {
+    return when (val result = intercept(settings, chain)) {
+        is Chain.Result.Skip -> chain
+        is Chain.Result.Sync if result.chain is Chain.Sync -> result.chain
+        else -> error("Don't support async")
     }
-
-    data object Skip: ChainResult()
 }
-

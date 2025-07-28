@@ -2,8 +2,7 @@ package com.neoutils.nil.interceptor.diskcache.impl
 
 import com.neoutils.nil.core.contract.Cacheable
 import com.neoutils.nil.core.contract.Request
-import com.neoutils.nil.core.foundation.ChainResult
-import com.neoutils.nil.core.foundation.Interceptor2
+import com.neoutils.nil.core.foundation.Interceptor3
 import com.neoutils.nil.core.model.Chain
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.util.Level
@@ -13,7 +12,7 @@ import com.neoutils.nil.interceptor.diskcache.util.LruDiskCache
 import com.neoutils.nil.util.Remember
 import okio.ByteString.Companion.encodeUtf8
 
-class DiskCacheInterceptor : Interceptor2(Level.REQUEST, Level.DATA) {
+class DiskCacheInterceptor : Interceptor3(Level.REQUEST, Level.DATA) {
 
     private val caches = Remember<LruDiskCache>()
 
@@ -26,11 +25,11 @@ class DiskCacheInterceptor : Interceptor2(Level.REQUEST, Level.DATA) {
             else -> null
         }
 
-    override fun intercept(
+    override suspend fun intercept(
         settings: Settings,
         chain: Chain
-    ): ChainResult {
-        val key = chain.request.hash ?: return ChainResult.Skip
+    ): Chain.Result {
+        val key = chain.request.hash ?: return Chain.Result.Skip
 
         val extra = settings.extras[DiskCacheExtra.ExtrasKey]
 
@@ -42,21 +41,21 @@ class DiskCacheInterceptor : Interceptor2(Level.REQUEST, Level.DATA) {
             )
         }
 
-        return ChainResult.Process {
-            when (val data = chain.data) {
-                is Resource.Result.Success<ByteArray> if extra.enabled -> {
-                    cache[key] = data.value
-                    chain
-                }
+        return when (val data = chain.data) {
+            is Resource.Result.Success<ByteArray> if extra.enabled -> {
+                cache[key] = data.value
+                Chain.Result.Skip
+            }
 
-                is Resource.Loading if extra.enabled && cache.has(key) -> {
-                    chain.copy(
+            is Resource.Loading if extra.enabled && cache.has(key) -> {
+                Chain.Result.Sync(
+                    chain.doCopy(
                         data = Resource.Result.Success(cache[key])
                     )
-                }
-
-                else -> chain
+                )
             }
+
+            else -> Chain.Result.Skip
         }
     }
 }
