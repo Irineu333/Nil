@@ -2,9 +2,11 @@ package com.neoutils.nil.interceptor.diskcache.model
 
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.interceptor.diskcache.extension.mb
+import com.neoutils.nil.interceptor.diskcache.util.LruDiskCache
 import com.neoutils.nil.interceptor.diskcache.util.SizeUnit
 import okio.FileSystem
 import okio.Path
+import okio.SYSTEM
 
 private const val DEFAULT_CACHE_PATH = "nil-cache"
 
