@@ -16,7 +16,7 @@ import okio.ByteString.Companion.encodeUtf8
 
 class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
 
-    private val caches = Remember<LruDiskCache>()
+    private val remember = Remember<LruDiskCache>()
 
     private val Request.hash
         get() = when (this) {
@@ -37,7 +37,7 @@ class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
 
         if (!extra.enabled) return ChainResult.Skip
 
-        val cache = caches(extra) {
+        val cache = remember(extra) {
             LruDiskCache(
                 fileSystem = extra.fileSystem,
                 path = extra.path,
