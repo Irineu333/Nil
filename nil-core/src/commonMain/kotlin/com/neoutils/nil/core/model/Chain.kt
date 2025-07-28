@@ -24,19 +24,6 @@ sealed interface Chain {
         override val painter: PainterResource = PainterResource.Loading()
     ) : Chain
 
-    sealed interface Result {
-
-        data class Sync(
-            val chain: Chain,
-        ) : Result
-
-        data class Async(
-            val flow: Flow<Chain.Async>,
-        ) : Result
-
-        data object Skip : Result
-    }
-
     fun doCopy(
         request: Request = this.request,
         data: Resource<ByteArray> = this.data,
@@ -56,11 +43,5 @@ sealed interface Chain {
     }
 }
 
-val Chain.result
-    get() = when (painter) {
-        is PainterResource.Loading -> throw RuntimeException()
-        is PainterResource.Result.Failure -> painter
-        is PainterResource.Result.Success -> painter
-    }
-
-val Flow<Chain>.state get() = map { it.painter }
+fun Chain.getAsResult() = painter as PainterResource.Result
+fun Flow<Chain>.getAsFlow() = map { it.painter }

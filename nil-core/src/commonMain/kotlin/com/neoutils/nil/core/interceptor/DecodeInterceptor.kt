@@ -3,8 +3,9 @@ package com.neoutils.nil.core.interceptor
 import com.neoutils.nil.core.exception.NoDecoderFound
 import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.foundation.Decoder
-import com.neoutils.nil.core.foundation.Interceptor3
+import com.neoutils.nil.core.foundation.Interceptor
 import com.neoutils.nil.core.model.Chain
+import com.neoutils.nil.core.model.ChainResult
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.strings.DecoderErrorStrings
 import com.neoutils.nil.core.util.Level
@@ -13,16 +14,16 @@ import com.neoutils.nil.core.util.Support
 
 private val error = DecoderErrorStrings()
 
-class DecodeInterceptor : Interceptor3(Level.PAINTER) {
+class DecodeInterceptor : Interceptor(Level.PAINTER) {
 
     override suspend fun intercept(
         settings: Settings,
         chain: Chain
-    ): Chain.Result {
+    ): ChainResult {
 
-        if (!chain.painter.isLoading) return Chain.Result.Skip
+        if (!chain.painter.isLoading) return ChainResult.Skip
 
-        return Chain.Result.Sync(
+        return ChainResult.Process(
             chain.doCopy(
                 painter = chain.data.toPainterResource { data ->
                     settings
