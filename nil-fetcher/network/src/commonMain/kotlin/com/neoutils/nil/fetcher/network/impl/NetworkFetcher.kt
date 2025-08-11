@@ -1,7 +1,7 @@
 package com.neoutils.nil.fetcher.network.impl
 
 import com.neoutils.nil.core.util.Extras
-import com.neoutils.nil.core.source.Fetcher
+import com.neoutils.nil.core.foundation.Fetcher
 import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.fetcher.network.model.RequestNetwork
 import io.ktor.client.*
@@ -49,6 +49,26 @@ class NetworkFetcher : Fetcher<RequestNetwork>(RequestNetwork::class) {
         }
 
         awaitClose()
+    }
+
+    override suspend fun get(
+        input: RequestNetwork,
+        extras: Extras
+    ) = runCatching {
+        val headers = extras[HeadersExtrasKey]
+        val client = extras[HttpClientExtra]
+
+        val response = client.request(input.url) {
+            method = input.method
+
+            headers.forEach {
+                this.headers[it.key] = it.value
+            }
+        }
+
+        Resource.Result.Success(value = response.bodyAsBytes())
+    }.getOrElse {
+        Resource.Result.Failure(it)
     }
 }
 

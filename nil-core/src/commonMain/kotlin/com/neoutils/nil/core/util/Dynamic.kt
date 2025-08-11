@@ -1,9 +1,8 @@
 package com.neoutils.nil.core.util
 
-import com.neoutils.nil.core.source.Decoder
-import com.neoutils.nil.core.source.Fetcher
-import com.neoutils.nil.core.source.Interceptor
-import java.util.*
+import com.neoutils.nil.core.foundation.Decoder
+import com.neoutils.nil.core.foundation.Fetcher
+import com.neoutils.nil.core.foundation.Interceptor
 
 object Dynamic {
     val decoders = load<Decoder>()
@@ -11,7 +10,4 @@ object Dynamic {
     val interceptors = load<Interceptor>()
 }
 
-private inline fun <reified T : Any> load(): List<T> = ServiceLoader.load(
-    T::class.java,
-    T::class.java.classLoader,
-).toList()
+internal expect inline  fun <reified T : Any> load(): List<T>

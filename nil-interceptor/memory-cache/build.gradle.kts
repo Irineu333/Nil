@@ -20,11 +20,16 @@ kotlin {
         }
     }
 
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
     sourceSets {
         commonMain.dependencies {
 
             // module
             implementation(project(":nil-core"))
+            implementation(project(":nil-util"))
 
             // compose
             implementation(compose.runtime)
@@ -32,9 +37,9 @@ kotlin {
 
             // coroutines
             implementation(libs.kotlinx.coroutines)
-
-            // lru cache
-            implementation(libs.cache4k)
+        }
+        all {
+            languageSettings.enableLanguageFeature("WhenGuards")
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.neoutils.nil.core.extension
 
 import androidx.compose.ui.graphics.painter.Painter
-import com.neoutils.nil.core.util.PainterResource
+import com.neoutils.nil.core.painter.PainterResource
 import com.neoutils.nil.core.util.Resource
 
 inline fun <T, R> Resource<T>.map(transform: (T) -> R): Resource<R> {
@@ -31,9 +31,7 @@ inline fun <T> Resource<T>.onSuccess(onSuccess: (T) -> Unit): Resource<T> {
 }
 
 inline fun <T> Resource.Result<T>.toPainterResource(
-    transformation: (T) -> PainterResource.Result = { painter ->
-        PainterResource.Result.Success(painter as Painter)
-    }
+    transformation: (T) -> PainterResource.Result
 ) = when (this) {
     is Resource.Result.Failure -> {
         PainterResource.Result.Failure(throwable)
@@ -43,9 +41,7 @@ inline fun <T> Resource.Result<T>.toPainterResource(
 }
 
 inline fun <T> Resource<T>.toPainterResource(
-    transformation: (T) -> PainterResource = { painter ->
-        PainterResource.Result.Success(painter as Painter)
-    }
+    transformation: (T) -> PainterResource
 ) = when (this) {
     is Resource.Loading -> {
         PainterResource.Loading(progress)
@@ -56,4 +52,41 @@ inline fun <T> Resource<T>.toPainterResource(
     }
 
     is Resource.Result.Success<T> -> transformation(value)
+}
+
+fun Resource<Painter>.toPainterResource() = when (this) {
+    is Resource.Loading -> {
+        PainterResource.Loading(progress)
+    }
+
+    is Resource.Result.Failure -> {
+        PainterResource.Result.Failure(throwable)
+    }
+
+    is Resource.Result.Success<Painter> -> {
+        PainterResource.Result.Success(value)
+    }
+}
+
+fun Resource.Result<Painter>.toPainterResource() = when (this) {
+
+    is Resource.Result.Failure -> {
+        PainterResource.Result.Failure(throwable)
+    }
+
+    is Resource.Result.Success<Painter> -> {
+        PainterResource.Result.Success(value)
+    }
+}
+
+fun <T> Resource<T>.asResult(): Resource.Result<T> {
+    return checkNotNull(this as? Resource.Result) { "Loading is not supported" }
+}
+
+inline fun <T, R : T> Resource<T>.getOrElse(block: () -> R): T {
+    return when (this) {
+        is Resource.Loading -> block()
+        is Resource.Result.Failure -> block()
+        is Resource.Result.Success<T> -> value
+    }
 }

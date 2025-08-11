@@ -19,9 +19,18 @@ kotlin {
         }
     }
 
-    sourceSets {
-        val desktopMain by getting
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "ComposeApp"
+            isStatic = true
+        }
+    }
 
+    sourceSets {
         commonMain.dependencies {
 
             // modules
@@ -29,9 +38,10 @@ kotlin {
             implementation(project(":nil-fetcher:resources"))
             implementation(project(":nil-fetcher:network"))
             implementation(project(":nil-decoder:bitmap"))
-            implementation(project(":nil-decoder:gif"))
-            implementation(project(":nil-decoder:svg"))
             implementation(project(":nil-decoder:xml"))
+            implementation(project(":nil-decoder:svg"))
+            implementation(project(":nil-decoder:gif"))
+            implementation(project(":nil-interceptor:disk-cache"))
             implementation(project(":nil-interceptor:memory-cache"))
 
             // compose
@@ -40,6 +50,7 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
 
             // coroutines
             implementation(libs.kotlinx.coroutines)
@@ -54,19 +65,27 @@ kotlin {
             implementation(libs.ktor.client.android)
         }
 
-        desktopMain.dependencies {
+        val desktopMain by getting {
+            dependencies {
 
-            // compose
-            implementation(compose.desktop.currentOs)
+                // compose
+                implementation(compose.desktop.currentOs)
+
+                // ktor
+                implementation(libs.ktor.client.java)
+
+                // coroutines
+                implementation(libs.kotlinx.coroutines.swing)
+
+                // slf4j
+                implementation("org.slf4j:slf4j-nop:2.0.9")
+            }
+        }
+
+        iosMain.dependencies {
 
             // ktor
-            implementation(libs.ktor.client.java)
-
-            // coroutines
-            implementation(libs.kotlinx.coroutines.swing)
-
-            // slf4j
-            implementation("org.slf4j:slf4j-nop:2.0.9")
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
@@ -105,6 +124,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+}
+
+dependencies {
+    debugImplementation(libs.androidx.ui.tooling)
 }
 
 compose.resources {

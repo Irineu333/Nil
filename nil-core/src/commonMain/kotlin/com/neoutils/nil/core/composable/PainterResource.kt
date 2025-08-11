@@ -4,56 +4,34 @@ package com.neoutils.nil.core.composable
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.painter.Painter
+import com.neoutils.nil.core.annotation.NilDsl
+import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.extension.merge
 import com.neoutils.nil.core.model.Nil
 import com.neoutils.nil.core.painter.Animatable
+import com.neoutils.nil.core.painter.EmptyPainter
+import com.neoutils.nil.core.painter.PainterResource
 import com.neoutils.nil.core.scope.SettingsScope
-import com.neoutils.nil.core.util.EmptyPainter
-import com.neoutils.nil.core.util.PainterResource
-import com.neoutils.nil.core.util.Request
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 @Composable
-fun asyncPainterResource(
-    request: Request,
-    placeholder: Painter = EmptyPainter,
+fun painterResource(
+    request: Request.Sync,
     fallback: Painter = EmptyPainter,
-    settings: SettingsScope.() -> Unit = {}
-): PainterResource {
+    settings: @NilDsl SettingsScope.() -> Unit = {}
+): PainterResource.Result {
 
     val settings = rememberSettings(settings)
 
     val nil = remember(settings) { Nil(settings) }
 
-    val flow = remember(nil, request) { nil.async(request) }
+    val result = remember(nil, request) { runBlocking { nil.sync(request) } }
 
-    val painter by flow.collectAsState(PainterResource.Loading())
-
-    return rememberPainterResource(
-        resource = painter,
-        placeholder = placeholder,
-        fallback = fallback
-    )
-}
-
-@Composable
-fun rememberPainterResource(
-    resource: PainterResource,
-    placeholder: Painter = EmptyPainter,
-    fallback: Painter = EmptyPainter
-): PainterResource {
-
-    val resource = remember(resource, placeholder, fallback) {
-        resource.merge(
-            failure = fallback,
-            loading = placeholder
-        )
-    }
-
-    LaunchedEffect(resource) {
-        when (val painter = resource.painter) {
+    LaunchedEffect(result) {
+        when (val painter = result.painter) {
             is Animatable -> {
                 withContext(Dispatchers.Default) {
                     painter.animate()
@@ -62,5 +40,18 @@ fun rememberPainterResource(
         }
     }
 
-    return resource
+    return rememberMerged(
+        resource = result,
+        fallback = fallback,
+    )
+}
+
+@Composable
+private fun rememberMerged(
+    resource: PainterResource.Result,
+    fallback: Painter = EmptyPainter
+) = remember(resource, fallback) {
+    resource.merge(
+        failure = fallback,
+    )
 }

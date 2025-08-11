@@ -8,9 +8,9 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.DefaultAlpha
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import com.neoutils.nil.core.contract.Request
+import com.neoutils.nil.core.painter.EmptyPainter
 import com.neoutils.nil.core.scope.SettingsScope
-import com.neoutils.nil.core.util.EmptyPainter
-import com.neoutils.nil.core.util.Request
 
 @Composable
 fun AsyncImage(
@@ -42,3 +42,4 @@ fun AsyncImage(
         colorFilter = colorFilter
     )
 }
+

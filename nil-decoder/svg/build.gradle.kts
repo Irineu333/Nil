@@ -19,20 +19,42 @@ kotlin {
         }
     }
 
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
 
-        androidMain.dependencies {
-            implementation(libs.androidsvg)
+        commonMain {
+            dependencies {
+
+                // module
+                implementation(project(":nil-core"))
+
+                // compose
+                implementation(compose.runtime)
+                implementation(compose.ui)
+            }
         }
 
-        commonMain.dependencies {
+        androidMain {
+            dependencies {
+                implementation(libs.androidsvg)
+            }
+        }
 
-            // module
-            implementation(project(":nil-core"))
+        val nonAndroidMain by creating {
+            dependsOn(commonMain.get())
+        }
 
-            // compose
-            implementation(compose.runtime)
-            implementation(compose.ui)
+        val desktopMain by getting {
+            dependsOn(nonAndroidMain)
+        }
+
+        iosMain {
+            dependsOn(nonAndroidMain)
         }
     }
 

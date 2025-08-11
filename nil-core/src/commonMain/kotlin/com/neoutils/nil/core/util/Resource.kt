@@ -1,5 +1,7 @@
 package com.neoutils.nil.core.util
 
+import com.neoutils.nil.core.contract.State
+
 sealed interface Resource<out T> : State {
 
     data class Loading(

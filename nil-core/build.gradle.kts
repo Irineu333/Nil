@@ -20,6 +20,10 @@ kotlin {
         }
     }
 
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
     sourceSets {
         commonMain.dependencies {
 
@@ -30,9 +34,6 @@ kotlin {
 
             // coroutines
             implementation(libs.kotlinx.coroutines)
-
-            // lru cache
-            implementation(libs.cache4k)
         }
 
         all {
