@@ -19,6 +19,10 @@ kotlin {
         }
     }
 
+    wasmJs {
+        browser()
+    }
+
     iosX64()
     iosArm64()
     iosSimulatorArm64()
@@ -63,6 +67,10 @@ kotlin {
         }
 
         iosMain {
+            dependsOn(nonAndroidMain)
+        }
+
+        val wasmJsMain by getting {
             dependsOn(nonAndroidMain)
         }
 
