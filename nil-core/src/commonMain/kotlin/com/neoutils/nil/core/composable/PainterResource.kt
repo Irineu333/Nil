@@ -27,7 +27,7 @@ fun painterResource(
 
     val nil = remember(settings) { Nil(settings) }
 
-    var result by remember(nil, request) { mutableStateOf<PainterResource.Result?>(null) }
+    var result by remember(nil, request) { mutableStateOf<PainterResource.Result?>(PainterResource.Result.Success(EmptyPainter)) }
 
     LaunchedEffect(nil, request) {
         result = nil.sync(request)
