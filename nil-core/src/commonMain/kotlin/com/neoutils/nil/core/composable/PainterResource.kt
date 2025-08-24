@@ -14,7 +14,6 @@ import com.neoutils.nil.core.painter.PainterResource
 import com.neoutils.nil.core.scope.SettingsScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 @Composable
@@ -28,10 +27,14 @@ fun painterResource(
 
     val nil = remember(settings) { Nil(settings) }
 
-    val result = remember(nil, request) { runBlocking { nil.sync(request) } }
+    var result by remember(nil, request) { mutableStateOf<PainterResource.Result?>(null) }
+
+    LaunchedEffect(nil, request) {
+        result = nil.sync(request)
+    }
 
     LaunchedEffect(result) {
-        when (val painter = result.painter) {
+        when (val painter = result?.painter) {
             is Animatable -> {
                 withContext(Dispatchers.Default) {
                     painter.animate()
@@ -40,9 +43,14 @@ fun painterResource(
         }
     }
 
-    return rememberMerged(
-        resource = result,
-        fallback = fallback,
+    return result?.let { 
+        rememberMerged(
+            resource = it,
+            fallback = fallback,
+        )
+    } ?: PainterResource.Result.Failure(
+        throwable = RuntimeException("Loading"), 
+        painter = fallback
     )
 }
 

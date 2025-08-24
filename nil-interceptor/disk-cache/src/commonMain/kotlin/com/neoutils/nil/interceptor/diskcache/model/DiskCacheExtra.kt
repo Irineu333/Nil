@@ -6,13 +6,17 @@ import com.neoutils.nil.interceptor.diskcache.util.LruDiskCache
 import com.neoutils.nil.interceptor.diskcache.util.SizeUnit
 import okio.FileSystem
 import okio.Path
-import okio.SYSTEM
 
 private const val DEFAULT_CACHE_PATH = "nil-cache"
 
+expect object PlatformFileSystem {
+    val fileSystem: FileSystem
+    val temporaryDirectory: Path
+}
+
 data class DiskCacheExtra(
-    val fileSystem: FileSystem = FileSystem.SYSTEM,
-    val path: Path = FileSystem.SYSTEM_TEMPORARY_DIRECTORY / DEFAULT_CACHE_PATH,
+    val fileSystem: FileSystem = PlatformFileSystem.fileSystem,
+    val path: Path = PlatformFileSystem.temporaryDirectory / DEFAULT_CACHE_PATH,
     val maxSize: SizeUnit = 100.mb,
     val enabled: Boolean = true,
 ) {
