@@ -6,24 +6,14 @@ import com.neoutils.nil.core.chain.ChainResult
 import com.neoutils.nil.core.model.Settings
 import kotlinx.coroutines.flow.*
 
-fun Interceptor.async(
+fun Interceptor.resolve(
     settings: Settings,
-    chain: Chain.Async
-): Flow<Chain.Async> {
+    chain: Chain
+): Flow<Chain> {
     return flow {
         when (val result = intercept(settings, chain)) {
-            is ChainResult.Process -> emitAll(result.flow.asAsync())
+            is ChainResult.Process -> emitAll(result.flow)
             is ChainResult.Skip -> emit(chain)
         }
-    }
-}
-
-suspend fun Interceptor.sync(
-    settings: Settings,
-    chain: Chain.Sync
-): Chain.Sync {
-    return when (val result = intercept(settings, chain)) {
-        is ChainResult.Process -> result.flow.single() as Chain.Sync
-        is ChainResult.Skip -> chain
     }
 }

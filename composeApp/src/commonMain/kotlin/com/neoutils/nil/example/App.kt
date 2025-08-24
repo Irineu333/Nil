@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.neoutils.nil.core.composable.asyncPainterResource
-import com.neoutils.nil.core.composable.painterResource
+import com.neoutils.nil.core.composable.syncPainterResource
 import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.painter.PainterResource
 import com.neoutils.nil.decoder.bitmap.extension.bitmap
@@ -75,7 +75,7 @@ fun AppPreview() {
         }
     ) {
         Image(
-            painter = painterResource(
+            painter = syncPainterResource(
                 request = Request.resource(Res.drawable.atom_vector),
             ),
             contentDescription = null,

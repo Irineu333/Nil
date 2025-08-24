@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 
 private val error = ErrorStrings()
 
-fun Chain.Sync.resolve(): PainterResource.Result = when {
+fun Chain.resolve(): PainterResource = when {
 
     painter != null -> painter.toPainterResource()
 
@@ -29,33 +29,4 @@ fun Chain.Sync.resolve(): PainterResource.Result = when {
     }
 }
 
-fun Chain.Async.resolve(): PainterResource = when {
-
-    painter != null -> painter.toPainterResource()
-
-    data != null -> {
-        data.toPainterResource {
-            PainterResource.Result.Failure(
-                ResolveException(error.decoder.noDecodedData)
-            )
-        }
-    }
-
-    else -> {
-        PainterResource.Result.Failure(
-            ResolveException(error.fetchers.noData)
-        )
-    }
-}
-
-fun Flow<Chain>.resolve() = map(Chain::resolve).distinctUntilChanged()
-
-fun Chain.resolve() = when (this) {
-    is Chain.Async -> resolve()
-    is Chain.Sync -> resolve()
-}
-
-fun Flow<Chain>.asAsync(): Flow<Chain.Async> = map { chain ->
-    check(chain is Chain.Async)
-    chain
-}
+fun Flow<Chain>.resolve(): Flow<PainterResource> = distinctUntilChanged().map(Chain::resolve)

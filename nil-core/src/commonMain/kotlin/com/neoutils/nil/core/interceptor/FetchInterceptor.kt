@@ -8,11 +8,14 @@ import com.neoutils.nil.core.chain.Chain
 import com.neoutils.nil.core.chain.ChainResult
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.strings.FetcherErrorStrings
+import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.Resource
 import kotlinx.coroutines.flow.map
 
 private val error = FetcherErrorStrings()
+
+val ProgressMonitorExtrasKey = Extras.Key(default = true)
 
 class FetchInterceptor : Interceptor(Level.DATA) {
 
@@ -23,16 +26,18 @@ class FetchInterceptor : Interceptor(Level.DATA) {
         if (chain.painter != null) return ChainResult.Skip
         if (chain.data != null) return ChainResult.Skip
 
+        val progressing = settings.extras[ProgressMonitorExtrasKey]
+
         return when (val fetcher = settings.fetcherFor(chain.request)) {
             is Resource.Result.Failure -> {
                 ChainResult.Process(
-                    chain.doCopy(
+                    chain.copy(
                         data = Resource.Result.Failure(fetcher.throwable)
                     )
                 )
             }
 
-            is Resource.Result.Success<Fetcher<Request>> if chain is Chain.Async -> {
+            is Resource.Result.Success<Fetcher<Request>> if progressing -> {
                 ChainResult.Process(
                      fetcher.value.fetch(
                         input = chain.request,
@@ -45,7 +50,7 @@ class FetchInterceptor : Interceptor(Level.DATA) {
 
             is Resource.Result.Success<Fetcher<Request>> -> {
                 ChainResult.Process(
-                    chain.doCopy(
+                    chain.copy(
                         data = fetcher.value.get(
                             input = chain.request,
                             extras = settings.extras

@@ -30,14 +30,14 @@ class DecodeInterceptor : Interceptor(Level.PAINTER) {
         return when(val decoder = settings.decoderFor(bytes)) {
             is Resource.Result.Failure -> {
                 ChainResult.Process(
-                    chain.doCopy(
+                    chain.copy(
                         painter = decoder
                     )
                 )
             }
             is Resource.Result.Success<Decoder> -> {
                 ChainResult.Process(
-                    chain.doCopy(
+                    chain.copy(
                         painter = decoder.value.decode(
                             input = bytes,
                             extras = settings.extras,
