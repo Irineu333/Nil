@@ -2,6 +2,7 @@ package com.neoutils.nil.fetcher.network.impl
 
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.foundation.Fetcher
+import com.neoutils.nil.core.interceptor.ProgressMonitorExtrasKey
 import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.fetcher.network.model.RequestNetwork
 import io.ktor.client.*
@@ -12,8 +13,6 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 
 val HeadersExtrasKey = Extras.Key<Map<String, String>>(mapOf())
-
-val ProgressMonitorExtrasKey = Extras.Key(default = true)
 
 val HttpClientExtra = Extras.Key(HttpClient())
 

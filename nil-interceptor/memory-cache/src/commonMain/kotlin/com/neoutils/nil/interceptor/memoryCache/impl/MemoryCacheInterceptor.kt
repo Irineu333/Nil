@@ -34,7 +34,7 @@ class MemoryCacheInterceptor : Interceptor(Level.REQUEST, Level.PAINTER) {
         if (chain.painter == null && cache.has(chain.request)) {
 
             return ChainResult.Process(
-                chain.doCopy(
+                chain.copy(
                     painter = Resource.Result.Success(cache[chain.request])
                 )
             )

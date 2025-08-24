@@ -12,34 +12,6 @@ inline fun <T, R> Resource<T>.map(transform: (T) -> R): Resource<R> {
     }
 }
 
-inline fun <T, R> Resource<T>.combine(
-    transform: (T) -> Resource<R>
-): Resource<R> {
-    return when (this) {
-        is Resource.Loading -> this
-        is Resource.Result.Failure -> this
-        is Resource.Result.Success<T> -> transform(value)
-    }
-}
-
-inline fun <T> Resource<T>.onSuccess(onSuccess: (T) -> Unit): Resource<T> {
-    return also {
-        if (it is Resource.Result.Success) {
-            onSuccess(it.value)
-        }
-    }
-}
-
-inline fun <T> Resource.Result<T>.toPainterResource(
-    transformation: (T) -> PainterResource.Result
-) = when (this) {
-    is Resource.Result.Failure -> {
-        PainterResource.Result.Failure(throwable)
-    }
-
-    is Resource.Result.Success<T> -> transformation(value)
-}
-
 inline fun <T> Resource<T>.toPainterResource(
     transformation: (T) -> PainterResource
 ) = when (this) {
@@ -66,21 +38,6 @@ fun Resource<Painter>.toPainterResource() = when (this) {
     is Resource.Result.Success<Painter> -> {
         PainterResource.Result.Success(value)
     }
-}
-
-fun Resource.Result<Painter>.toPainterResource() = when (this) {
-
-    is Resource.Result.Failure -> {
-        PainterResource.Result.Failure(throwable)
-    }
-
-    is Resource.Result.Success<Painter> -> {
-        PainterResource.Result.Success(value)
-    }
-}
-
-fun <T> Resource<T>.asResult(): Resource.Result<T> {
-    return checkNotNull(this as? Resource.Result) { "Loading is not supported" }
 }
 
 inline fun <T, R : T> Resource<T>.getOrElse(block: () -> R): T {

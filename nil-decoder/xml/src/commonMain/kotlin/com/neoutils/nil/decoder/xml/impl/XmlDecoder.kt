@@ -2,7 +2,6 @@ package com.neoutils.nil.decoder.xml.impl
 
 import androidx.compose.ui.graphics.painter.Painter
 import com.neoutils.nil.core.exception.NotSupportFormat
-import com.neoutils.nil.core.extension.toPainterResource
 import com.neoutils.nil.core.constant.DensityExtrasKey
 import com.neoutils.nil.core.extension.resourceCatching
 import com.neoutils.nil.core.util.Extras

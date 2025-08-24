@@ -4,9 +4,7 @@ package com.neoutils.nil.core.model
 
 import com.neoutils.nil.core.chain.Chain
 import com.neoutils.nil.core.contract.Request
-import com.neoutils.nil.core.extension.async
 import com.neoutils.nil.core.extension.resolve
-import com.neoutils.nil.core.extension.sync
 import com.neoutils.nil.core.painter.PainterResource
 import com.neoutils.nil.core.util.Level
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,25 +21,16 @@ class Nil(
         }
     }
 
-    fun async(request: Request): Flow<PainterResource> {
+    fun resolve(
+        request: Request
+    ): Flow<PainterResource> {
 
         return interceptors.fold(
-            flowOf(Chain.Async(request))
+            flowOf(Chain(request))
         ) { flow, interceptor ->
             flow.flatMapConcat { chain ->
-                interceptor.async(settings, chain)
+                interceptor.resolve(settings, chain)
             }
-        }.resolve()
-    }
-
-    suspend fun sync(
-        request: Request.Sync
-    ): PainterResource.Result {
-
-        return interceptors.fold(
-            Chain.Sync(request)
-        ) { chain, interceptor ->
-            interceptor.sync(settings, chain)
         }.resolve()
     }
 }

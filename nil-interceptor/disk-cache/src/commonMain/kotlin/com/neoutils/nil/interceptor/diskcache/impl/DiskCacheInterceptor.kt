@@ -48,7 +48,7 @@ class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
         if (chain.data == null && cache.has(key)) {
 
             return ChainResult.Process(
-                chain.doCopy(
+                chain.copy(
                     data = Resource.Result.Success(cache[key])
                 )
             )
