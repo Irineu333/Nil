@@ -1,5 +1,6 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
+import com.vanniktech.maven.publish.KotlinMultiplatform
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -8,6 +9,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.maven.publish)
 }
 
 kotlin {
@@ -71,4 +73,52 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+}
+
+mavenPublishing {
+
+    publishToMavenCentral()
+
+    coordinates(
+        artifactId = "disk-cache-interceptor",
+        groupId = "com.neoutils.nil",
+        version = "0.1.0-alpha01"
+    )
+
+    configure(
+        KotlinMultiplatform(
+            sourcesJar = true,
+            androidVariantsToPublish = listOf("release"),
+        )
+    )
+
+    pom {
+        name = "disk-cache-interceptor"
+        description = "Disk Cache for Nil."
+        inceptionYear = "2025"
+        url = "https://github.com/Irineu333/ImageLoader-POC"
+
+        licenses {
+            license {
+                name = "The MIT License"
+                url = "https://opensource.org/licenses/MIT"
+            }
+        }
+
+        developers {
+            developer {
+                id = "irineu333"
+                name = "Irineu A. Silva"
+                url = "https://github.com/Irineu333"
+            }
+        }
+
+        scm {
+            url = "https://github.com/Irineu333/ImageLoader-POC"
+            connection = "scm:git:git://github.com/Irineu333/ImageLoader-POC.git"
+            developerConnection = "scm:git:ssh://git@github.com/Irineu333/ImageLoader-POC.git"
+        }
+    }
+
+    signAllPublications()
 }
