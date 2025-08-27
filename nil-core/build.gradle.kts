@@ -14,7 +14,11 @@ plugins {
 
 kotlin {
 
-    jvm("desktop")
+    jvm("desktop") {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_17
+        }
+    }
 
     androidTarget {
         compilerOptions {
@@ -76,7 +80,7 @@ mavenPublishing {
     coordinates(
         artifactId = "core",
         groupId = "com.neoutils.nil",
-        version = "0.1.0-alpha02"
+        version = "0.1.0-alpha03"
     )
 
     configure(
