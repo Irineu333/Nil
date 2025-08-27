@@ -13,11 +13,15 @@ plugins {
 }
 
 kotlin {
-    jvm("desktop")
+    jvm("desktop") {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+        }
+    }
 
     androidTarget {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget = JvmTarget.JVM_11
         }
     }
 
@@ -74,7 +78,7 @@ mavenPublishing {
     coordinates(
         artifactId = "bitmap-decoder",
         groupId = "com.neoutils.nil",
-        version = "0.1.0-alpha03"
+        version = "0.1.0-alpha04"
     )
 
     configure(
