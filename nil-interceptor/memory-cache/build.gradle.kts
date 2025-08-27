@@ -77,9 +77,9 @@ mavenPublishing {
     publishToMavenCentral()
 
     coordinates(
-        artifactId = "memory-cache-interceptor",
+        artifactId = "memory-cache",
         groupId = "com.neoutils.nil",
-        version = "0.1.0-alpha01"
+        version = "0.1.0-alpha02"
     )
 
     configure(
