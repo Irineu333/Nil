@@ -1,4 +1,4 @@
-package com.neoutils.nil.type
+package com.neoutils.nil.util
 
 import okio.Buffer
 import okio.ByteString

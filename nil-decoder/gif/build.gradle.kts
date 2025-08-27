@@ -34,7 +34,7 @@ kotlin {
 
                 // module
                 implementation(project(":nil-core"))
-                implementation(project(":nil-type"))
+                implementation(project(":nil-util"))
 
                 // compose
                 implementation(compose.runtime)
@@ -111,7 +111,7 @@ mavenPublishing {
     coordinates(
         artifactId = "gif-decoder",
         groupId = "com.neoutils.nil",
-        version = "0.1.0-alpha01"
+        version = "0.1.0-alpha02"
     )
 
     configure(

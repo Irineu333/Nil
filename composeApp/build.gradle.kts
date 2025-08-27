@@ -34,9 +34,9 @@ kotlin {
         commonMain.dependencies {
 
             // maven
-            implementation("com.neoutils.nil:core:0.1.0-alpha01")
-            implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha01")
-            implementation("com.neoutils.nil:network-fetcher:0.1.0-alpha01")
+            implementation("com.neoutils.nil:core:0.1.0-alpha02")
+            implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha02")
+            implementation("com.neoutils.nil:network-fetcher:0.1.0-alpha02")
 
             // compose
             implementation(compose.runtime)

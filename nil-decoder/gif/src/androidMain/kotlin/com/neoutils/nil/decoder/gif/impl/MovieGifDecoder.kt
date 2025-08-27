@@ -10,7 +10,7 @@ import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.core.util.Support
 import com.neoutils.nil.decoder.gif.model.GifExtra
 import com.neoutils.nil.decoder.gif.painter.MovieGifPainter
-import com.neoutils.nil.type.Type
+import com.neoutils.nil.util.Type
 
 @Suppress("DEPRECATION")
 class MovieGifDecoder : Decoder {

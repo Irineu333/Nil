@@ -8,7 +8,7 @@ import com.neoutils.nil.core.foundation.Decoder
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.core.util.Support
-import com.neoutils.nil.type.Type
+import com.neoutils.nil.util.Type
 import org.jetbrains.compose.resources.decodeToImageBitmap
 
 class BitmapDecoder : Decoder {

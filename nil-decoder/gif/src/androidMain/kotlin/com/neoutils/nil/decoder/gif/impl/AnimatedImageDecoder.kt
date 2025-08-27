@@ -16,7 +16,7 @@ import com.neoutils.nil.core.util.key
 import com.neoutils.nil.decoder.gif.model.GifExtra
 import com.neoutils.nil.decoder.gif.painter.AnimatedImageGifPainter
 import com.neoutils.nil.decoder.gif.painter.DrawablePainter
-import com.neoutils.nil.type.Type
+import com.neoutils.nil.util.Type
 import io.github.reactivecircus.cache4k.Cache
 
 @RequiresApi(Build.VERSION_CODES.P)

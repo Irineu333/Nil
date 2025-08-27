@@ -98,7 +98,7 @@ mavenPublishing {
     coordinates(
         artifactId = "svg-decoder",
         groupId = "com.neoutils.nil",
-        version = "0.1.0-alpha01"
+        version = "0.1.0-alpha02"
     )
 
     configure(
