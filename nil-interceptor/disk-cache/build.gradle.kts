@@ -82,7 +82,7 @@ mavenPublishing {
     coordinates(
         artifactId = "disk-cache",
         groupId = "com.neoutils.nil",
-        version = "0.1.0-alpha02"
+        version = "0.1.0-alpha03"
     )
 
     configure(
