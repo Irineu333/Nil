@@ -136,3 +136,45 @@ Image(
     contentDescription = null,
 )
 ```
+
+## Compose Resources
+
+To load images from Compose resources, add the following dependency.
+
+```kotlin
+implementation("com.neoutils.nil:resources-fetcher:0.1.0-alpha04")
+```
+
+And use the `Request.resource(...)` extension.
+
+```kotlin
+Image(
+    painter = syncPainterResource(
+        Request.resource(Res.drawable.cute_cat),
+    ),
+    contentDescription = null,
+)
+```
+
+### XML Support
+
+For Drawable Image Vector support, add the XML decoder dependency.
+
+```kotlin
+implementation("com.neoutils.nil:xml-decoder:0.1.0-alpha04")
+```
+
+And declare it in the configuration.
+
+```kotlin
+Image(
+    painter = syncPainterResource(
+        Request.resource(Res.drawable.vector_icon),
+    ) {
+        decoders {
+            xml() // or add(XmlDecoder())
+        }
+    },
+    contentDescription = null,
+)
+```
