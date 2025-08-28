@@ -82,7 +82,7 @@ mavenPublishing {
     coordinates(
         artifactId = "network-fetcher",
         groupId = "com.neoutils.nil",
-        version = "0.1.0-alpha04"
+        version = libs.versions.version.get(),
     )
 
     configure(
@@ -96,12 +96,12 @@ mavenPublishing {
         name = "network-fetcher"
         description = "Ktor fetcher for Nil."
         inceptionYear = "2025"
-        url = "https://github.com/Irineu333/ImageLoader-POC"
+        url = "https://github.com/Irineu333/Nil"
 
         licenses {
             license {
-                name = "The MIT License"
-                url = "https://opensource.org/licenses/MIT"
+                name = "Apache License, Version 2.0"
+                url = "https://opensource.org/license/apache-2-0"
             }
         }
 
@@ -114,9 +114,9 @@ mavenPublishing {
         }
 
         scm {
-            url = "https://github.com/Irineu333/ImageLoader-POC"
-            connection = "scm:git:git://github.com/Irineu333/ImageLoader-POC.git"
-            developerConnection = "scm:git:ssh://git@github.com/Irineu333/ImageLoader-POC.git"
+            url = "https://github.com/Irineu333/Nil"
+            connection = "scm:git:git://github.com/Irineu333/Nil.git"
+            developerConnection = "scm:git:ssh://git@github.com/Irineu333/Nil.git"
         }
     }
 
