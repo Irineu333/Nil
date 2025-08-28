@@ -51,6 +51,25 @@ Image(
 )
 ```
 
+## Autenticação
+
+Utilize a extensão network de extras para configurar autenticação básica.
+
+``` kotlin
+Image(
+    painter = asyncPainterResource(
+        Request.network(...),
+    ) {
+        extras {
+            network {
+                headers = mapOf("Bearer" to "...")
+            }
+        }
+    },
+    contentDescription = null,
+)
+```
+
 ## Suporte a GIF
 
 Para suporte a imagens animadas, adicione a dependência do decodificador de GIF.
