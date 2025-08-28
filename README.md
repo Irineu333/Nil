@@ -57,11 +57,9 @@ implementation("com.neoutils.nil:disk-cache:0.1.0-alpha04")
 
 Use the `memoryCache` and `diskCache` extensions to configure.
 
-```kotlin
+``` kotlin
 Image(
-    painter = asyncPainterResource(
-        Request.network("https://cataas.com/cat"),
-    ) {
+    painter = asyncPainterResource(...) {
         extras {
             diskCache {
                 maxSize = 10.mb
@@ -76,4 +74,42 @@ Image(
 )
 ```
 
-## Translations
+## GIF Support
+
+For animated image support, add the GIF decoder dependency.
+
+```kotlin
+implementation("com.neoutils.nil:gif-decoder:0.1.0-alpha04")
+```
+
+And declare it in the configuration.
+
+```kotlin
+Image(
+    painter = asyncPainterResource(
+        Request.network("https://cataas.com/cat/gif"),
+    ) {
+        decoders {
+            gif() // or add(GifDecoder())
+        }
+    },
+    contentDescription = null,
+)
+```
+
+Use extras for adjustments.
+
+``` kotlin
+Image(
+    painter = asyncPainterResource(...) {
+        ...
+    
+        extras {
+            gif {
+                repeatCount = 2
+            }
+        }
+    },
+    contentDescription = null,
+)
+```
