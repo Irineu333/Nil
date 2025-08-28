@@ -11,11 +11,15 @@ plugins {
 }
 
 kotlin {
-    jvm("desktop")
+    jvm("desktop") {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+        }
+    }
 
     androidTarget {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget = JvmTarget.JVM_11
         }
     }
 
@@ -33,16 +37,16 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
 
-            // modules
-            implementation(project(":nil-core"))
-            implementation(project(":nil-fetcher:resources"))
-            implementation(project(":nil-fetcher:network"))
-            implementation(project(":nil-decoder:bitmap"))
-            implementation(project(":nil-decoder:xml"))
-            implementation(project(":nil-decoder:svg"))
-            implementation(project(":nil-decoder:gif"))
-            implementation(project(":nil-interceptor:disk-cache"))
-            implementation(project(":nil-interceptor:memory-cache"))
+            // maven
+            implementation("com.neoutils.nil:core:0.1.0-alpha04")
+            implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha04")
+            implementation("com.neoutils.nil:gif-decoder:0.1.0-alpha04")
+            implementation("com.neoutils.nil:svg-decoder:0.1.0-alpha04")
+            implementation("com.neoutils.nil:xml-decoder:0.1.0-alpha04")
+            implementation("com.neoutils.nil:network-fetcher:0.1.0-alpha04")
+            implementation("com.neoutils.nil:resources-fetcher:0.1.0-alpha04")
+            implementation("com.neoutils.nil:memory-cache:0.1.0-alpha04")
+            implementation("com.neoutils.nil:disk-cache:0.1.0-alpha04")
 
             // compose
             implementation(compose.runtime)
