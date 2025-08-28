@@ -10,7 +10,7 @@ Import the core module, a fetcher, and a decoder to get started.
 
 ```kotlin
 implementation("com.neoutils.nil:core:0.1.0-alpha04")
-implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha04")
+implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha04") // supports PNG, JPEG and WEBP
 implementation("com.neoutils.nil:network-fetcher:0.1.0-alpha04")
 ```
 
@@ -108,6 +108,29 @@ Image(
             gif {
                 repeatCount = 2
             }
+        }
+    },
+    contentDescription = null,
+)
+```
+
+## SVG Support
+
+For SVG image support, add the SVG decoder dependency.
+
+```kotlin
+implementation("com.neoutils.nil:svg-decoder:0.1.0-alpha04")
+```
+
+And declare it in the configuration.
+
+```kotlin
+Image(
+    painter = asyncPainterResource(
+        Request.network("https://example.com/image.svg"),
+    ) {
+        decoders {
+            svg() // or add(SvgDecoder())
         }
     },
     contentDescription = null,

@@ -112,3 +112,26 @@ Image(
     contentDescription = null,
 )
 ```
+
+## Suporte a SVG
+
+Para suporte a imagens SVG, adicione a dependência do decodificador de SVG.
+
+```kotlin
+implementation("com.neoutils.nil:svg-decoder:0.1.0-alpha04")
+```
+
+E declare na configuração.
+
+```kotlin
+Image(
+    painter = asyncPainterResource(
+        Request.network("https://example.com/image.svg"),
+    ) {
+        decoders {
+            svg() // or add(SvgDecoder())
+        }
+    },
+    contentDescription = null,
+)
+```
