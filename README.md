@@ -46,3 +46,34 @@ Image(
 )
 ```
 
+## Cache
+
+To enable memory cache and disk cache, just add the following dependencies.
+
+```kotlin
+implementation("com.neoutils.nil:memory-cache:0.1.0-alpha04")
+implementation("com.neoutils.nil:disk-cache:0.1.0-alpha04")
+```
+
+Use the `memoryCache` and `diskCache` extensions to configure.
+
+```kotlin
+Image(
+    painter = asyncPainterResource(
+        Request.network("https://cataas.com/cat"),
+    ) {
+        extras {
+            diskCache {
+                maxSize = 10.mb
+            }
+
+            memoryCache {
+                maxSize = 10
+            }
+        }
+    },
+    contentDescription = null,
+)
+```
+
+## Translations
