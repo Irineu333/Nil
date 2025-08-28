@@ -75,7 +75,7 @@ mavenPublishing {
     coordinates(
         artifactId = "util",
         groupId = "com.neoutils.nil",
-        version = "0.1.0-alpha04"
+        version = libs.versions.version.get(),
     )
 
     configure(
