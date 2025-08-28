@@ -8,7 +8,7 @@ Importe o módulo core, um fetcher e um decodificador para começar.
 
 ```kotlin
 implementation("com.neoutils.nil:core:0.1.0-alpha04")
-implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha04")
+implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha04") // suporta PNG, JPEG e WEBP
 implementation("com.neoutils.nil:network-fetcher:0.1.0-alpha04")
 ```
 
@@ -56,11 +56,9 @@ implementation("com.neoutils.nil:disk-cache:0.1.0-alpha04")
 
 Utilize as extensões `memoryCache` e `diskCache` para configurar.
 
-```kotlin
+``` kotlin
 Image(
-    painter = asyncPainterResource(
-        Request.network("https://cataas.com/cat"),
-    ) {
+    painter = asyncPainterResource(...) {
         extras {
             diskCache {
                 maxSize = 10.mb
@@ -68,6 +66,46 @@ Image(
 
             memoryCache {
                 maxSize = 10
+            }
+        }
+    },
+    contentDescription = null,
+)
+```
+
+## Suporte a GIF
+
+Para suporte a imagens animadas, adicione a dependência do decodificador de GIF.
+
+```kotlin
+implementation("com.neoutils.nil:gif-decoder:0.1.0-alpha04")
+```
+
+E declare na configuração.
+
+```kotlin
+Image(
+    painter = asyncPainterResource(
+        Request.network("https://cataas.com/cat/gif"),
+    ) {
+        decoders {
+            gif() // or add(GifDecoder())
+        }
+    },
+    contentDescription = null,
+)
+```
+
+Utilize extras para ajustes.
+
+```kotlin
+Image(
+    painter = asyncPainterResource(...) {
+        ...
+    
+        extras {
+            gif {
+                repeatCount = 2
             }
         }
     },
