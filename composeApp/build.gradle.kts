@@ -43,7 +43,7 @@ kotlin {
             implementation("com.neoutils.nil:gif-decoder:0.1.0-alpha04")
             implementation("com.neoutils.nil:svg-decoder:0.1.0-alpha04")
             implementation("com.neoutils.nil:xml-decoder:0.1.0-alpha04")
-            implementation("com.neoutils.nil:network-fetcher:0.1.0-alpha04")
+            implementation("com.neoutils.nil:network-fetcher-default:0.1.0-alpha04")
             implementation("com.neoutils.nil:resources-fetcher:0.1.0-alpha04")
             implementation("com.neoutils.nil:memory-cache:0.1.0-alpha04")
             implementation("com.neoutils.nil:disk-cache:0.1.0-alpha04")
@@ -64,9 +64,6 @@ kotlin {
 
             // activity
             implementation(libs.androidx.activity.compose)
-
-            // ktor
-            implementation(libs.ktor.client.android)
         }
 
         val desktopMain by getting {
@@ -75,21 +72,12 @@ kotlin {
                 // compose
                 implementation(compose.desktop.currentOs)
 
-                // ktor
-                implementation(libs.ktor.client.java)
-
                 // coroutines
                 implementation(libs.kotlinx.coroutines.swing)
 
                 // slf4j
                 implementation("org.slf4j:slf4j-nop:2.0.9")
             }
-        }
-
-        iosMain.dependencies {
-
-            // ktor
-            implementation(libs.ktor.client.darwin)
         }
     }
 }
