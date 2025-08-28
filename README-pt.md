@@ -9,32 +9,10 @@ Importe o módulo core, um fetcher e um decodificador para começar.
 ```kotlin
 implementation("com.neoutils.nil:core:0.1.0-alpha04")
 implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha04") // suporta PNG, JPEG e WEBP
-implementation("com.neoutils.nil:network-fetcher:0.1.0-alpha04")
+implementation("com.neoutils.nil:network-fetcher-default:0.1.0-alpha04")
 ```
 
-O fetcher de network utiliza o **ktor3** internamente, e requer que especifique
-um [ktor engine](https://ktor.io/docs/client-engines.html) para cada
-plataforma.
-
-```kotlin
-androidMain {
-    dependencies {
-        implementation("io.ktor:ktor-client-android:3.1.0")
-    }
-}
-appleMain {
-    dependencies {
-        implementation("io.ktor:ktor-client-darwin:3.1.0")
-    }
-}
-jvmMain {
-    dependencies {
-        implementation("io.ktor:ktor-client-java:3.1.0")
-    }
-}
-```
-
-Utilize `asyncPainterResource` para carregar uma imagem de forma assíncrona.
+E utilize `asyncPainterResource` para carregar uma imagem de forma assíncrona.
 
 ```kotlin
 Image(
@@ -54,7 +32,7 @@ implementation("com.neoutils.nil:memory-cache:0.1.0-alpha04")
 implementation("com.neoutils.nil:disk-cache:0.1.0-alpha04")
 ```
 
-Utilize as extensões `memoryCache` e `diskCache` para configurar.
+E utilize as extensões `memoryCache` e `diskCache` para configurar.
 
 ``` kotlin
 Image(
@@ -96,9 +74,9 @@ Image(
 )
 ```
 
-Utilize extras para ajustes.
+Utilize a extensão `gif` para configurar.
 
-```kotlin
+``` kotlin
 Image(
     painter = asyncPainterResource(...) {
         ...
@@ -144,7 +122,7 @@ Para carregar imagens dos recursos do Compose, adicione a seguinte dependência.
 implementation("com.neoutils.nil:resources-fetcher:0.1.0-alpha04")
 ```
 
-E utilize a extension `Request.resource(...)`.
+E utilize a extension `Request.resource(...)` para carregar.
 
 ```kotlin
 Image(
@@ -157,7 +135,7 @@ Image(
 
 ### Suporte a XML
 
-Para suporte a Drawable Image Vector, adicione a dependência do decodificador de XML.
+Se precisa carregar um Drawable Image Vector dos recursos, adicione a dependência do decodificador de XML.
 
 ```kotlin
 implementation("com.neoutils.nil:xml-decoder:0.1.0-alpha04")

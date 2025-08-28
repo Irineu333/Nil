@@ -11,31 +11,10 @@ Import the core module, a fetcher, and a decoder to get started.
 ```kotlin
 implementation("com.neoutils.nil:core:0.1.0-alpha04")
 implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha04") // supports PNG, JPEG and WEBP
-implementation("com.neoutils.nil:network-fetcher:0.1.0-alpha04")
+implementation("com.neoutils.nil:network-fetcher-default:0.1.0-alpha04")
 ```
 
-The network fetcher uses **ktor3** internally and requires you to specify
-a [ktor engine](https://ktor.io/docs/client-engines.html) for each platform.
-
-```kotlin
-androidMain {
-    dependencies {
-        implementation("io.ktor:ktor-client-android:3.1.0")
-    }
-}
-appleMain {
-    dependencies {
-        implementation("io.ktor:ktor-client-darwin:3.1.0")
-    }
-}
-jvmMain {
-    dependencies {
-        implementation("io.ktor:ktor-client-java:3.1.0")
-    }
-}
-```
-
-Use `asyncPainterResource` to load an image asynchronously.
+And use `asyncPainterResource` to load an image asynchronously.
 
 ```kotlin
 Image(
@@ -55,7 +34,7 @@ implementation("com.neoutils.nil:memory-cache:0.1.0-alpha04")
 implementation("com.neoutils.nil:disk-cache:0.1.0-alpha04")
 ```
 
-Use the `memoryCache` and `diskCache` extensions to configure.
+And use the `memoryCache` and `diskCache` extensions to configure.
 
 ``` kotlin
 Image(
