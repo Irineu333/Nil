@@ -8,7 +8,7 @@ Importe o módulo core, um fetcher e um decodificador para começar.
 
 ```kotlin
 implementation("com.neoutils.nil:core:0.1.0-alpha04")
-implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha04") // suporta PNG, JPEG e WEBP
+implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha04")
 implementation("com.neoutils.nil:network-fetcher-default:0.1.0-alpha04")
 ```
 

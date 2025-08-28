@@ -10,7 +10,7 @@ Import the core module, a fetcher, and a decoder to get started.
 
 ```kotlin
 implementation("com.neoutils.nil:core:0.1.0-alpha04")
-implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha04") // supports PNG, JPEG and WEBP
+implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha04")
 implementation("com.neoutils.nil:network-fetcher-default:0.1.0-alpha04")
 ```
 
