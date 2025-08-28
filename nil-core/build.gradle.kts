@@ -80,7 +80,7 @@ mavenPublishing {
     coordinates(
         artifactId = "core",
         groupId = "com.neoutils.nil",
-        version = "0.1.0-alpha04"
+        version = libs.versions.version.get(),
     )
 
     configure(
@@ -92,7 +92,7 @@ mavenPublishing {
 
     pom {
         name = "Nil"
-        description = "Image Loader Engine."
+        description = "Neo Image Loader Engine."
         inceptionYear = "2025"
         url = "https://github.com/Irineu333/ImageLoader-POC"
 
