@@ -62,7 +62,7 @@ Image(
     ) {
         extras {
             network {
-                headers = mapOf("Bearer" to "...")
+                headers = mapOf("Autorization" to "Bearer ...")
             }
         }
     },
