@@ -63,7 +63,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.neoutils.nil.fecther.network"
+    namespace = "com.neoutils.nil.fetcher.network"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
