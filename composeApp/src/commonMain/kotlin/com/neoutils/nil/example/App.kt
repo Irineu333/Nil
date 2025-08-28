@@ -9,19 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.neoutils.nil.core.composable.asyncPainterResource
-import com.neoutils.nil.core.composable.syncPainterResource
 import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.painter.PainterResource
-import com.neoutils.nil.decoder.bitmap.extension.bitmap
-import com.neoutils.nil.decoder.gif.extension.gif
-import com.neoutils.nil.decoder.xml.extension.xml
-import com.neoutils.nil.example.resources.Res
-import com.neoutils.nil.example.resources.atom_vector
 import com.neoutils.nil.fetcher.network.extension.network
-import com.neoutils.nil.fetcher.resources.compose.ResourcesPreview
-import com.neoutils.nil.fetcher.resources.extension.resource
-import com.neoutils.nil.fetcher.resources.extension.resources
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun App() = Box(
@@ -58,27 +48,3 @@ fun App() = Box(
     }
 }
 
-@Preview
-@Composable
-fun AppPreview() {
-    ResourcesPreview(
-        settings = {
-            fetchers {
-                resources()
-            }
-
-            decoders {
-                xml()
-                bitmap()
-                gif()
-            }
-        }
-    ) {
-        Image(
-            painter = syncPainterResource(
-                request = Request.resource(Res.drawable.atom_vector),
-            ),
-            contentDescription = null,
-        )
-    }
-}
