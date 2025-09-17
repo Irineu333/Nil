@@ -5,6 +5,8 @@ import com.neoutils.nil.core.foundation.Decoder
 import com.neoutils.nil.core.foundation.Interceptor
 import com.neoutils.nil.core.chain.Chain
 import com.neoutils.nil.core.chain.ChainResult
+import com.neoutils.nil.core.extension.process
+import com.neoutils.nil.core.extension.skip
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.usecase.GetDecoderUseCase
 import com.neoutils.nil.core.util.Level
@@ -19,27 +21,23 @@ class DecodeInterceptor(
         chain: Chain
     ): ChainResult {
 
-        if (chain.painter != null) return ChainResult.Skip
+        if (chain.painter != null) return chain.skip()
 
-        val data = chain.data ?: return ChainResult.Skip
+        val data = chain.data ?: return chain.skip()
+        val bytes = data.getOrElse { return chain.skip() }
 
-        val bytes = data.getOrElse { return ChainResult.Skip }
-
-        return when(val decoder = decoderFor(settings.decoders, bytes)) {
+        return when (val decoder = decoderFor(settings.decoders, bytes)) {
             is Resource.Result.Failure -> {
-                ChainResult.Process(
-                    chain.copy(
-                        painter = decoder
-                    )
+                chain.process(
+                    painter = decoder
                 )
             }
+
             is Resource.Result.Success<Decoder> -> {
-                ChainResult.Process(
-                    chain.copy(
-                        painter = decoder.value.decode(
-                            input = bytes,
-                            extras = settings.extras,
-                        )
+                chain.process(
+                    painter = decoder.value.decode(
+                        input = bytes,
+                        extras = settings.extras,
                     )
                 )
             }

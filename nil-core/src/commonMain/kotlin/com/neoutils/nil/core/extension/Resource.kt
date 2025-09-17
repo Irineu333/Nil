@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import com.neoutils.nil.core.painter.PainterResource
 import com.neoutils.nil.core.util.Resource
 
-inline fun <T, R> Resource<T>.map(transform: (T) -> R): Resource<R> {
+fun <T, R> Resource<T>.map(transform: (T) -> R): Resource<R> {
     return when (this) {
         is Resource.Loading -> this
         is Resource.Result.Failure -> this
@@ -12,7 +12,7 @@ inline fun <T, R> Resource<T>.map(transform: (T) -> R): Resource<R> {
     }
 }
 
-inline fun <T> Resource<T>.toPainterResource(
+fun <T> Resource<T>.toPainterResource(
     transformation: (T) -> PainterResource
 ) = when (this) {
     is Resource.Loading -> {

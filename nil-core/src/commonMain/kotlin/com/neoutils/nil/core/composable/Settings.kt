@@ -15,6 +15,8 @@ import com.neoutils.nil.core.scope.SettingsScope
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.LocalExtras
 
+val CompositeKeyHash = Extras.Key<Int>()
+
 @Composable
 fun ProvideSettings(
     settings: @NilDsl SettingsScope.() -> Unit,
@@ -66,5 +68,3 @@ fun rememberSettings(block: @NilDsl SettingsScope.() -> Unit): Settings {
 
     return remember(scope) { scope.apply(block).build() }
 }
-
-val CompositeKeyHash = Extras.Key<Int>()

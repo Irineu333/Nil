@@ -1,6 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
-rootProject.name = "ImageLoader-POC"
+rootProject.name = "Nil"
 
 pluginManagement {
     repositories {

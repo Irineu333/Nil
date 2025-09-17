@@ -12,8 +12,8 @@ fun Interceptor.resolve(
 ): Flow<Chain> {
     return flow {
         when (val result = intercept(settings, chain)) {
-            is ChainResult.Process -> emitAll(result.flow)
-            is ChainResult.Skip -> emit(chain)
+            is ChainResult.Stream -> emitAll(result.chain)
+            is ChainResult.Single -> emit(result.chain)
         }
     }
 }

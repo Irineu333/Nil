@@ -5,6 +5,8 @@ import com.neoutils.nil.core.foundation.Interceptor
 import com.neoutils.nil.core.chain.Chain
 import com.neoutils.nil.core.chain.ChainResult
 import com.neoutils.nil.core.composable.CompositeKeyHash
+import com.neoutils.nil.core.extension.process
+import com.neoutils.nil.core.extension.skip
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.Resource
@@ -21,7 +23,7 @@ class MemoryCacheInterceptor : Interceptor(Level.REQUEST, Level.PAINTER) {
     ): ChainResult {
         val extra = settings.extras[MemoryCacheExtra.ExtrasKey]
 
-        if (!extra.enabled) return ChainResult.Skip
+        if (!extra.enabled) return chain.skip()
 
         val key = settings.extras[CompositeKeyHash]
 
@@ -33,17 +35,15 @@ class MemoryCacheInterceptor : Interceptor(Level.REQUEST, Level.PAINTER) {
 
         if (chain.painter == null && cache.has(chain.request)) {
 
-            return ChainResult.Process(
-                chain.copy(
-                    painter = Resource.Result.Success(cache[chain.request])
-                )
+            return chain.process(
+                painter = Resource.Result.Success(cache[chain.request])
             )
         }
 
-        val painter = chain.painter ?: return ChainResult.Skip
+        val painter = chain.painter ?: return chain.skip()
 
-        cache[chain.request] = painter.getOrElse { return ChainResult.Skip }
+        cache[chain.request] = painter.getOrElse { return chain.skip() }
 
-        return ChainResult.Skip
+        return chain.skip()
     }
 }
