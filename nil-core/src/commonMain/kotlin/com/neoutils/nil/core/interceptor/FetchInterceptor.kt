@@ -1,23 +1,22 @@
 package com.neoutils.nil.core.interceptor
 
 import com.neoutils.nil.core.contract.Request
-import com.neoutils.nil.core.exception.NoFetcherFound
 import com.neoutils.nil.core.foundation.Fetcher
 import com.neoutils.nil.core.foundation.Interceptor
 import com.neoutils.nil.core.chain.Chain
 import com.neoutils.nil.core.chain.ChainResult
 import com.neoutils.nil.core.model.Settings
-import com.neoutils.nil.core.strings.FetcherErrorStrings
+import com.neoutils.nil.core.usecase.GetFetcherUseCase
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.Resource
 import kotlinx.coroutines.flow.map
 
-private val error = FetcherErrorStrings()
-
 val ProgressMonitorExtrasKey = Extras.Key(default = true)
 
-class FetchInterceptor : Interceptor(Level.DATA) {
+class FetchInterceptor(
+    private val getFetcher: GetFetcherUseCase = GetFetcherUseCase()
+) : Interceptor(Level.DATA) {
 
     override suspend fun intercept(
         settings: Settings,
@@ -28,7 +27,7 @@ class FetchInterceptor : Interceptor(Level.DATA) {
 
         val progressing = settings.extras[ProgressMonitorExtrasKey]
 
-        return when (val fetcher = settings.fetcherFor(chain.request)) {
+        return when (val fetcher = getFetcher(settings.fetchers, chain.request)) {
             is Resource.Result.Failure -> {
                 ChainResult.Process(
                     chain.copy(
@@ -39,7 +38,7 @@ class FetchInterceptor : Interceptor(Level.DATA) {
 
             is Resource.Result.Success<Fetcher<Request>> if progressing -> {
                 ChainResult.Process(
-                     fetcher.value.fetch(
+                    fetcher.value.fetch(
                         input = chain.request,
                         extras = settings.extras
                     ).map { data ->
@@ -58,21 +57,6 @@ class FetchInterceptor : Interceptor(Level.DATA) {
                     )
                 )
             }
-        }
-    }
-
-    private fun Settings.fetcherFor(request: Request): Resource.Result<Fetcher<Request>> {
-
-        if (fetchers.isEmpty()) {
-            return Resource.Result.Failure(NoFetcherFound(error.notFound))
-        }
-
-        val fetcher = fetchers.find { it.type == request::class }
-
-        return if (fetcher != null) {
-            Resource.Result.Success(fetcher)
-        } else {
-            Resource.Result.Failure(NoFetcherFound(error.noRequiredFound))
         }
     }
 }

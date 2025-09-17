@@ -37,16 +37,16 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
 
-            // maven
-            implementation("com.neoutils.nil:core:0.1.0-alpha04")
-            implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha04")
-            implementation("com.neoutils.nil:gif-decoder:0.1.0-alpha04")
-            implementation("com.neoutils.nil:svg-decoder:0.1.0-alpha04")
-            implementation("com.neoutils.nil:xml-decoder:0.1.0-alpha04")
-            implementation("com.neoutils.nil:network-fetcher-default:0.1.0-alpha04")
-            implementation("com.neoutils.nil:resources-fetcher:0.1.0-alpha04")
-            implementation("com.neoutils.nil:memory-cache:0.1.0-alpha04")
-            implementation("com.neoutils.nil:disk-cache:0.1.0-alpha04")
+            // modules
+            implementation(project(":nil-core"))
+            implementation(project(":nil-fetcher:resources"))
+            implementation(project(":nil-fetcher:network-default"))
+            implementation(project(":nil-decoder:bitmap"))
+            implementation(project(":nil-decoder:xml"))
+            implementation(project(":nil-decoder:svg"))
+            implementation(project(":nil-decoder:gif"))
+            implementation(project(":nil-interceptor:disk-cache"))
+            implementation(project(":nil-interceptor:memory-cache"))
 
             // compose
             implementation(compose.runtime)

@@ -12,6 +12,7 @@ import com.neoutils.nil.core.composable.asyncPainterResource
 import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.painter.PainterResource
 import com.neoutils.nil.fetcher.network.extension.network
+import com.neoutils.nil.interceptor.diskcache.extension.diskCache
 
 @Composable
 fun App() = Box(
@@ -21,7 +22,13 @@ fun App() = Box(
 
     val resource = asyncPainterResource(
         request = Request.network("https://cataas.com/cat"),
-    )
+    ) {
+        extras {
+            diskCache {
+                enabled = false
+            }
+        }
+    }
 
     when (resource) {
         is PainterResource.Result.Success -> {
