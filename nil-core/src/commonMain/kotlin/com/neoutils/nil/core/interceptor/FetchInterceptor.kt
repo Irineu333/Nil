@@ -9,12 +9,14 @@ import com.neoutils.nil.core.foundation.Fetcher
 import com.neoutils.nil.core.foundation.Interceptor
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.usecase.GetFetcherUseCase
+import com.neoutils.nil.core.util.Dynamic
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.Resource
 import kotlinx.coroutines.flow.map
 
 val ProgressMonitorExtrasKey = Extras.Key(default = true)
+val FetchersExtra = Extras.Key(Dynamic.fetchers)
 
 class FetchInterceptor(
     private val getFetcher: GetFetcherUseCase = GetFetcherUseCase()
@@ -30,7 +32,7 @@ class FetchInterceptor(
 
         val progressing = settings.extras[ProgressMonitorExtrasKey]
 
-        return when (val fetcher = getFetcher(settings.fetchers, chain.request)) {
+        return when (val fetcher = getFetcher(settings.extras, chain.request)) {
             is Resource.Result.Failure -> {
                 chain.process(
                     data = Resource.Result.Failure(fetcher.throwable)

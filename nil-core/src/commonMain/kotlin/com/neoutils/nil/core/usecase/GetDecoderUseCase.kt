@@ -2,17 +2,21 @@ package com.neoutils.nil.core.usecase
 
 import com.neoutils.nil.core.exception.NoDecoderFound
 import com.neoutils.nil.core.foundation.Decoder
+import com.neoutils.nil.core.interceptor.DecodersExtra
 import com.neoutils.nil.core.strings.DecoderErrorStrings
+import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.core.util.Support
 
 private val error = DecoderErrorStrings()
 
-class GetDecoderUseCase() {
+class GetDecoderUseCase {
     suspend operator fun invoke(
-        decoders: List<Decoder>,
+        extras: Extras,
         bytes: ByteArray
     ): Resource.Result<Decoder> {
+
+        val decoders = extras[DecodersExtra]
 
         if (decoders.isEmpty()) {
             return Resource.Result.Failure(NoDecoderFound(error.notFound))

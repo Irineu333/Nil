@@ -23,10 +23,8 @@ fun App() = Box(
     val resource = asyncPainterResource(
         request = Request.network("https://cataas.com/cat"),
     ) {
-        extras {
-            diskCache {
-                enabled = false
-            }
+        diskCache {
+            enabled = false
         }
     }
 

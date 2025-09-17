@@ -3,6 +3,7 @@ package com.neoutils.nil.fetcher.resources.compose
 import androidx.compose.runtime.Composable
 import com.neoutils.nil.core.annotation.NilDsl
 import com.neoutils.nil.core.composable.rememberSettings
+import com.neoutils.nil.core.extension.fetchers
 import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.scope.*
 import com.neoutils.nil.fetcher.resources.extension.resources

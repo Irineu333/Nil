@@ -1,10 +1,10 @@
 package com.neoutils.nil.interceptor.diskcache.extension
 
 import com.neoutils.nil.core.annotation.NilDsl
-import com.neoutils.nil.core.scope.ExtrasScope
+import com.neoutils.nil.core.scope.SettingsScope
 import com.neoutils.nil.interceptor.diskcache.model.DiskCacheExtra
 
-fun ExtrasScope.diskCache(
+fun SettingsScope.diskCache(
     scope: @NilDsl DiskCacheExtra.Builder.() -> Unit
 ) {
     extras.update(DiskCacheExtra.ExtrasKey) {
