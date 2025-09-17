@@ -7,7 +7,7 @@ import com.neoutils.nil.core.chain.ChainResult
 import com.neoutils.nil.core.composable.CompositeKeyHash
 import com.neoutils.nil.core.extension.process
 import com.neoutils.nil.core.extension.skip
-import com.neoutils.nil.core.model.Settings
+import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.interceptor.memoryCache.model.MemoryCacheExtra
@@ -18,18 +18,18 @@ class MemoryCacheInterceptor : Interceptor(Level.REQUEST, Level.PAINTER) {
     private val caches = mutableMapOf<Int, LruMemoryCache>()
 
     override suspend fun intercept(
-        settings: Settings,
+        extras: Extras,
         chain: Chain
     ): ChainResult {
-        val extra = settings.extras[MemoryCacheExtra.ExtrasKey]
+        val config = extras[MemoryCacheExtra.ExtrasKey]
 
-        if (!extra.enabled) return chain.skip()
+        if (!config.enabled) return chain.skip()
 
-        val key = settings.extras[CompositeKeyHash]
+        val key = extras[CompositeKeyHash]
 
         val cache = caches.getOrPut(key) {
             LruMemoryCache(
-                maxSize = extra.maxSize
+                maxSize = config.maxSize
             )
         }
 

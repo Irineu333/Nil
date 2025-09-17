@@ -8,7 +8,7 @@ import com.neoutils.nil.core.chain.Chain
 import com.neoutils.nil.core.chain.ChainResult
 import com.neoutils.nil.core.extension.process
 import com.neoutils.nil.core.extension.skip
-import com.neoutils.nil.core.model.Settings
+import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.Resource
 import com.neoutils.nil.interceptor.diskcache.model.DiskCacheExtra
@@ -30,20 +30,20 @@ class DiskCacheInterceptor : Interceptor(Level.REQUEST, Level.DATA) {
         }
 
     override suspend fun intercept(
-        settings: Settings,
+        extras: Extras,
         chain: Chain
     ): ChainResult {
         val key = chain.request.hash ?: return chain.skip()
 
-        val extra = settings.extras[DiskCacheExtra.ExtrasKey]
+        val config = extras[DiskCacheExtra.ExtrasKey]
 
-        if (!extra.enabled) return chain.skip()
+        if (!config.enabled) return chain.skip()
 
-        val cache = remember(extra) {
+        val cache = remember(config) {
             LruDiskCache(
-                fileSystem = extra.fileSystem,
-                path = extra.path,
-                maxSize = extra.maxSize
+                fileSystem = config.fileSystem,
+                path = config.path,
+                maxSize = config.maxSize
             )
         }
 

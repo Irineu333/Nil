@@ -7,21 +7,18 @@ import com.neoutils.nil.core.extension.process
 import com.neoutils.nil.core.extension.skip
 import com.neoutils.nil.core.foundation.Decoder
 import com.neoutils.nil.core.foundation.Interceptor
-import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.usecase.GetDecoderUseCase
 import com.neoutils.nil.core.util.Dynamic
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.Level
 import com.neoutils.nil.core.util.Resource
 
-val DecodersExtra = Extras.Key(Dynamic.decoders)
-
 class DecodeInterceptor(
-    private val decoderFor: GetDecoderUseCase = GetDecoderUseCase()
+    private val getDecoder: GetDecoderUseCase = GetDecoderUseCase()
 ) : Interceptor(Level.PAINTER) {
 
     override suspend fun intercept(
-        settings: Settings,
+        extras: Extras,
         chain: Chain
     ): ChainResult {
 
@@ -30,7 +27,7 @@ class DecodeInterceptor(
         val data = chain.data ?: return chain.skip()
         val bytes = data.getOrElse { return chain.skip() }
 
-        return when (val decoder = decoderFor(settings.extras, bytes)) {
+        return when (val decoder = getDecoder(extras, bytes)) {
             is Resource.Result.Failure -> {
                 chain.process(
                     painter = decoder
@@ -41,7 +38,7 @@ class DecodeInterceptor(
                 chain.process(
                     painter = decoder.value.decode(
                         input = bytes,
-                        extras = settings.extras,
+                        extras = extras,
                     )
                 )
             }

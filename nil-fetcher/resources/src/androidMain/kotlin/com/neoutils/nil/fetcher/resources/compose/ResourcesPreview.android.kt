@@ -1,20 +1,20 @@
 package com.neoutils.nil.fetcher.resources.compose
 
 import androidx.compose.runtime.Composable
-import com.neoutils.nil.core.composable.ProvideSettings
-import com.neoutils.nil.core.model.Settings
+import com.neoutils.nil.core.composable.ProvideExtras
+import com.neoutils.nil.core.util.Extras
 import org.jetbrains.compose.resources.PreviewContextConfigurationEffect
 
 @Composable
 actual fun ResourcesPreview(
-    settings: Settings,
+    extras: Extras,
     content: @Composable (() -> Unit)
 ) {
     // required to compose resources
     PreviewContextConfigurationEffect()
 
-    ProvideSettings(
-        settings = settings,
+    ProvideExtras(
+        extras = extras,
         content = content,
     )
 }

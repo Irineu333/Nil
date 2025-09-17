@@ -3,7 +3,7 @@ package com.neoutils.nil.core.usecase
 import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.exception.NoFetcherFound
 import com.neoutils.nil.core.foundation.Fetcher
-import com.neoutils.nil.core.interceptor.FetchersExtra
+import com.neoutils.nil.core.foundation.FetchersExtra
 import com.neoutils.nil.core.strings.FetcherErrorStrings
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.Resource

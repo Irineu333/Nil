@@ -1,8 +1,11 @@
 package com.neoutils.nil.core.strings
 
+import kotlin.reflect.KClass
+
 internal data class ErrorStrings(
     val decoder: DecoderErrorStrings = DecoderErrorStrings(),
-    val fetchers: FetcherErrorStrings = FetcherErrorStrings()
+    val fetchers: FetcherErrorStrings = FetcherErrorStrings(),
+    val unsupportedType: (type: KClass<*>) -> String = { type -> "Unsupported type $type" },
 )
 
 internal data class DecoderErrorStrings(

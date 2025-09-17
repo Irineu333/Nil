@@ -1,11 +1,14 @@
 package com.neoutils.nil.core.foundation
 
 import com.neoutils.nil.core.contract.Request
+import com.neoutils.nil.core.util.Dynamic
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlin.reflect.KClass
+
+val FetchersExtra = Extras.Key(Dynamic.fetchers)
 
 abstract class Fetcher<out T : Request>(
     internal val type: KClass<@UnsafeVariance T>

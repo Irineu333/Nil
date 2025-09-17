@@ -1,17 +1,13 @@
 package com.neoutils.nil.core.util
 
-import androidx.compose.runtime.staticCompositionLocalOf
 import com.neoutils.nil.core.strings.ExtraErrorStrings
 import com.neoutils.nil.core.util.Extras.Key
-
-val LocalExtras = staticCompositionLocalOf { Extras.EMPTY }
 
 private val error = ExtraErrorStrings()
 
 class Extras private constructor(
     private val extras: Map<Key<*>, Any>
 ) {
-
     operator fun <T> get(key: Key<T>): T {
         return extras.getOrDefault(key)
     }

@@ -7,7 +7,6 @@ import com.neoutils.nil.core.extension.process
 import com.neoutils.nil.core.extension.skip
 import com.neoutils.nil.core.foundation.Fetcher
 import com.neoutils.nil.core.foundation.Interceptor
-import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.usecase.GetFetcherUseCase
 import com.neoutils.nil.core.util.Dynamic
 import com.neoutils.nil.core.util.Extras
@@ -16,23 +15,22 @@ import com.neoutils.nil.core.util.Resource
 import kotlinx.coroutines.flow.map
 
 val ProgressMonitorExtrasKey = Extras.Key(default = true)
-val FetchersExtra = Extras.Key(Dynamic.fetchers)
 
 class FetchInterceptor(
     private val getFetcher: GetFetcherUseCase = GetFetcherUseCase()
 ) : Interceptor(Level.DATA) {
 
     override suspend fun intercept(
-        settings: Settings,
+        extras: Extras,
         chain: Chain
     ): ChainResult {
 
         if (chain.painter != null) return chain.skip()
         if (chain.data != null) return chain.skip()
 
-        val progressing = settings.extras[ProgressMonitorExtrasKey]
+        val progressing = extras[ProgressMonitorExtrasKey]
 
-        return when (val fetcher = getFetcher(settings.extras, chain.request)) {
+        return when (val fetcher = getFetcher(extras, chain.request)) {
             is Resource.Result.Failure -> {
                 chain.process(
                     data = Resource.Result.Failure(fetcher.throwable)
@@ -42,7 +40,7 @@ class FetchInterceptor(
             is Resource.Result.Success<Fetcher<Request>> if progressing -> {
                 fetcher.value.fetch(
                     input = chain.request,
-                    extras = settings.extras
+                    extras = extras,
                 ).map { data ->
                     chain.copy(data = data)
                 }.process()
@@ -52,7 +50,7 @@ class FetchInterceptor(
                 chain.process(
                     data = fetcher.value.get(
                         input = chain.request,
-                        extras = settings.extras
+                        extras = extras,
                     )
                 )
             }

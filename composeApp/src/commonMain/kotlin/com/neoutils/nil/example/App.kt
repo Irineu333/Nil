@@ -11,8 +11,10 @@ import androidx.compose.ui.Modifier
 import com.neoutils.nil.core.composable.asyncPainterResource
 import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.painter.PainterResource
-import com.neoutils.nil.fetcher.network.extension.network
-import com.neoutils.nil.interceptor.diskcache.extension.diskCache
+import com.neoutils.nil.decoder.svg.impl.SvgDecoder
+import com.neoutils.nil.example.resources.Res
+import com.neoutils.nil.example.resources.atom
+import com.neoutils.nil.fetcher.resources.extension.resource
 
 @Composable
 fun App() = Box(
@@ -21,10 +23,10 @@ fun App() = Box(
 ) {
 
     val resource = asyncPainterResource(
-        request = Request.network("https://cataas.com/cat"),
+        Request.resource(Res.drawable.atom)
     ) {
-        diskCache {
-            enabled = false
+        decoders {
+            +SvgDecoder()
         }
     }
 
@@ -52,4 +54,3 @@ fun App() = Box(
         }
     }
 }
-

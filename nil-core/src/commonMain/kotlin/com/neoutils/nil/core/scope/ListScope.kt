@@ -1,23 +1,15 @@
 package com.neoutils.nil.core.scope
 
-import kotlin.reflect.KClass
+import kotlin.collections.plus
 
 class ListScope<T : Any>(
-    private var values: MutableList<T>
+    internal var values: List<T> = listOf()
 ) {
-    fun add(value: T) = values.add(value)
-
-    fun remove(clazz: KClass<out T>) {
-        values = values.filter {
-            it::class != clazz
-        }.toMutableList()
+    fun add(value: T) {
+        values += value
     }
 
-    internal fun get() = values.toList()
-
-    companion object {
-        fun <T : Any> from(
-            values: List<T>
-        ) = ListScope(values.toMutableList())
+    operator fun T.unaryPlus() {
+        values += this
     }
 }

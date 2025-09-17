@@ -1,16 +1,16 @@
 package com.neoutils.nil.fetcher.resources.compose
 
 import androidx.compose.runtime.Composable
-import com.neoutils.nil.core.composable.ProvideSettings
-import com.neoutils.nil.core.model.Settings
+import com.neoutils.nil.core.composable.ProvideExtras
+import com.neoutils.nil.core.util.Extras
 
 @Composable
 actual fun ResourcesPreview(
-    settings: Settings,
+    extras: Extras,
     content: @Composable (() -> Unit)
 ) {
-    ProvideSettings(
-        settings = settings,
+    ProvideExtras(
+        extras = extras,
         content = content,
     )
 }

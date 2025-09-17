@@ -9,11 +9,11 @@ import com.neoutils.nil.core.annotation.NilDsl
 import com.neoutils.nil.core.contract.Request
 import com.neoutils.nil.core.extension.merge
 import com.neoutils.nil.core.model.Nil
-import com.neoutils.nil.core.model.Settings
 import com.neoutils.nil.core.painter.Animatable
 import com.neoutils.nil.core.painter.EmptyPainter
 import com.neoutils.nil.core.painter.PainterResource
 import com.neoutils.nil.core.scope.SettingsScope
+import com.neoutils.nil.core.util.Extras
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -31,7 +31,7 @@ fun asyncPainterResource(
     return rememberMerged(
         resource = painterResource(
             request = request,
-            settings = rememberSettings(settings),
+            extras = rememberExtras(settings),
         ) {
             collectAsState(PainterResource.Loading()).value
         },
@@ -51,7 +51,7 @@ fun syncPainterResource(
     return rememberMerged(
         resource = painterResource(
             request = request,
-            settings = rememberSettings(settings),
+            extras = rememberExtras(settings),
         ) {
             runBlocking { first() }
         },
@@ -62,11 +62,11 @@ fun syncPainterResource(
 @Composable
 private fun painterResource(
     request: Request,
-    settings: Settings,
+    extras: Extras,
     collect: @Composable (Flow<PainterResource>.() -> PainterResource)
 ): PainterResource {
 
-    val nil = remember(settings) { Nil(settings) }
+    val nil = remember(extras) { Nil(extras) }
 
     val resource = remember(nil, request) { nil.resolve(request) }.collect()
 

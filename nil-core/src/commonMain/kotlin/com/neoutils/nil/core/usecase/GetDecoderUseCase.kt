@@ -2,7 +2,7 @@ package com.neoutils.nil.core.usecase
 
 import com.neoutils.nil.core.exception.NoDecoderFound
 import com.neoutils.nil.core.foundation.Decoder
-import com.neoutils.nil.core.interceptor.DecodersExtra
+import com.neoutils.nil.core.foundation.DecodersExtra
 import com.neoutils.nil.core.strings.DecoderErrorStrings
 import com.neoutils.nil.core.util.Extras
 import com.neoutils.nil.core.util.Resource
