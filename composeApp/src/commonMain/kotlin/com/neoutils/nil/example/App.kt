@@ -23,7 +23,7 @@ fun App() = Box(
 ) {
 
     val resource = asyncPainterResource(
-        Request.resource(Res.drawable.atom)
+        request = Request.resource(Res.drawable.atom),
     ) {
         decoders {
             +SvgDecoder()
@@ -54,3 +54,4 @@ fun App() = Box(
         }
     }
 }
+

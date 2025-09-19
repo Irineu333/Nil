@@ -1,20 +1,20 @@
 # Nil
 
-An image loading library for Compose Multiplatform.
+An image loading library for **Compose Multiplatform**.
 
 Translations: [Português](README-pt.md)
 
 ## Quick Start
 
-Import the core module, a fetcher, and a decoder to get started.
+Import the **core** module, a **fetcher**, and a **decoder** to get started.
 
 ```kotlin
-implementation("com.neoutils.nil:core:0.1.0-alpha04")
-implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha04")
-implementation("com.neoutils.nil:network-fetcher-default:0.1.0-alpha04")
+implementation("com.neoutils.nil:core:0.1.0-alpha05")
+implementation("com.neoutils.nil:bitmap-decoder:0.1.0-alpha05")
+implementation("com.neoutils.nil:network-fetcher-default:0.1.0-alpha05")
 ```
 
-And use `asyncPainterResource` to load an image asynchronously.
+Use `asyncPainterResource` to load an image asynchronously.
 
 ```kotlin
 Image(
@@ -27,45 +27,20 @@ Image(
 
 ## Cache
 
-To enable memory cache and disk cache, just add the following dependencies.
+Add the dependencies for the desired cache functionalities.
 
 ```kotlin
-implementation("com.neoutils.nil:memory-cache:0.1.0-alpha04")
-implementation("com.neoutils.nil:disk-cache:0.1.0-alpha04")
+implementation("com.neoutils.nil:memory-cache:0.1.0-alpha05")
+implementation("com.neoutils.nil:disk-cache:0.1.0-alpha05")
 ```
 
-And use the `memoryCache` and `diskCache` extensions to configure.
+Use the `diskCache` and `memoryCache` extensions to configure.
 
 ``` kotlin
 Image(
     painter = asyncPainterResource(...) {
-        extras {
-            diskCache {
-                maxSize = 10.mb
-            }
-
-            memoryCache {
-                maxSize = 10
-            }
-        }
-    },
-    contentDescription = null,
-)
-```
-
-## Authentication
-
-Use the network extension in extras to configure basic authentication.
-
-``` kotlin
-Image(
-    painter = asyncPainterResource(
-        Request.network(...),
-    ) {
-        extras {
-            network {
-                headers = mapOf("Autorization" to "Bearer ...")
-            }
+        diskCache {
+            maxSize = 10.mb
         }
     },
     contentDescription = null,
@@ -74,10 +49,10 @@ Image(
 
 ## GIF Support
 
-For animated image support, add the GIF decoder dependency.
+For animated image support like **GIF** and **WebP**, add the `GifDecoder` dependency.
 
 ```kotlin
-implementation("com.neoutils.nil:gif-decoder:0.1.0-alpha04")
+implementation("com.neoutils.nil:gif-decoder:0.1.0-alpha05")
 ```
 
 And declare it in the configuration.
@@ -88,24 +63,22 @@ Image(
         Request.network("https://cataas.com/cat/gif"),
     ) {
         decoders {
-            gif() // or add(GifDecoder())
+            gif() // or +GifDecoder()
         }
     },
     contentDescription = null,
 )
 ```
 
-Use extras for adjustments.
+Use the `gif` extension for configuration.
 
 ``` kotlin
 Image(
     painter = asyncPainterResource(...) {
         ...
-    
-        extras {
-            gif {
-                repeatCount = 2
-            }
+
+        gif {
+            repeatCount = 2
         }
     },
     contentDescription = null,
@@ -117,7 +90,7 @@ Image(
 For SVG image support, add the SVG decoder dependency.
 
 ```kotlin
-implementation("com.neoutils.nil:svg-decoder:0.1.0-alpha04")
+implementation("com.neoutils.nil:svg-decoder:0.1.0-alpha05")
 ```
 
 And declare it in the configuration.
@@ -128,7 +101,7 @@ Image(
         Request.network("https://example.com/image.svg"),
     ) {
         decoders {
-            svg() // or add(SvgDecoder())
+            svg() // or +SvgDecoder()
         }
     },
     contentDescription = null,
@@ -140,7 +113,7 @@ Image(
 To load images from Compose resources, add the following dependency.
 
 ```kotlin
-implementation("com.neoutils.nil:resources-fetcher:0.1.0-alpha04")
+implementation("com.neoutils.nil:resources-fetcher:0.1.0-alpha05")
 ```
 
 And use the `Request.resource(...)` extension.
@@ -159,7 +132,7 @@ Image(
 For Drawable Image Vector support, add the XML decoder dependency.
 
 ```kotlin
-implementation("com.neoutils.nil:xml-decoder:0.1.0-alpha04")
+implementation("com.neoutils.nil:xml-decoder:0.1.0-alpha05")
 ```
 
 And declare it in the configuration.
@@ -170,11 +143,117 @@ Image(
         Request.resource(Res.drawable.vector_icon),
     ) {
         decoders {
-            xml() // or add(XmlDecoder())
+            xml() // or +XmlDecoder()
         }
     },
     contentDescription = null,
 )
+```
+
+## Network Configuration
+
+Use the `network` extension to configure the `NetworkFetcher`.
+
+``` kotlin
+Image(
+    painter = asyncPainterResource(
+        Request.network(...),
+    ) {
+        network {
+            headers = mapOf("Authorization" to "Bearer ...")
+        }
+    },
+    contentDescription = null,
+)
+```
+
+Use the `network-fetcher` dependency instead of `network-fetcher-default` to manually specify
+the [Ktor Client](https://ktor.io/docs/client-engines.html).
+
+```kotlin
+implementation("com.neoutils.nil:network-fetcher:0.1.0-alpha05")
+```
+
+Configure the client for each target.
+
+``` kotlin
+kotlin {
+    sourceSets {
+        androidMain {
+            dependencies {
+                implementation("io.ktor:ktor-client-okhttp:3.1.0")
+            }
+        }
+        
+        iosMain {
+            dependencies {
+                implementation("io.ktor:ktor-client-darwin:3.1.0")
+            }
+        }
+        
+        jvmMain {
+            dependencies {
+                implementation("io.ktor:ktor-client-java:3.1.0")
+            }
+        }
+        
+        ...
+    }
+}
+
+```
+
+## State Handling
+
+Use the `placeholder` and `failure` parameters to display images during loading or in case of failure.
+
+``` kotlin
+Image(
+    painter = asyncPainterResource(
+        request = Request.network("..."),
+        placeholder = painterResource(Res.drawable.placeholder),
+        failure = painterResource(Res.drawable.failure),
+    ),
+    contentDescription = null,
+)
+```
+
+Or handle states manually.
+
+``` kotlin
+val resource = asyncPainterResource(
+    Request.network("..."),
+)
+
+when (resource) {
+    is PainterResource.Result.Success -> {
+        Image(
+            painter = resource,
+            contentDescription = null,
+        )
+    }
+
+    is PainterResource.Loading -> {
+        if (resource.progress != null) {
+            CircularProgressIndicator(
+                progress = { resource.progress!! }
+            )
+        } else {
+            CircularProgressIndicator()
+        }
+    }
+
+    is PainterResource.Result.Failure -> {
+        if (resource.throwable is ResponseException) {
+            Image(
+                painter = painterResource(Res.drawable.failure),
+                contentDescription = null,
+            )
+        } else {
+            throw resource.throwable
+        }
+    }
+}
 ```
 
 ## License

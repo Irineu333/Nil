@@ -24,7 +24,7 @@ import kotlinx.coroutines.withContext
 fun asyncPainterResource(
     request: Request,
     placeholder: Painter = EmptyPainter,
-    fallback: Painter = EmptyPainter,
+    error: Painter = EmptyPainter,
     settings: @NilDsl SettingsScope.() -> Unit = {}
 ): PainterResource {
 
@@ -36,7 +36,7 @@ fun asyncPainterResource(
             collectAsState(PainterResource.Loading()).value
         },
         placeholder = placeholder,
-        fallback = fallback
+        fallback = error
     )
 }
 
