@@ -48,7 +48,7 @@ kotlin {
             }
         }
 
-        iosArm64Main {
+        iosMain {
             dependencies {
                 implementation(libs.ktor.client.darwin)
             }

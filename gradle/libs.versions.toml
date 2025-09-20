@@ -7,7 +7,7 @@ androidsvg = "1.4"
 androidx-activity = "1.10.1"
 androidx-core = "1.16.0"
 
-version = "0.1.0-alpha04"
+version = "0.1.0-alpha05"
 
 cmp = "1.8.1"
 kotlin = "2.1.21"
