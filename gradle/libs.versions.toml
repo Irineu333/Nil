@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.3"
+agp = "8.7.0"
 android-compileSdk = "35"
 android-minSdk = "24"
 android-targetSdk = "35"
@@ -9,8 +9,8 @@ androidx-core = "1.16.0"
 
 version = "0.1.0-alpha05"
 
-cmp = "1.8.1"
-kotlin = "2.1.21"
+cmp = "1.8.2"
+kotlin = "2.1.0"
 ktor = "3.1.0"
 kotlinx-coroutines = "1.10.2"
 okio = "3.13.0"
