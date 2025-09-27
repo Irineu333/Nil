@@ -1,15 +1,16 @@
 [versions]
-agp = "8.7.0"
+agp = "8.7.2"
 android-compileSdk = "35"
 android-minSdk = "24"
 android-targetSdk = "35"
 androidsvg = "1.4"
 androidx-activity = "1.10.1"
 androidx-core = "1.16.0"
+androidx-compose = "1.8.1"
 
 version = "0.1.0-alpha05"
 
-cmp = "1.8.2"
+cmp = "1.9.0"
 kotlin = "2.1.0"
 ktor = "3.1.0"
 kotlinx-coroutines = "1.10.2"
@@ -41,7 +42,7 @@ compose-ui-graphics = { module = "org.jetbrains.compose.ui:ui-graphics", version
 
 okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 cache4k = { module = "io.github.reactivecircus.cache4k:cache4k", version.ref = "cache4k" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "cmp" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "androidx-compose" }
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }
